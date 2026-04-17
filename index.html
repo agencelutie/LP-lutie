@@ -71,17 +71,11 @@
       box-shadow: 0 24px 64px rgba(25,52,92,0.16), 0 4px 16px rgba(25,52,92,0.08);
       aspect-ratio: 16 / 9;
       background: #19345c;
-      position: relative;
-      display: block;
-      cursor: pointer;
-      text-decoration: none;
     }
-    .video-frame img {
+    .video-frame iframe {
       width: 100%; height: 100%;
-      object-fit: cover; display: block;
+      border: none; display: block;
     }
-    .video-frame:hover img { opacity: 0.92; }
-    .video-frame img { transition: opacity .2s; }
 
     /* ─ Download button ──────────────────────── */
     .btn-dl {
