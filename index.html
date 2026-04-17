@@ -68,14 +68,20 @@
       width: 100%;
       border-radius: 18px;
       overflow: hidden;
-      box-shadow: 0 24px 64px rgba(14,21,53,0.16), 0 4px 16px rgba(14,21,53,0.08);
+      box-shadow: 0 24px 64px rgba(25,52,92,0.16), 0 4px 16px rgba(25,52,92,0.08);
       aspect-ratio: 16 / 9;
       background: #19345c;
+      position: relative;
+      display: block;
+      cursor: pointer;
+      text-decoration: none;
     }
-    .video-frame iframe {
+    .video-frame img {
       width: 100%; height: 100%;
-      border: none; display: block;
+      object-fit: cover; display: block;
     }
+    .video-frame:hover img { opacity: 0.92; }
+    .video-frame img { transition: opacity .2s; }
 
     /* ─ Download button ──────────────────────── */
     .btn-dl {
@@ -137,16 +143,11 @@
 
     <!-- 1. Vidéo YouTube -->
     <div class="video-frame">
-      <!--
-        Remplacez YOUR_VIDEO_ID par l'ID de votre vidéo YouTube
-        Ex : https://youtu.be/dQw4w9WgXcQ → ID = dQw4w9WgXcQ
-      -->
       <iframe
-        src="https://www.youtube.com/embed/fEPzutWKSTg?rel=0&modestbranding=1"
+        src="https://www.youtube.com/embed/fEPzutWKSTg?autoplay=1&mute=1&rel=0&modestbranding=1"
         title="Skill Google Ads pour Claude"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-        loading="lazy">
+        allowfullscreen>
       </iframe>
     </div>
 
