@@ -1,0 +1,18 @@
+{
+  "_comment": "Configuration des clients Clarity + GA4 pour le skill weekly-cro-report Lutie. Un token Clarity par projet, généré depuis Settings > Data Export > Generate new API token.",
+  "clients": [
+    {
+      "name": "Exemple Client",
+      "project_id": "votre_project_id",
+      "clarity_token": "votre_token_jwt_ici",
+      "site_url": "https://example.com",
+      "ga4_property": "properties/123456789",
+      "cro_objectives": {
+        "target_cvr": 3.0,
+        "primary_conversion": "form_submit",
+        "secondary_conversions": ["phone_click", "chat_open"],
+        "key_pages": ["/", "/services", "/contact", "/devis"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accompagnement individuel — Clément Simon</title>
+  <meta name="description" content="Pour les collaborateurs qui portent beaucoup — un espace confidentiel pour y voir plus clair. Premier échange gratuit avec Clément Simon." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg:      #fefcf9;
+      --bg2:     #f5f0e8;
+      --bg3:     #ede7db;
+      --text:    #1d1b18;
+      --text2:   #4a4540;
+      --text3:   #8a8278;
+      --accent:  #3b5640;
+      --accent2: #2e4332;
+      --acc-l:   #edf2ee;
+      --line:    #e2dbd0;
+      --serif:   'Instrument Serif', Georgia, serif;
+      --sans:    'DM Sans', system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 17px; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: var(--sans); font-weight: 300;
+      line-height: 1.75; -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    /* ── TYPO ── */
+    .t-display { font-family: var(--serif); font-size: clamp(2.5rem, 5.2vw, 4.2rem); line-height: 1.1; font-weight: 400; letter-spacing: -.015em; }
+    .t-display em { font-style: italic; color: var(--accent); }
+    .t-heading  { font-family: var(--serif); font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.2; font-weight: 400; }
+    .t-heading em { font-style: italic; color: var(--accent); }
+    .t-label { font-family: var(--sans); font-size: .67rem; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+    .t-sub  { font-family: var(--sans); font-size: 1.05rem; font-weight: 300; color: var(--text2); line-height: 1.75; }
+
+    /* ── LAYOUT ── */
+    .wrap        { max-width: 1080px; margin: 0 auto; padding: 0 44px; }
+    .wrap--narrow { max-width: 720px;  margin: 0 auto; padding: 0 44px; }
+    .section     { padding: 108px 0; }
+    .section--tinted { background: var(--bg2); }
+    .section--deep   { background: var(--bg3); }
+
+    /* ── RULE ── */
+    .rule { width: 36px; height: 1.5px; background: var(--accent); display: block; margin-bottom: 20px; }
+
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .75s cubic-bezier(.16,1,.3,1), transform .75s cubic-bezier(.16,1,.3,1); }
+    .reveal.on { opacity: 1; transform: none; }
+    .d1 { transition-delay: .1s; } .d2 { transition-delay: .2s; }
+    .d3 { transition-delay: .32s; } .d4 { transition-delay: .44s; }
+
+    /* ══ NAV ══ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      padding: 18px 44px; display: flex; justify-content: space-between; align-items: center;
+      background: rgba(254,252,249,.95); backdrop-filter: blur(14px);
+      border-bottom: 1px solid transparent; transition: border-color .25s;
+    }
+    .nav.scrolled { border-bottom-color: var(--line); }
+    .nav-logo { font-family: var(--serif); font-size: 1.05rem; letter-spacing: .02em; }
+    .nav-logo span { color: var(--accent); }
+    .nav-right { display: flex; align-items: center; gap: 28px; }
+    .nav-link  { font-family: var(--sans); font-size: .78rem; font-weight: 400; color: var(--text2); transition: color .18s; }
+    .nav-link:hover { color: var(--text); }
+    .nav-btn   { font-family: var(--sans); font-size: .73rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; padding: 10px 20px; border-radius: 3px; background: var(--accent); color: #fff; transition: background .18s; }
+    .nav-btn:hover { background: var(--accent2); }
+
+    /* ══ BUTTONS ══ */
+    .btn { display: inline-flex; align-items: center; gap: 9px; font-family: var(--sans); font-size: .76rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; padding: 15px 26px; border-radius: 3px; border: none; cursor: pointer; transition: all .2s; }
+    .btn-solid { background: var(--accent); color: #fff; }
+    .btn-solid:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(59,86,64,.2); }
+    .btn-ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+    .btn-ghost:hover { background: var(--acc-l); }
+    .btn-white { background: #fff; color: var(--accent); }
+    .btn-white:hover { background: var(--bg2); }
+
+    /* ══ STICKY MOBILE BAR ══ */
+    .sticky-bar {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 190;
+      background: var(--bg); border-top: 1px solid var(--line);
+      padding: 14px 22px; gap: 10px; align-items: center;
+    }
+    .sticky-bar .sticky-cta { flex: 1; text-align: center; padding: 14px; font-size: .76rem; }
+    .sticky-note { font-family: var(--sans); font-size: .68rem; font-weight: 300; color: var(--text3); text-align: center; }
+    @media (max-width: 860px) {
+      .sticky-bar { display: flex; flex-direction: column; }
+      body { padding-bottom: 90px; }
+    }
+
+    /* ══ TRUST BAR ══ */
+    .trust-bar { background: var(--acc-l); border-bottom: 1px solid #d4e2d5; }
+    .trust-inner { display: flex; justify-content: center; flex-wrap: wrap; gap: 0; }
+    .trust-item {
+      display: flex; align-items: center; gap: 8px; padding: 14px 28px;
+      border-right: 1px solid #d4e2d5; font-family: var(--sans);
+      font-size: .78rem; font-weight: 400; color: var(--accent2);
+    }
+    .trust-item:last-child { border-right: none; }
+    .trust-icon { font-size: .9rem; }
+
+    /* ══ HERO ══ */
+    .hero { min-height: 100svh; display: grid; align-items: center; padding: 130px 0 80px; }
+    .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+    .hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; }
+    .hero-eyebrow::before { content: ''; display: block; width: 24px; height: 1.5px; background: var(--accent); }
+    .hero h1 { margin-bottom: 22px; }
+    .hero-outcome {
+      font-family: var(--sans); font-size: .97rem; font-weight: 400;
+      color: var(--text); background: var(--acc-l); border-left: 2.5px solid var(--accent);
+      padding: 12px 18px; margin-bottom: 28px; line-height: 1.55;
+    }
+    .hero-sub { margin-bottom: 36px; }
+    .hero-cta-group { display: flex; flex-direction: column; gap: 12px; }
+    .hero-cta-note {
+      font-family: var(--sans); font-size: .71rem; font-weight: 300;
+      color: var(--text3); display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    }
+    .hero-cta-note span::before { content: '·'; margin-right: 14px; }
+    .hero-cta-note span:first-child::before { content: ''; margin-right: 0; }
+
+    /* Hero — carte témoignage */
+    .hero-card {
+      background: var(--bg); border: 1px solid var(--line); border-radius: 6px;
+      padding: 36px 32px; position: relative; box-shadow: 0 4px 24px rgba(0,0,0,.06);
+    }
+    .hero-card-stripe { position: absolute; top: 0; left: 32px; width: 44px; height: 2.5px; background: var(--accent); border-radius: 0 0 2px 2px; }
+    .hero-card-label { font-family: var(--sans); font-size: .66rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--text3); margin-bottom: 16px; }
+    .hero-quote { font-family: var(--serif); font-size: 1.15rem; font-style: italic; line-height: 1.62; color: var(--text); margin-bottom: 22px; }
+    .hero-quote::before { content: '\201C'; color: var(--accent); opacity: .3; }
+    .hero-quote::after  { content: '\201D'; color: var(--accent); opacity: .3; }
+    .hero-card-author { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--acc-l); border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: .85rem; color: var(--accent); flex-shrink: 0; }
+    .author-name  { font-family: var(--sans); font-size: .85rem; font-weight: 500; color: var(--text); }
+    .author-role  { font-family: var(--sans); font-size: .74rem; font-weight: 300; color: var(--text3); }
+    .hero-stats { display: flex; gap: 0; padding-top: 22px; border-top: 1px solid var(--line); }
+    .h-stat { flex: 1; text-align: center; padding: 4px 0; }
+    .h-stat + .h-stat { border-left: 1px solid var(--line); }
+    .h-stat-n { font-family: var(--serif); font-size: 1.6rem; font-weight: 400; color: var(--accent); line-height: 1; }
+    .h-stat-l { font-family: var(--sans); font-size: .68rem; font-weight: 300; color: var(--text3); margin-top: 4px; line-height: 1.4; }
+
+    /* ══ PROBLEM ══ */
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 88px; align-items: start; }
+    .problem-pull { font-family: var(--serif); font-size: clamp(1.55rem, 2.4vw, 2.1rem); font-weight: 400; line-height: 1.45; color: var(--text); }
+    .problem-pull::before { content: '"'; display: block; font-family: var(--serif); font-size: 3.5rem; line-height: 1; color: var(--accent); opacity: .22; margin-bottom: -10px; }
+    .problem-body p { font-family: var(--sans); font-weight: 300; font-size: .97rem; color: var(--text2); line-height: 1.85; margin-bottom: 1em; }
+    .problem-body strong { font-weight: 500; color: var(--text); }
+
+    /* ══ QUAL ══ */
+    .qual-header { text-align: center; max-width: 580px; margin: 0 auto 52px; }
+    .qual-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; margin-bottom: 24px; }
+    .qual-card { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 26px 24px; display: flex; gap: 14px; align-items: flex-start; transition: border-color .2s, box-shadow .2s; }
+    .qual-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(59,86,64,.08); }
+    .qual-icon { width: 30px; height: 30px; border-radius: 50%; background: var(--acc-l); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; font-size: .72rem; color: var(--accent); }
+    .qual-card h4 { font-family: var(--sans); font-size: .93rem; font-weight: 500; color: var(--text); margin-bottom: 5px; line-height: 1.3; }
+    .qual-card p  { font-family: var(--sans); font-size: .84rem; font-weight: 300; color: var(--text2); line-height: 1.72; margin: 0; }
+    .qual-notfor { background: var(--bg2); border-radius: 4px; padding: 18px 26px; text-align: center; }
+    .qual-notfor p { font-family: var(--sans); font-size: .82rem; font-weight: 300; color: var(--text3); line-height: 1.7; }
+    .qual-notfor strong { font-weight: 500; color: var(--text2); }
+
+    /* ══ CLÉMENT ══ */
+    .clement-inner { display: grid; grid-template-columns: 1fr 1.6fr; gap: 88px; align-items: start; }
+    .portrait-wrap { position: relative; }
+    .portrait-frame { width: 100%; aspect-ratio: 3/4; background: var(--bg3); border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .portrait-initials { font-family: var(--serif); font-size: 5rem; font-weight: 400; color: rgba(59,86,64,.18); }
+    .portrait-accent { position: absolute; bottom: -10px; right: -10px; width: 48px; height: 48px; border: 1.5px solid var(--accent); border-radius: 4px; opacity: .22; }
+    .pname { margin-top: 16px; font-family: var(--serif); font-size: 1.08rem; font-weight: 400; color: var(--text); }
+    .prole { font-family: var(--sans); font-size: .7rem; font-weight: 400; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-top: 3px; }
+    .clement-text .t-heading { margin: 12px 0 22px; }
+    .clement-letter { font-family: var(--sans); font-size: .96rem; font-weight: 300; color: var(--text2); line-height: 1.88; }
+    .clement-letter p { margin-bottom: 1.05em; }
+    .clement-signature { margin-top: 26px; padding-top: 18px; border-top: 1px solid var(--line); font-family: var(--serif); font-style: italic; font-size: 1.05rem; color: var(--accent); }
+
+    /* ══ BENEFITS ══ */
+    .benefits-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 52px; }
+    .benefit { padding: 34px 28px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); border-top: 2.5px solid var(--accent); transition: box-shadow .2s; }
+    .benefit:hover { box-shadow: 0 6px 22px rgba(59,86,64,.09); }
+    .benefit-num { font-family: var(--serif); font-size: 2.2rem; font-weight: 400; color: var(--accent); opacity: .22; line-height: 1; margin-bottom: 22px; }
+    .benefit h3 { font-family: var(--sans); font-size: .97rem; font-weight: 500; color: var(--text); margin-bottom: 10px; line-height: 1.35; }
+    .benefit p  { font-family: var(--sans); font-size: .88rem; font-weight: 300; color: var(--text2); line-height: 1.82; }
+
+    /* ══ TESTIMONIALS ══ */
+    .testi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 48px; }
+    .testi-card { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 34px 28px; position: relative; }
+    .testi-card::before { content: '\201C'; position: absolute; top: 14px; left: 22px; font-family: var(--serif); font-size: 4rem; color: var(--accent); opacity: .16; line-height: 1; }
+    .testi-text { font-family: var(--serif); font-size: 1.03rem; line-height: 1.7; color: var(--text); margin-bottom: 18px; }
+    .testi-outcome { font-family: var(--sans); font-size: .82rem; font-weight: 400; color: var(--accent); background: var(--acc-l); padding: 8px 12px; border-radius: 3px; margin-bottom: 18px; }
+    .testi-author { font-family: var(--sans); font-size: .69rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase; color: var(--text3); }
+    .testi-stat { display: flex; gap: 40px; align-items: center; background: var(--bg2); border: 1px solid var(--line); border-radius: 6px; padding: 28px 36px; margin-top: 18px; }
+    .stat-n { font-family: var(--serif); font-size: 3rem; font-weight: 400; color: var(--accent); line-height: 1; white-space: nowrap; }
+    .stat-sep { width: 1px; height: 40px; background: var(--line); flex-shrink: 0; }
+    .stat-desc { font-family: var(--sans); font-size: .85rem; font-weight: 300; color: var(--text2); line-height: 1.75; }
+
+    /* ══ WHAT HAPPENS NEXT ══ */
+    .next-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; margin-top: 52px; }
+    .next-step { background: var(--bg); padding: 32px 28px; position: relative; }
+    .next-step-num { font-family: var(--serif); font-size: 2rem; font-weight: 400; color: var(--accent); opacity: .2; line-height: 1; margin-bottom: 16px; }
+    .next-step h4 { font-family: var(--sans); font-size: .93rem; font-weight: 500; color: var(--text); margin-bottom: 8px; }
+    .next-step p  { font-family: var(--sans); font-size: .84rem; font-weight: 300; color: var(--text2); line-height: 1.72; margin: 0; }
+    .next-step-time { font-family: var(--sans); font-size: .68rem; font-weight: 500; color: var(--accent); text-transform: uppercase; letter-spacing: .1em; margin-top: 12px; }
+
+    /* ══ FAQ ══ */
+    .faq-list { border-top: 1px solid var(--line); margin-top: 48px; }
+    .faq-item { border-bottom: 1px solid var(--line); }
+    .faq-btn  { width: 100%; background: none; border: none; padding: 22px 0; display: flex; justify-content: space-between; align-items: center; cursor: pointer; gap: 20px; text-align: left; }
+    .faq-q    { font-family: var(--sans); font-size: .97rem; font-weight: 400; color: var(--text); line-height: 1.4; }
+    .faq-ico  { width: 28px; height: 28px; min-width: 28px; border-radius: 50%; border: 1.5px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 1.05rem; color: var(--accent); transition: all .2s; line-height: 1; }
+    .faq-item.open .faq-ico { transform: rotate(45deg); border-color: var(--accent); }
+    .faq-ans  { display: none; padding-bottom: 22px; font-family: var(--sans); font-size: .92rem; font-weight: 300; color: var(--text2); line-height: 1.82; max-width: 620px; }
+    .faq-ans strong { font-weight: 500; color: var(--text); }
+    .faq-item.open .faq-ans { display: block; }
+
+    /* ══ OFFER ══ */
+    .offer-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 52px; align-items: start; margin-top: 52px; }
+    .offer-list   { list-style: none; margin: 26px 0 28px; }
+    .offer-list li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); font-family: var(--sans); font-size: .92rem; font-weight: 300; color: var(--text2); line-height: 1.5; }
+    .offer-list li:first-child { border-top: 1px solid var(--line); }
+    .offer-chk { color: var(--accent); flex-shrink: 0; margin-top: 1px; font-size: .82rem; }
+    .offer-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 26px; }
+    .pill { font-family: var(--sans); font-size: .68rem; font-weight: 500; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); border: 1.5px solid var(--accent); padding: 6px 14px; border-radius: 100px; }
+    .scarcity {
+      background: #fef9ec; border: 1px solid #f0d98a; border-radius: 4px;
+      padding: 12px 16px; margin-bottom: 24px;
+      font-family: var(--sans); font-size: .82rem; font-weight: 400; color: #7a6010;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .offer-aside { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 34px 28px; border-top: 2.5px solid var(--accent); }
+    .aside-lbl  { font-family: var(--sans); font-size: .64rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: var(--text3); margin-bottom: 11px; }
+    .aside-lead { font-family: var(--serif); font-size: 1.2rem; font-weight: 400; line-height: 1.5; color: var(--text); margin-bottom: 22px; }
+    .aside-body { font-family: var(--sans); font-size: .84rem; font-weight: 300; color: var(--text2); line-height: 1.78; }
+    hr.ar { border: none; border-top: 1px solid var(--line); margin: 18px 0; }
+
+    /* ══ FORM ══ */
+    .form-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 88px; align-items: start; }
+    .form-intro .t-heading { margin-top: 12px; margin-bottom: 16px; }
+    .form-intro p { font-family: var(--sans); font-size: .93rem; font-weight: 300; color: var(--text2); line-height: 1.82; margin-bottom: .9em; }
+    .form-badges { display: flex; flex-direction: column; gap: 9px; margin-top: 26px; }
+    .badge { display: flex; align-items: center; gap: 9px; font-family: var(--sans); font-size: .78rem; font-weight: 300; color: var(--text2); }
+    .badge-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .form-card { background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 40px 36px; }
+    .fg { margin-bottom: 16px; }
+    .fg label { display: block; font-family: var(--sans); font-size: .65rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; color: var(--text3); margin-bottom: 7px; }
+    .fg-opt { font-weight: 300; text-transform: none; letter-spacing: 0; font-size: .65rem; }
+    .fg input, .fg textarea {
+      width: 100%; background: var(--bg2); border: 1px solid var(--line); border-radius: 3px;
+      padding: 12px 14px; font-family: var(--sans); font-size: .93rem; font-weight: 300;
+      color: var(--text); outline: none; transition: border-color .18s, box-shadow .18s; -webkit-appearance: none;
+    }
+    .fg input::placeholder, .fg textarea::placeholder { color: var(--text3); }
+    .fg input:focus, .fg textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59,86,64,.08); background: var(--bg); }
+    .fg textarea { min-height: 100px; resize: vertical; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-submit { width: 100%; margin-top: 4px; justify-content: center; padding: 16px; font-size: .76rem; }
+    .form-legal { font-family: var(--sans); font-size: .68rem; font-weight: 300; color: var(--text3); text-align: center; margin-top: 12px; line-height: 1.62; }
+    /* Champs additionnels cachés par défaut */
+    .form-extra { display: none; margin-top: 4px; }
+    .form-extra.visible { display: block; }
+    .form-expand-msg { font-family: var(--sans); font-size: .8rem; font-weight: 300; color: var(--text3); margin: 12px 0 4px; }
+
+    /* ══ FINAL CTA ══ */
+    .final-cta { padding: 112px 0; background: var(--accent); text-align: center; position: relative; overflow: hidden; }
+    .final-cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(255,255,255,.06) 0%, transparent 70%); }
+    .final-cta .wrap { position: relative; }
+    .final-cta .t-display { color: #fff; margin-bottom: 16px; }
+    .final-cta .t-display em { color: rgba(255,255,255,.72); }
+    .final-cta .t-sub { color: rgba(255,255,255,.68); margin-bottom: 40px; max-width: 450px; margin-left: auto; margin-right: auto; }
+    .final-note { font-family: var(--sans); font-size: .7rem; font-weight: 300; color: rgba(255,255,255,.38); margin-top: 14px; }
+
+    /* ══ FOOTER ══ */
+    footer { padding: 30px 44px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    footer .logo  { font-family: var(--serif); font-size: .93rem; color: var(--text2); }
+    footer .links { display: flex; gap: 20px; font-family: var(--sans); font-size: .7rem; color: var(--text3); }
+    footer .links a:hover { color: var(--text2); }
+    footer .copy  { font-family: var(--sans); font-size: .67rem; color: var(--text3); }
+
+    /* ══ RESPONSIVE ══ */
+    @media (max-width: 860px) {
+      .wrap, .wrap--narrow { padding: 0 20px; }
+      .nav { padding: 14px 20px; }
+      .nav-right .nav-link { display: none; }
+      .section { padding: 72px 0; }
+      .hero { padding: 110px 0 60px; }
+      .hero-inner { grid-template-columns: 1fr; gap: 44px; }
+      .hero-card  { display: none; }
+      .trust-inner { flex-direction: column; }
+      .trust-item  { border-right: none; border-bottom: 1px solid #d4e2d5; justify-content: center; }
+      .trust-item:last-child { border-bottom: none; }
+      .problem-grid, .clement-inner, .offer-layout, .form-layout { grid-template-columns: 1fr; gap: 40px; }
+      .qual-grid, .benefits-row, .testi-grid, .next-steps { grid-template-columns: 1fr; }
+      .next-steps { background: none; border: none; gap: 12px; }
+      .next-step   { border: 1px solid var(--line); border-radius: 6px; }
+      .testi-stat  { flex-direction: column; gap: 14px; padding: 22px 20px; }
+      .stat-sep    { display: none; }
+      .portrait-wrap { max-width: 280px; }
+      .form-card   { padding: 26px 20px; }
+      .form-row    { grid-template-columns: 1fr; }
+      footer       { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-logo">Cabinet<span>·</span>CS</div>
+  <div class="nav-right">
+    <a href="https://cabinetcs.fr" class="nav-link">Accueil</a>
+    <a href="#formulaire" class="nav-btn">Échange gratuit</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-inner">
+      <div>
+        <div class="hero-eyebrow reveal">
+          <span class="t-label">Accompagnement individuel · Collaborateurs</span>
+        </div>
+        <h1 class="t-display reveal d1">
+          Vous portez beaucoup.<br>
+          Il est temps d'avoir<br>
+          <em>un espace rien qu'à vous.</em>
+        </h1>
+
+        <!-- CRO #7 : outcome explicite en encadré accroche-œil -->
+        <div class="hero-outcome reveal d2">
+          Pour les collaborateurs qui veulent <strong>comprendre ce qui se joue vraiment</strong> dans leurs situations — et avancer avec plus de clarté et de légèreté.
+        </div>
+
+        <p class="t-sub hero-sub reveal d2">
+          Clément Simon crée avec vous un espace de dialogue sincère et confidentiel — adapté à votre situation, à votre rythme.
+        </p>
+        <div class="hero-cta-group reveal d3">
+          <!-- CRO #1 : CTA hero spécifique à l'intention de découverte -->
+          <a href="#formulaire" class="btn btn-solid" style="align-self:flex-start;">Voir si c'est fait pour moi →</a>
+          <div class="hero-cta-note">
+            <span>Premier échange offert</span>
+            <span>Confidentiel</span>
+            <span>Réponse sous 24h</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-card reveal d2">
+        <div class="hero-card-stripe"></div>
+        <div class="hero-card-label">Charlène — collaboratrice accompagnée</div>
+        <p class="hero-quote">Je venais avec des situations que je n'arrivais pas à démêler seule. Clément a su créer un espace où je pouvais vraiment parler — sans jugement, sans pression.</p>
+        <div class="hero-card-author">
+          <div class="avatar">C</div>
+          <div>
+            <div class="author-name">Charlène</div>
+            <div class="author-role">Collaboratrice accompagnée · 6 mois</div>
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="h-stat">
+            <div class="h-stat-n">100%</div>
+            <div class="h-stat-l">satisfaction<br>des suivis</div>
+          </div>
+          <div class="h-stat">
+            <div class="h-stat-n">3–9</div>
+            <div class="h-stat-l">mois<br>d'engagement</div>
+          </div>
+          <div class="h-stat">
+            <div class="h-stat-n">1er</div>
+            <div class="h-stat-l">échange<br>toujours offert</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CRO #9 : TRUST BAR -->
+<div class="trust-bar reveal">
+  <div class="trust-inner wrap">
+    <div class="trust-item"><span class="trust-icon">🔒</span>Confidentialité garantie</div>
+    <div class="trust-item"><span class="trust-icon">✓</span>100% de satisfaction sur les accompagnements réalisés</div>
+    <div class="trust-item"><span class="trust-icon">◎</span>Réponse personnelle sous 24h</div>
+    <div class="trust-item"><span class="trust-icon">◈</span>Tarif adapté à votre situation</div>
+  </div>
+</div>
+
+<!-- ═══ PROBLEM -->
+<section class="section section--tinted">
+  <div class="wrap">
+    <div class="problem-grid">
+      <div class="reveal">
+        <span class="rule"></span>
+        <span class="t-label">Ce que vous vivez</span>
+        <p class="problem-pull" style="margin-top:20px;">"Il n'y a que moi qui peux gérer ça. Et demander de l'aide, c'est pas vraiment dans ma nature."</p>
+      </div>
+      <div class="reveal d1" style="padding-top:4px;">
+        <p style="font-family:var(--sans);font-weight:300;font-size:.97rem;color:var(--text2);line-height:1.85;margin-bottom:1em;">Vous êtes quelqu'un d'engagé. Vous foncez, vous portez vos responsabilités, vous gérez. C'est une force — mais ça a un coût.</p>
+        <p style="font-family:var(--sans);font-weight:300;font-size:.97rem;color:var(--text2);line-height:1.85;margin-bottom:1em;">Certaines situations s'accumulent sans que vous ayez vraiment l'espace pour les déposer. Une relation qui coince, une décision difficile, une période floue que vous n'arrivez pas à nommer.</p>
+        <p style="font-family:var(--sans);font-weight:300;font-size:.97rem;color:var(--text2);line-height:1.85;margin-bottom:1em;">Et parce que vous n'êtes pas du genre à vous plaindre — vous portez ça seul. Sans espace. Sans quelqu'un à qui vraiment parler.</p>
+        <p style="font-family:var(--sans);font-weight:300;font-size:.97rem;color:var(--text2);line-height:1.85;"><strong style="font-weight:500;color:var(--text);">Ce n'est pas une faiblesse. Il vous manque juste un espace à la hauteur de ce que vous traversez.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ QUALIFICATION -->
+<section class="section">
+  <div class="wrap">
+    <div class="qual-header reveal">
+      <span class="t-label">Pour qui</span>
+      <h2 class="t-heading" style="margin-top:12px;">Reconnaissez-vous <em>votre situation ?</em></h2>
+      <p class="t-sub" style="margin-top:12px;font-style:normal;">Cet accompagnement est fait pour vous si vous vous retrouvez dans l'une de ces situations :</p>
+    </div>
+    <div class="qual-grid">
+      <div class="qual-card reveal">
+        <div class="qual-icon">→</div>
+        <div>
+          <h4>Une relation qui coince</h4>
+          <p>Avec votre manager, un collègue, une équipe. Vous sentez que quelque chose se joue, mais vous ne savez pas comment l'aborder ni comment en sortir.</p>
+        </div>
+      </div>
+      <div class="qual-card reveal d1">
+        <div class="qual-icon">→</div>
+        <div>
+          <h4>Une période floue ou difficile</h4>
+          <p>Réorganisation, changement de poste, charge qui s'emballe. Vous traversez ça sans vraiment avoir l'espace pour souffler et y voir clair.</p>
+        </div>
+      </div>
+      <div class="qual-card reveal d2">
+        <div class="qual-icon">→</div>
+        <div>
+          <h4>Des doutes que vous portez seul</h4>
+          <p>Sur votre place, votre trajectoire, vos choix. Des questions que vous n'osez pas poser autour de vous — parce que ce n'est ni le bon endroit, ni la bonne personne.</p>
+        </div>
+      </div>
+      <div class="qual-card reveal d3">
+        <div class="qual-icon">→</div>
+        <div>
+          <h4>Une décision importante à prendre</h4>
+          <p>Et vous avez besoin d'en parler — pas pour qu'on décide à votre place, mais pour réfléchir à voix haute avec quelqu'un qui écoute vraiment.</p>
+        </div>
+      </div>
+    </div>
+    <div class="qual-notfor reveal">
+      <p><strong>Ce n'est pas fait pour vous si</strong> vous cherchez une solution rapide à un problème opérationnel, ou si vous avez besoin d'un suivi thérapeutique — dans ce cas, Clément peut vous orienter.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CLÉMENT -->
+<section class="section section--tinted">
+  <div class="wrap">
+    <div class="clement-inner">
+      <div class="portrait-wrap reveal">
+        <div class="portrait-frame"><span class="portrait-initials">C·S</span></div>
+        <div class="portrait-accent"></div>
+        <div class="pname">Clément Simon</div>
+        <div class="prole">Coach · Formateur · Consultant</div>
+      </div>
+      <div>
+        <span class="rule reveal"></span>
+        <span class="t-label reveal">Clément vous parle</span>
+        <h2 class="t-heading reveal d1" style="margin-top:12px;">Ce que je crée avec vous,<br><em>et pourquoi ça marche</em></h2>
+        <div class="clement-letter reveal d2">
+          <p>Ce que je propose, ce n'est pas du coaching au sens classique. C'est un espace de dialogue — un vrai. Un endroit où vous pouvez poser ce que vous vivez sans que ça remonte, sans être jugé, sans devoir performer.</p>
+          <p>La plupart des personnes que j'accompagne ont une chose en commun : elles sont très engagées, elles portent beaucoup, et demander de l'aide leur coûte. Ce n'est pas un défaut — c'est souvent ce qui fait leur force. Mais ça les isole aussi.</p>
+          <p>Ce que j'observe à chaque fois : dès que l'espace est posé, et que je prends vraiment le temps d'écouter — sans agenda, sans solution toute faite — quelque chose se dépose. Et de là, les choses bougent.</p>
+          <div class="clement-signature">— Clément</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BENEFITS -->
+<section class="section">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="rule"></span>
+      <span class="t-label">Ce qui change</span>
+      <h2 class="t-heading" style="margin-top:12px;max-width:480px;">Ce que vous retirez de l'accompagnement</h2>
+    </div>
+    <div class="benefits-row">
+      <div class="benefit reveal d1">
+        <div class="benefit-num">01</div>
+        <h3>Vous déposez ce que vous portez seul</h3>
+        <p>Exprimer ce qui bloque, sans filtre — ça libère. Beaucoup repartent du premier échange avec une légèreté qu'ils n'avaient plus depuis longtemps.</p>
+      </div>
+      <div class="benefit reveal d2">
+        <div class="benefit-num">02</div>
+        <h3>Vous comprenez ce qui se joue vraiment</h3>
+        <p>Derrière une relation tendue, une période difficile ou un doute — il y a toujours quelque chose de plus précis. L'accompagnement vous aide à le nommer.</p>
+      </div>
+      <div class="benefit reveal d3">
+        <div class="benefit-num">03</div>
+        <h3>Vous avancez à votre mesure</h3>
+        <p>Fréquence, format, durée — tout est construit avec vous. Rien n'est imposé. L'accompagnement s'adapte, pas l'inverse.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS -->
+<section class="section section--tinted">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="rule"></span>
+      <span class="t-label">Ils l'ont vécu</span>
+      <h2 class="t-heading" style="margin-top:12px;">Ce qu'en disent ceux qui ont été accompagnés</h2>
+    </div>
+    <!-- CRO #3 : outcomes spécifiques ajoutés sous chaque témoignage -->
+    <div class="testi-grid">
+      <div class="testi-card reveal d1">
+        <p class="testi-text">"Je venais avec des situations que je n'arrivais pas à démêler seule. Clément a su créer un espace où je pouvais vraiment parler — sans jugement, sans pression. Les séances m'ont aidée à reprendre de la hauteur."</p>
+        <div class="testi-outcome">→ Retrouvé de la clarté sur une relation managériale difficile</div>
+        <div class="testi-author">Charlène · 6 mois d'accompagnement</div>
+      </div>
+      <div class="testi-card reveal d2">
+        <p class="testi-text">"Ce qui m'a frappé, c'est la qualité d'écoute. Je ne m'attendais pas à ce que quelques échanges changent autant ma façon de voir certaines situations au travail."</p>
+        <div class="testi-outcome">→ Prise de décision débloquée après plusieurs semaines d'hésitation</div>
+        <div class="testi-author">Arthur · 3 mois d'accompagnement</div>
+      </div>
+    </div>
+    <!-- CRO #3 : volumétrie ajoutée -->
+    <div class="testi-stat reveal">
+      <div class="stat-n">100%</div>
+      <div class="stat-sep"></div>
+      <div class="stat-desc">de satisfaction sur l'ensemble des accompagnements réalisés à ce jour.<br>Des profils et secteurs différents — ils sont venus seuls, ils sont repartis avec des clés.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ -->
+<section class="section">
+  <div class="wrap--narrow">
+    <div class="reveal">
+      <span class="rule"></span>
+      <span class="t-label">Vos questions</span>
+      <h2 class="t-heading" style="margin-top:12px;">Ce que vous vous demandez peut-être</h2>
+    </div>
+    <!-- CRO #10 : phrase-choc en bold en tête de chaque réponse -->
+    <div class="faq-list reveal d1">
+      <div class="faq-item">
+        <button class="faq-btn" onclick="faq(this)">
+          <span class="faq-q">"Je n'ai pas vraiment le temps."</span>
+          <span class="faq-ico">+</span>
+        </button>
+        <div class="faq-ans"><strong>Une heure prise pour soi en rend souvent les autres plus efficaces.</strong> Les séances s'adaptent à votre agenda — en présentiel ou visio, à la fréquence qui vous convient. La plupart des personnes accompagnées ont trouvé un rythme sans que ça empiète sur leur vie professionnelle.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="faq(this)">
+          <span class="faq-q">"Ce n'est pas si grave, je gère."</span>
+          <span class="faq-ico">+</span>
+        </button>
+        <div class="faq-ans"><strong>Ce n'est pas une question de gravité — c'est une question de choix.</strong> La plupart des personnes accompagnées pensaient pareil avant de commencer. Continuer à porter ça seul, ou avancer avec quelqu'un qui écoute vraiment : vous seul pouvez décider.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="faq(this)">
+          <span class="faq-q">"Comment savoir si ça va m'apporter quelque chose ?"</span>
+          <span class="faq-ico">+</span>
+        </button>
+        <div class="faq-ans"><strong>Le premier échange est là exactement pour ça — aucun engagement de votre côté.</strong> Clément présente l'espace de dialogue, vous posez vos questions, et vous repartez avec une vision claire. Avec ou sans suite.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-btn" onclick="faq(this)">
+          <span class="faq-q">"Est-ce que ce que je dis reste confidentiel ?"</span>
+          <span class="faq-ico">+</span>
+        </button>
+        <div class="faq-ans"><strong>La confidentialité est le fondement de tout l'accompagnement — sans elle, l'espace ne peut pas exister.</strong> Rien ne remonte à votre employeur. Rien n'est partagé sans votre accord explicite.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ OFFER -->
+<section class="section section--deep">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="rule"></span>
+      <span class="t-label">L'accompagnement</span>
+      <h2 class="t-heading" style="margin-top:12px;">Construit avec vous, pas pour vous</h2>
+    </div>
+    <div class="offer-layout">
+      <div class="reveal d1">
+        <ul class="offer-list">
+          <li><span class="offer-chk">✓</span>Séances individuelles, en présentiel ou visio</li>
+          <li><span class="offer-chk">✓</span>Fréquence adaptée à votre rythme et votre situation</li>
+          <li><span class="offer-chk">✓</span>Suivi entre les séances si le besoin se présente</li>
+          <li><span class="offer-chk">✓</span>Approche sur-mesure — aucune méthode imposée</li>
+          <li><span class="offer-chk">✓</span>Tarif adapté à votre profil et vos ressources</li>
+        </ul>
+        <p class="t-label" style="margin-bottom:11px;">Durée d'engagement</p>
+        <div class="offer-pills" style="margin-bottom:20px;">
+          <span class="pill">3 mois</span>
+          <span class="pill">6 mois</span>
+          <span class="pill">9 mois</span>
+        </div>
+        <!-- CRO #6 : rareté spécifique et crédible -->
+        <div class="scarcity">
+          <span>⚠</span>
+          <span>Clément limite volontairement le nombre d'accompagnements simultanés pour garantir la qualité de chaque suivi. <strong>Quelques places disponibles ce trimestre.</strong></span>
+        </div>
+        <!-- CRO #1 : CTA "décision" -->
+        <a href="#formulaire" class="btn btn-solid">Demander mon échange de découverte →</a>
+      </div>
+      <div class="offer-aside reveal d2">
+        <div class="aside-lbl">Par où ça commence</div>
+        <p class="aside-lead">Un premier échange offert, sans engagement, pour voir si l'accompagnement vous correspond.</p>
+        <hr class="ar" />
+        <p class="aside-body">Clément prend l'initiative de présenter l'espace de dialogue. Un lien de confiance se pose naturellement — c'est de là que tout part.</p>
+        <hr class="ar" />
+        <p class="aside-body">Le tarif est discuté ensemble, en fonction de votre situation et vos ressources. Rien n'est fixé à l'avance.</p>
+        <hr class="ar" />
+        <p class="aside-body" style="font-style:italic;color:var(--text3);">Clément mène peu d'accompagnements en parallèle — par choix, pour que chaque personne ait vraiment sa place.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CRO #8 : CE QUI SE PASSE APRÈS -->
+<section class="section">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="rule"></span>
+      <span class="t-label">Ce qui se passe ensuite</span>
+      <h2 class="t-heading" style="margin-top:12px;">Trois étapes simples</h2>
+    </div>
+    <div class="next-steps reveal d1">
+      <div class="next-step">
+        <div class="next-step-num">1</div>
+        <h4>Vous envoyez votre demande</h4>
+        <p>En moins de 2 minutes. Juste votre prénom, votre email, et si vous le souhaitez quelques mots sur votre situation.</p>
+        <div class="next-step-time">Maintenant</div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-num">2</div>
+        <h4>Clément vous répond personnellement</h4>
+        <p>Sous 24h, il vous propose un créneau pour votre premier échange. Un vrai message — pas une réponse automatique.</p>
+        <div class="next-step-time">Sous 24h</div>
+      </div>
+      <div class="next-step">
+        <div class="next-step-num">3</div>
+        <h4>Vous repartez avec une vision claire</h4>
+        <p>Après cet échange gratuit et sans engagement, vous décidez en toute liberté si vous souhaitez aller plus loin.</p>
+        <div class="next-step-time">Premier échange</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FORM -->
+<section class="section section--tinted" id="formulaire">
+  <div class="wrap">
+    <div class="form-layout">
+      <div class="form-intro">
+        <span class="rule reveal"></span>
+        <span class="t-label reveal">Premier échange</span>
+        <h2 class="t-heading reveal d1">Prenons le temps<br>de nous parler.</h2>
+        <p class="reveal d2">Ce que vous partagez ici reste confidentiel. Juste quelques lignes pour que Clément puisse préparer votre échange.</p>
+        <div class="form-badges reveal d3">
+          <div class="badge"><span class="badge-dot"></span>Premier échange offert · Aucun engagement</div>
+          <div class="badge"><span class="badge-dot"></span>Réponse personnelle de Clément sous 24h</div>
+          <div class="badge"><span class="badge-dot"></span>Strictement confidentiel</div>
+        </div>
+      </div>
+
+      <!-- CRO #2 : formulaire allégé — 2 champs obligatoires + expansion -->
+      <div class="form-card reveal d1">
+        <form id="form" onsubmit="submitForm(event)">
+          <div class="form-row">
+            <div class="fg">
+              <label>Prénom *</label>
+              <input type="text" id="f-prenom" placeholder="Votre prénom" required />
+            </div>
+            <div class="fg">
+              <label>Email *</label>
+              <input type="email" id="f-email" placeholder="vous@email.com" required />
+            </div>
+          </div>
+          <!-- Expansion douce au focus -->
+          <div class="fg">
+            <label>Téléphone <span class="fg-opt">(facultatif)</span></label>
+            <input type="tel" id="f-tel" placeholder="+33 6 00 00 00 00" onfocus="expandForm()" />
+          </div>
+          <div id="form-extra" class="form-extra">
+            <p class="form-expand-msg">En quelques mots, ce que vous traversez :</p>
+            <div class="fg">
+              <label>Votre situation <span class="fg-opt">(facultatif)</span></label>
+              <textarea id="f-situation" placeholder="En quelques mots — c'est facultatif, juste pour préparer notre échange."></textarea>
+            </div>
+          </div>
+          <!-- CRO #1 : CTA formulaire = engagement / décision -->
+          <button type="submit" class="btn btn-solid form-submit">Prendre mon premier échange gratuit →</button>
+          <p class="form-legal">Vos données restent strictement confidentielles et ne seront jamais transmises à des tiers.</p>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINAL CTA -->
+<section class="final-cta">
+  <div class="wrap">
+    <h2 class="t-display reveal" style="max-width:680px;margin:0 auto 16px;">
+      Il n'y a pas de bon moment.<br><em>Il y a juste maintenant.</em>
+    </h2>
+    <p class="t-sub reveal d1" style="margin-bottom:40px;max-width:440px;margin-left:auto;margin-right:auto;">Premier échange offert. Sans engagement. Pour voir si c'est fait pour vous.</p>
+    <div class="reveal d2">
+      <!-- CRO #1 : CTA final = urgence douce -->
+      <a href="#formulaire" class="btn btn-white">Réserver mon échange gratuit →</a>
+      <p class="final-note">Quelques places disponibles ce trimestre.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Cabinet CS — Clément Simon</div>
+  <div class="links">
+    <a href="https://cabinetcs.fr">cabinetcs.fr</a>
+    <a href="#">Mentions légales</a>
+    <a href="#">Confidentialité</a>
+  </div>
+  <div class="copy">© 2024 Cabinet CS</div>
+</footer>
+
+<!-- ═══ CRO #5 : STICKY MOBILE BAR -->
+<div class="sticky-bar" id="sticky">
+  <a href="#formulaire" class="btn btn-solid sticky-cta">Réserver mon échange gratuit →</a>
+  <p class="sticky-note">Gratuit · Confidentiel · Réponse sous 24h</p>
+</div>
+
+<script>
+  // Reveal
+  const io = new IntersectionObserver(
+    es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); } }),
+    { threshold: .07, rootMargin: '0px 0px -28px 0px' }
+  );
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Nav border
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', scrollY > 40);
+    // Cacher sticky bar quand le formulaire est visible
+    const form = document.getElementById('formulaire');
+    const sticky = document.getElementById('sticky');
+    if (form) {
+      const rect = form.getBoundingClientRect();
+      sticky.style.display = rect.top < window.innerHeight ? 'none' : '';
+    }
+  }, { passive: true });
+
+  // FAQ
+  function faq(btn) {
+    const item = btn.closest('.faq-item'), was = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!was) item.classList.add('open');
+  }
+
+  // Form — expansion progressive
+  function expandForm() {
+    document.getElementById('form-extra').classList.add('visible');
+  }
+
+  // Form submit
+  function submitForm(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.form-submit');
+    btn.textContent = '✓  Demande envoyée — Clément vous répond sous 24h';
+    btn.style.background = '#2d6e4f';
+    btn.disabled = true;
+    e.target.querySelectorAll('input, textarea').forEach(i => i.disabled = true);
+    // Masquer sticky bar
+    document.getElementById('sticky').style.display = 'none';
+  }
+
+  // Smooth scroll avec offset nav
+  document.querySelectorAll('a[href="#formulaire"]').forEach(a =>
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      window.scrollTo({ top: document.getElementById('formulaire').offsetTop - 80, behavior: 'smooth' });
+    })
+  );
+</script>
+</body>
+</html>

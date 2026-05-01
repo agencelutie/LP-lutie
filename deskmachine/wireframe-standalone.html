@@ -1,0 +1,1502 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DeskMachine — Wireframes Landing v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Kalam:wght@400;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --dm-blue: #2C6BD2;
+    --dm-blue-dark: #1B4FA8;
+    --dm-blue-soft: #D7E6FF;
+    --dm-bg: #F7F7F8;
+    --dm-ink: #1a1a1a;
+    --dm-ink-2: #4a4a4a;
+    --dm-line: #2b2b2b;
+    --dm-line-soft: #c2c2c2;
+    --dm-paper: #FBFAF6;
+    --dm-yellow: #FFE45C;
+    --dm-green: #34C26A;
+    --dm-red: #E45858;
+  }
+  html, body { margin: 0; padding: 0; background: #ECECEE; font-family: 'Inter', sans-serif; color: var(--dm-ink); }
+  .sk-box { border: 1.5px solid var(--dm-line); border-radius: 6px; background: white; }
+  .sk-box.dashed { border-style: dashed; }
+  .sk-box.soft { border-color: var(--dm-line-soft); }
+  .sk-pill { border: 1.5px solid var(--dm-line); border-radius: 999px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 6px; font-size: 11px; background: white; }
+  .sk-btn { border: 1.5px solid var(--dm-line); border-radius: 6px; padding: 10px 16px; background: var(--dm-blue); color: white; font-weight: 600; font-size: 13px; box-shadow: 3px 3px 0 var(--dm-line); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+  .sk-btn.ghost { background: white; color: var(--dm-ink); }
+  .sk-btn.sm { padding: 6px 10px; font-size: 11px; box-shadow: 2px 2px 0 var(--dm-line); }
+  .sk-img { background: repeating-linear-gradient(135deg, #eee 0 8px, #f7f7f7 8px 16px); border: 1.5px dashed var(--dm-line-soft); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #888; text-align: center; padding: 6px; }
+  .sk-handwrite { font-family: 'Kalam', cursive; }
+  .sk-annot { font-family: 'Caveat', cursive; color: var(--dm-blue); font-size: 18px; }
+  .sk-mono { font-family: 'JetBrains Mono', monospace; }
+  .squiggle { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 6'><path d='M0 3 Q 7.5 0 15 3 T 30 3 T 45 3 T 60 3' stroke='%232C6BD2' stroke-width='1.5' fill='none'/></svg>"); background-repeat: repeat-x; background-position: 0 100%; background-size: 60px 6px; padding-bottom: 4px; }
+  .dm-logo { font-family: 'Inter'; font-weight: 800; letter-spacing: -0.02em; font-size: 18px; }
+  .dm-logo .dot { color: var(--dm-blue); }
+  .artboard-scroll { overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; }
+  .artboard-scroll::-webkit-scrollbar { width: 6px; }
+  .artboard-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+  .phone-frame { width: 360px; height: 740px; border: 12px solid #1a1a1a; border-radius: 36px; background: white; overflow: hidden; position: relative; box-shadow: 6px 6px 0 #1a1a1a; }
+  .phone-frame::before { content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 90px; height: 18px; border-radius: 9px; background: #1a1a1a; z-index: 10; }
+  .phone-screen { width: 100%; height: 100%; overflow-y: auto; background: white; }
+  .swipe-dots { display: flex; gap: 6px; }
+  .swipe-dots .d { width: 6px; height: 6px; border-radius: 50%; background: #ccc; }
+  .swipe-dots .d.active { background: var(--dm-blue); width: 18px; border-radius: 3px; }
+</style>
+</head>
+<body>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<div id="root"></div>
+
+<script type="text/babel">
+// ── design-canvas.jsx ──────────────────────────────────────────
+const DC = {
+  bg: '#f0eee9', grid: 'rgba(0,0,0,0.06)', label: 'rgba(60,50,40,0.7)',
+  title: 'rgba(40,30,20,0.85)', subtitle: 'rgba(60,50,40,0.6)',
+  postitBg: '#fef4a8', postitText: '#5a4a2a',
+  font: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
+};
+
+if (!document.getElementById('dc-styles')) {
+  const s = document.createElement('style');
+  s.id = 'dc-styles';
+  s.textContent = [
+    '.dc-editable{cursor:text;outline:none;white-space:nowrap;border-radius:3px;padding:0 2px;margin:0 -2px}',
+    '.dc-editable:focus{background:#fff;box-shadow:0 0 0 1.5px #c96442}',
+    '[data-dc-slot]{transition:transform .18s cubic-bezier(.2,.7,.3,1)}',
+    '[data-dc-slot].dc-dragging{transition:none;z-index:10;pointer-events:none}',
+    '[data-dc-slot].dc-dragging .dc-card{box-shadow:0 12px 40px rgba(0,0,0,.25),0 0 0 2px #c96442;transform:scale(1.02)}',
+    '.dc-card{transition:box-shadow .15s,transform .15s}',
+    '.dc-card *{scrollbar-width:none}',
+    '.dc-card *::-webkit-scrollbar{display:none}',
+    '.dc-labelrow{display:flex;align-items:center;gap:4px;height:24px}',
+    '.dc-grip{cursor:grab;display:flex;align-items:center;padding:5px 4px;border-radius:4px;transition:background .12s}',
+    '.dc-grip:hover{background:rgba(0,0,0,.08)}',
+    '.dc-grip:active{cursor:grabbing}',
+    '.dc-labeltext{cursor:pointer;border-radius:4px;padding:3px 6px;display:flex;align-items:center;transition:background .12s}',
+    '.dc-labeltext:hover{background:rgba(0,0,0,.05)}',
+    '.dc-expand{position:absolute;bottom:100%;right:0;margin-bottom:5px;z-index:2;opacity:0;transition:opacity .12s,background .12s;width:22px;height:22px;border-radius:5px;border:none;cursor:pointer;padding:0;background:transparent;color:rgba(60,50,40,.7);display:flex;align-items:center;justify-content:center}',
+    '.dc-expand:hover{background:rgba(0,0,0,.06);color:#2a251f}',
+    '[data-dc-slot]:hover .dc-expand{opacity:1}',
+  ].join('\n');
+  document.head.appendChild(s);
+}
+
+const DCCtx = React.createContext(null);
+
+function DesignCanvas({ children, minScale, maxScale, style }) {
+  const [state, setState] = React.useState({ sections: {}, focus: null });
+  const [ready, setReady] = React.useState(true);
+  const api = React.useMemo(() => ({
+    state,
+    section: (id) => state.sections[id] || {},
+    patchSection: (id, p) => setState((s) => ({
+      ...s,
+      sections: { ...s.sections, [id]: { ...s.sections[id], ...(typeof p === 'function' ? p(s.sections[id] || {}) : p) } },
+    })),
+    setFocus: (slotId) => setState((s) => ({ ...s, focus: slotId })),
+  }), [state]);
+
+  const registry = {};
+  const sectionMeta = {};
+  const sectionOrder = [];
+  React.Children.forEach(children, (sec) => {
+    if (!sec || sec.type !== DCSection) return;
+    const sid = sec.props.id ?? sec.props.title;
+    if (!sid) return;
+    sectionOrder.push(sid);
+    const persisted = state.sections[sid] || {};
+    const srcIds = [];
+    React.Children.forEach(sec.props.children, (ab) => {
+      if (!ab || ab.type !== DCArtboard) return;
+      const aid = ab.props.id ?? ab.props.label;
+      if (!aid) return;
+      registry[`${sid}/${aid}`] = { sectionId: sid, artboard: ab };
+      srcIds.push(aid);
+    });
+    const kept = (persisted.order || []).filter((k) => srcIds.includes(k));
+    sectionMeta[sid] = {
+      title: persisted.title ?? sec.props.title,
+      subtitle: sec.props.subtitle,
+      slotIds: [...kept, ...srcIds.filter((k) => !kept.includes(k))],
+    };
+  });
+
+  React.useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') api.setFocus(null); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [api]);
+
+  return (
+    <DCCtx.Provider value={api}>
+      <DCViewport minScale={minScale} maxScale={maxScale} style={style}>{ready && children}</DCViewport>
+      {state.focus && registry[state.focus] && (
+        <DCFocusOverlay entry={registry[state.focus]} sectionMeta={sectionMeta} sectionOrder={sectionOrder} />
+      )}
+    </DCCtx.Provider>
+  );
+}
+
+function DCViewport({ children, minScale = 0.1, maxScale = 8, style = {} }) {
+  const vpRef = React.useRef(null);
+  const worldRef = React.useRef(null);
+  const tf = React.useRef({ x: 0, y: 0, scale: 1 });
+
+  const apply = React.useCallback(() => {
+    const { x, y, scale } = tf.current;
+    const el = worldRef.current;
+    if (el) el.style.transform = `translate3d(${x}px,${y}px,0) scale(${scale})`;
+  }, []);
+
+  React.useEffect(() => {
+    const vp = vpRef.current;
+    if (!vp) return;
+    const zoomAt = (cx, cy, factor) => {
+      const r = vp.getBoundingClientRect();
+      const px = cx - r.left, py = cy - r.top;
+      const t = tf.current;
+      const next = Math.min(maxScale, Math.max(minScale, t.scale * factor));
+      const k = next / t.scale;
+      t.x = px - (px - t.x) * k;
+      t.y = py - (py - t.y) * k;
+      t.scale = next;
+      apply();
+    };
+    const isMouseWheel = (e) => e.deltaMode !== 0 || (e.deltaX === 0 && Number.isInteger(e.deltaY) && Math.abs(e.deltaY) >= 40);
+    let isGesturing = false;
+    const onWheel = (e) => {
+      e.preventDefault();
+      if (isGesturing) return;
+      if (e.ctrlKey) { zoomAt(e.clientX, e.clientY, Math.exp(-e.deltaY * 0.01)); }
+      else if (isMouseWheel(e)) { zoomAt(e.clientX, e.clientY, Math.exp(-Math.sign(e.deltaY) * 0.18)); }
+      else { tf.current.x -= e.deltaX; tf.current.y -= e.deltaY; apply(); }
+    };
+    let gsBase = 1;
+    const onGestureStart = (e) => { e.preventDefault(); isGesturing = true; gsBase = tf.current.scale; };
+    const onGestureChange = (e) => { e.preventDefault(); zoomAt(e.clientX, e.clientY, (gsBase * e.scale) / tf.current.scale); };
+    const onGestureEnd = (e) => { e.preventDefault(); isGesturing = false; };
+    let drag = null;
+    const onPointerDown = (e) => {
+      const onBg = !e.target.closest('[data-dc-slot], .dc-editable');
+      if (!(e.button === 1 || (e.button === 0 && onBg))) return;
+      e.preventDefault();
+      vp.setPointerCapture(e.pointerId);
+      drag = { id: e.pointerId, lx: e.clientX, ly: e.clientY };
+      vp.style.cursor = 'grabbing';
+    };
+    const onPointerMove = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      tf.current.x += e.clientX - drag.lx;
+      tf.current.y += e.clientY - drag.ly;
+      drag.lx = e.clientX; drag.ly = e.clientY;
+      apply();
+    };
+    const onPointerUp = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      vp.releasePointerCapture(e.pointerId);
+      drag = null; vp.style.cursor = '';
+    };
+    vp.addEventListener('wheel', onWheel, { passive: false });
+    vp.addEventListener('gesturestart', onGestureStart, { passive: false });
+    vp.addEventListener('gesturechange', onGestureChange, { passive: false });
+    vp.addEventListener('gestureend', onGestureEnd, { passive: false });
+    vp.addEventListener('pointerdown', onPointerDown);
+    vp.addEventListener('pointermove', onPointerMove);
+    vp.addEventListener('pointerup', onPointerUp);
+    vp.addEventListener('pointercancel', onPointerUp);
+    return () => {
+      vp.removeEventListener('wheel', onWheel);
+      vp.removeEventListener('gesturestart', onGestureStart);
+      vp.removeEventListener('gesturechange', onGestureChange);
+      vp.removeEventListener('gestureend', onGestureEnd);
+      vp.removeEventListener('pointerdown', onPointerDown);
+      vp.removeEventListener('pointermove', onPointerMove);
+      vp.removeEventListener('pointerup', onPointerUp);
+      vp.removeEventListener('pointercancel', onPointerUp);
+    };
+  }, [apply, minScale, maxScale]);
+
+  const gridSvg = `url("data:image/svg+xml,%3Csvg width='120' height='120' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M120 0H0v120' fill='none' stroke='${encodeURIComponent(DC.grid)}' stroke-width='1'/%3E%3C/svg%3E")`;
+  return (
+    <div ref={vpRef} className="design-canvas" style={{ height:'100vh',width:'100vw',background:DC.bg,overflow:'hidden',overscrollBehavior:'none',touchAction:'none',position:'relative',fontFamily:DC.font,boxSizing:'border-box',...style }}>
+      <div ref={worldRef} style={{ position:'absolute',top:0,left:0,transformOrigin:'0 0',willChange:'transform',width:'max-content',minWidth:'100%',minHeight:'100%',padding:'60px 0 80px' }}>
+        <div style={{ position:'absolute',inset:-6000,backgroundImage:gridSvg,backgroundSize:'120px 120px',pointerEvents:'none',zIndex:-1 }} />
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function DCSection({ id, title, subtitle, children, gap = 48 }) {
+  const ctx = React.useContext(DCCtx);
+  const sid = id ?? title;
+  const all = React.Children.toArray(children);
+  const artboards = all.filter((c) => c && c.type === DCArtboard);
+  const rest = all.filter((c) => !(c && c.type === DCArtboard));
+  const srcOrder = artboards.map((a) => a.props.id ?? a.props.label);
+  const sec = (ctx && sid && ctx.section(sid)) || {};
+  const order = React.useMemo(() => {
+    const kept = (sec.order || []).filter((k) => srcOrder.includes(k));
+    return [...kept, ...srcOrder.filter((k) => !kept.includes(k))];
+  }, [sec.order, srcOrder.join('|')]);
+  const byId = Object.fromEntries(artboards.map((a) => [a.props.id ?? a.props.label, a]));
+  return (
+    <div data-dc-section={sid} style={{ marginBottom:80,position:'relative' }}>
+      <div style={{ padding:'0 60px 56px' }}>
+        <div style={{ fontSize:28,fontWeight:600,color:DC.title,letterSpacing:-0.4,marginBottom:6,display:'inline-block' }}>{sec.title ?? title}</div>
+        {subtitle && <div style={{ fontSize:16,color:DC.subtitle }}>{subtitle}</div>}
+      </div>
+      <div style={{ display:'flex',gap,padding:'0 60px',alignItems:'flex-start',width:'max-content' }}>
+        {order.map((k) => (
+          <DCArtboardFrame key={k} sectionId={sid} artboard={byId[k]} order={order}
+            label={(sec.labels || {})[k] ?? byId[k].props.label}
+            onRename={(v) => ctx && ctx.patchSection(sid, (x) => ({ labels: { ...x.labels, [k]: v } }))}
+            onReorder={(next) => ctx && ctx.patchSection(sid, { order: next })}
+            onFocus={() => ctx && ctx.setFocus(`${sid}/${k}`)} />
+        ))}
+      </div>
+      {rest}
+    </div>
+  );
+}
+
+function DCArtboard() { return null; }
+
+function DCArtboardFrame({ sectionId, artboard, label, order, onRename, onReorder, onFocus }) {
+  const { id: rawId, label: rawLabel, width = 260, height = 480, children, style = {} } = artboard.props;
+  const id = rawId ?? rawLabel;
+  const ref = React.useRef(null);
+  return (
+    <div ref={ref} data-dc-slot={id} style={{ position:'relative',flexShrink:0 }}>
+      <div className="dc-labelrow" style={{ position:'absolute',bottom:'100%',left:-4,marginBottom:4,color:DC.label }}>
+        <div className="dc-grip" title="Drag to reorder">
+          <svg width="9" height="13" viewBox="0 0 9 13" fill="currentColor"><circle cx="2" cy="2" r="1.1"/><circle cx="7" cy="2" r="1.1"/><circle cx="2" cy="6.5" r="1.1"/><circle cx="7" cy="6.5" r="1.1"/><circle cx="2" cy="11" r="1.1"/><circle cx="7" cy="11" r="1.1"/></svg>
+        </div>
+        <div className="dc-labeltext" onClick={onFocus} title="Click to focus">
+          <span className="dc-editable" style={{ fontSize:15,fontWeight:500,color:DC.label,lineHeight:1 }}>{label}</span>
+        </div>
+      </div>
+      <button className="dc-expand" onClick={onFocus} title="Focus">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M7 1h4v4M5 11H1V7M11 1L7.5 4.5M1 11l3.5-3.5"/></svg>
+      </button>
+      <div className="dc-card" style={{ borderRadius:2,boxShadow:'0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06)',overflow:'hidden',width,height,background:'#fff',...style }}>
+        {children || <div style={{ height:'100%',display:'flex',alignItems:'center',justifyContent:'center',color:'#bbb',fontSize:13 }}>{id}</div>}
+      </div>
+    </div>
+  );
+}
+
+function DCFocusOverlay({ entry, sectionMeta, sectionOrder }) {
+  const ctx = React.useContext(DCCtx);
+  const { sectionId, artboard } = entry;
+  const sec = ctx.section(sectionId);
+  const meta = sectionMeta[sectionId];
+  const peers = meta.slotIds;
+  const aid = artboard.props.id ?? artboard.props.label;
+  const idx = peers.indexOf(aid);
+  const secIdx = sectionOrder.indexOf(sectionId);
+  const go = (d) => { const n = peers[(idx + d + peers.length) % peers.length]; if (n) ctx.setFocus(`${sectionId}/${n}`); };
+  React.useEffect(() => {
+    const k = (e) => {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+    };
+    document.addEventListener('keydown', k);
+    return () => document.removeEventListener('keydown', k);
+  });
+  const { width = 260, height = 480, children } = artboard.props;
+  const [vp, setVp] = React.useState({ w: window.innerWidth, h: window.innerHeight });
+  React.useEffect(() => { const r = () => setVp({ w: window.innerWidth, h: window.innerHeight }); window.addEventListener('resize', r); return () => window.removeEventListener('resize', r); }, []);
+  const scale = Math.max(0.1, Math.min((vp.w - 200) / width, (vp.h - 260) / height, 2));
+  return ReactDOM.createPortal(
+    <div onClick={() => ctx.setFocus(null)} style={{ position:'fixed',inset:0,zIndex:100,background:'rgba(24,20,16,.6)',backdropFilter:'blur(14px)',fontFamily:DC.font,color:'#fff' }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ position:'absolute',top:0,right:0,padding:16 }}>
+        <button onClick={() => ctx.setFocus(null)} style={{ border:'none',background:'transparent',color:'rgba(255,255,255,.7)',width:32,height:32,borderRadius:16,fontSize:20,cursor:'pointer' }}>×</button>
+      </div>
+      <div style={{ position:'absolute',top:64,bottom:56,left:100,right:100,display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',gap:16 }}>
+        <div onClick={(e) => e.stopPropagation()} style={{ width:width*scale,height:height*scale,position:'relative' }}>
+          <div style={{ width,height,transform:`scale(${scale})`,transformOrigin:'top left',background:'#fff',borderRadius:2,overflow:'hidden',boxShadow:'0 20px 80px rgba(0,0,0,.4)' }}>
+            {children}
+          </div>
+        </div>
+        <div onClick={(e) => e.stopPropagation()} style={{ fontSize:14,fontWeight:500,opacity:.85,textAlign:'center' }}>
+          {(sec.labels || {})[aid] ?? artboard.props.label}
+          <span style={{ opacity:.5,marginLeft:10 }}>{idx+1} / {peers.length}</span>
+        </div>
+      </div>
+      <button onClick={(e) => { e.stopPropagation(); go(-1); }} style={{ position:'absolute',top:'50%',left:28,transform:'translateY(-50%)',border:'none',background:'rgba(255,255,255,.08)',color:'rgba(255,255,255,.9)',width:44,height:44,borderRadius:22,fontSize:18,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center' }}>‹</button>
+      <button onClick={(e) => { e.stopPropagation(); go(1); }} style={{ position:'absolute',top:'50%',right:28,transform:'translateY(-50%)',border:'none',background:'rgba(255,255,255,.08)',color:'rgba(255,255,255,.9)',width:44,height:44,borderRadius:22,fontSize:18,cursor:'pointer',display:'flex',alignItems:'center',justifyContent:'center' }}>›</button>
+      <div onClick={(e) => e.stopPropagation()} style={{ position:'absolute',bottom:20,left:'50%',transform:'translateX(-50%)',display:'flex',gap:8 }}>
+        {peers.map((p, i) => (
+          <button key={p} onClick={() => ctx.setFocus(`${sectionId}/${p}`)} style={{ border:'none',padding:0,cursor:'pointer',width:6,height:6,borderRadius:3,background:i===idx?'#fff':'rgba(255,255,255,.3)' }} />
+        ))}
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+function DCPostIt({ children, top, left, right, bottom, rotate = -2, width = 180 }) {
+  return (
+    <div style={{ position:'absolute',top,left,right,bottom,width,background:DC.postitBg,padding:'14px 16px',fontFamily:'"Comic Sans MS","Marker Felt",cursive',fontSize:14,lineHeight:1.4,color:DC.postitText,boxShadow:'0 2px 8px rgba(0,0,0,.12)',transform:`rotate(${rotate}deg)`,zIndex:5 }}>{children}</div>
+  );
+}
+
+Object.assign(window, { DesignCanvas, DCSection, DCArtboard, DCPostIt });
+</script>
+
+<script type="text/babel">
+// ── tweaks-panel.jsx ───────────────────────────────────────────
+const __TWEAKS_STYLE = `
+  .twk-panel{position:fixed;right:16px;bottom:16px;z-index:2147483646;width:280px;max-height:calc(100vh - 32px);display:flex;flex-direction:column;background:rgba(250,249,247,.9);color:#29261b;-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);border:.5px solid rgba(255,255,255,.6);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.18);font:11.5px/1.4 system-ui,sans-serif;overflow:hidden}
+  .twk-hd{display:flex;align-items:center;justify-content:space-between;padding:10px 8px 10px 14px;cursor:move;user-select:none}
+  .twk-hd b{font-size:12px;font-weight:600}
+  .twk-x{appearance:none;border:0;background:transparent;color:rgba(41,38,27,.55);width:22px;height:22px;border-radius:6px;cursor:default;font-size:13px;line-height:1}
+  .twk-x:hover{background:rgba(0,0,0,.06);color:#29261b}
+  .twk-body{padding:2px 14px 14px;display:flex;flex-direction:column;gap:10px;overflow-y:auto;min-height:0}
+  .twk-row{display:flex;flex-direction:column;gap:5px}
+  .twk-row-h{flex-direction:row;align-items:center;justify-content:space-between;gap:10px}
+  .twk-lbl{display:flex;justify-content:space-between;align-items:baseline;color:rgba(41,38,27,.72)}
+  .twk-lbl>span:first-child{font-weight:500}
+  .twk-sect{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:rgba(41,38,27,.45);padding:10px 0 0}
+  .twk-field{appearance:none;width:100%;height:26px;padding:0 8px;border:.5px solid rgba(0,0,0,.1);border-radius:7px;background:rgba(255,255,255,.6);color:inherit;font:inherit;outline:none}
+  .twk-field:focus{border-color:rgba(0,0,0,.25)}
+  select.twk-field{padding-right:22px}
+  .twk-toggle{position:relative;width:32px;height:18px;border:0;border-radius:999px;background:rgba(0,0,0,.15);transition:background .15s;cursor:default;padding:0}
+  .twk-toggle[data-on="1"]{background:#34c759}
+  .twk-toggle i{position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:transform .15s}
+  .twk-toggle[data-on="1"] i{transform:translateX(14px)}
+`;
+
+function useTweaks(defaults) {
+  const [values, setValues] = React.useState(defaults);
+  const setTweak = React.useCallback((keyOrEdits, val) => {
+    const edits = typeof keyOrEdits === 'object' && keyOrEdits !== null ? keyOrEdits : { [keyOrEdits]: val };
+    setValues((prev) => ({ ...prev, ...edits }));
+  }, []);
+  return [values, setTweak];
+}
+
+function TweaksPanel({ title = 'Tweaks', children }) {
+  const [open, setOpen] = React.useState(true);
+  if (!open) return <button onClick={() => setOpen(true)} style={{ position:'fixed',right:16,bottom:16,zIndex:2147483646,border:'1.5px solid #2b2b2b',borderRadius:8,background:'white',padding:'8px 14px',cursor:'pointer',fontWeight:600,fontSize:12,boxShadow:'2px 2px 0 #2b2b2b' }}>⚙️ Tweaks</button>;
+  return (
+    <>
+      <style>{__TWEAKS_STYLE}</style>
+      <div className="twk-panel">
+        <div className="twk-hd">
+          <b>{title}</b>
+          <button className="twk-x" onClick={() => setOpen(false)}>✕</button>
+        </div>
+        <div className="twk-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
+function TweakSection({ label, title, children }) {
+  return <><div className="twk-sect">{label || title}</div>{children}</>;
+}
+
+function TweakRow({ label, value, children, inline = false }) {
+  return (
+    <div className={inline ? 'twk-row twk-row-h' : 'twk-row'}>
+      <div className="twk-lbl"><span>{label}</span>{value != null && <span style={{ opacity:.5 }}>{value}</span>}</div>
+      {children}
+    </div>
+  );
+}
+
+function TweakSelect({ label, value, options, onChange }) {
+  return (
+    <TweakRow label={label}>
+      <select className="twk-field" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((o) => {
+          const v = typeof o === 'object' ? o.value : o;
+          const l = typeof o === 'object' ? o.label : o;
+          return <option key={v} value={v}>{l}</option>;
+        })}
+      </select>
+    </TweakRow>
+  );
+}
+
+function TweakToggle({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <button type="button" className="twk-toggle" data-on={value ? '1' : '0'} onClick={() => onChange(!value)}><i /></button>
+    </div>
+  );
+}
+
+function TweakSlider({ label, value, min = 0, max = 100, step = 1, unit = '', onChange }) {
+  return (
+    <TweakRow label={label} value={`${value}${unit}`}>
+      <input type="range" style={{ width:'100%' }} min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
+    </TweakRow>
+  );
+}
+
+function TweakColor({ label, value, onChange }) {
+  return (
+    <div className="twk-row twk-row-h">
+      <div className="twk-lbl"><span>{label}</span></div>
+      <input type="color" value={value} onChange={(e) => onChange(e.target.value)} style={{ width:40,height:22,border:'none',cursor:'pointer' }} />
+    </div>
+  );
+}
+
+function TweakButton({ label, onClick, secondary = false }) {
+  return <button type="button" style={{ height:26,padding:'0 12px',border:0,borderRadius:7,background:secondary?'rgba(0,0,0,.06)':'rgba(0,0,0,.78)',color:secondary?'inherit':'#fff',font:'inherit',fontWeight:500,cursor:'pointer' }} onClick={onClick}>{label}</button>;
+}
+
+Object.assign(window, { useTweaks, TweaksPanel, TweakSection, TweakRow, TweakSelect, TweakToggle, TweakSlider, TweakColor, TweakButton });
+</script>
+
+<script type="text/babel">
+// ── dm-primitives.jsx ──────────────────────────────────────────
+const { useState, useEffect, useMemo, useRef } = React;
+
+const CITIES = {
+  geneve:    { name: 'Genève',            canton: 'GE', tva: '8.1%', spec: 'finance internationale' },
+  lausanne:  { name: 'Lausanne',          canton: 'VD', tva: '8.1%', spec: 'PME & startups' },
+  montreux:  { name: 'Montreux-Riviera',  canton: 'VD', tva: '8.1%', spec: 'tourisme & hôtellerie' },
+  yverdon:   { name: 'Yverdon-les-Bains', canton: 'VD', tva: '8.1%', spec: 'industrie & artisanat' },
+  neuchatel: { name: 'Neuchâtel',         canton: 'NE', tva: '8.1%', spec: 'horlogerie & micro-tech' },
+  nyon:      { name: 'Nyon',              canton: 'VD', tva: '8.1%', spec: 'multinationales & sièges' },
+  bienne:    { name: 'Bienne',            canton: 'BE', tva: '8.1%', spec: 'bilingue DE/FR' },
+  sion:      { name: 'Sion (Valais)',     canton: 'VS', tva: '8.1%', spec: 'tourisme & vignerons' },
+};
+
+const METIERS_BY_CITY = {
+  geneve:    ['Avocats', 'Conseil & finance', 'E-commerce'],
+  lausanne:  ['Startups tech', 'Consultants IT', 'Architectes'],
+  montreux:  ['Restaurants', 'Hôtels', 'Salons & esthétique'],
+  yverdon:   ['Artisans', 'Construction', 'PME industrie'],
+  neuchatel: ['Horlogerie', "Bureaux d'études", 'Cabinets médicaux'],
+  nyon:      ['Sièges sociaux', 'Conseil', 'Immobilier'],
+  bienne:    ['Industrie', 'Médecins', 'Garages'],
+  sion:      ['Vignerons', 'Restaurants', 'Construction'],
+};
+
+const TEAM_PHOTO = 'https://cdn.prod.website-files.com/68c005c9c1663ab4e1b4ea1b/69689c36b792f12c948acd54_WhatsApp%20Image%202026-01-15%20at%2008.38.46.jpeg';
+
+function SkBox({ children, style, dashed, soft, hand }) {
+  const cls = ['sk-box', dashed && 'dashed', soft && 'soft', hand && 'hand'].filter(Boolean).join(' ');
+  return <div className={cls} style={style}>{children}</div>;
+}
+
+function SkBtn({ children, ghost, sm, full, style, onClick }) {
+  const cls = ['sk-btn', ghost && 'ghost', sm && 'sm'].filter(Boolean).join(' ');
+  const s = { ...(full ? { width: '100%', justifyContent: 'center' } : {}), ...style };
+  return <button className={cls} style={s} onClick={onClick}>{children}</button>;
+}
+
+function SkImg({ label, w, h, style }) {
+  return <div className="sk-img" style={{ width: w || '100%', height: h || 120, ...style }}>{label || 'image'}</div>;
+}
+
+function Portrait({ src, name, role, w, h, round, style, ring }) {
+  return (
+    <div style={{ position:'relative',width:w||'100%',height:h||180,borderRadius:round?'50%':8,overflow:'hidden',border:ring?'3px solid white':'1px solid #ddd',boxShadow:ring?'0 4px 12px rgba(0,0,0,0.12)':'none',...style }}>
+      <img src={src||TEAM_PHOTO} alt={name||'Portrait'} style={{ width:'100%',height:'100%',objectFit:'cover' }} />
+      {(name||role)&&!round&&(
+        <div style={{ position:'absolute',bottom:0,left:0,right:0,padding:'8px 10px',background:'linear-gradient(0deg,rgba(0,0,0,0.7),transparent)',color:'white' }}>
+          {name&&<div style={{ fontSize:12,fontWeight:700 }}>{name}</div>}
+          {role&&<div style={{ fontSize:10,opacity:0.85 }}>{role}</div>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PortraitStack({ count = 4, size = 36 }) {
+  const initials = ['JD','ML','SR','TB','AC'];
+  return (
+    <div style={{ display:'flex' }}>
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} style={{ width:size,height:size,borderRadius:'50%',overflow:'hidden',border:'2px solid white',marginLeft:i>0?-size*0.3:0,position:'relative',background:['#D7E6FF','#FFE45C','#FCE0E0','#DAF1E2','#E8E8E8'][i%5],display:'flex',alignItems:'center',justifyContent:'center',fontSize:size*0.32,fontWeight:700,color:'#1B4FA8',flexShrink:0 }}>
+          {i===0?<img src={TEAM_PHOTO} style={{ width:'100%',height:'100%',objectFit:'cover' }} />:initials[i]}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SkPill({ children, color, style }) {
+  return <span className="sk-pill" style={{ background:color||'white',...style }}>{children}</span>;
+}
+
+function SkCheck({ children, x }) {
+  return (
+    <div style={{ display:'flex',gap:8,alignItems:'flex-start',fontSize:12,color:'#333',marginBottom:6 }}>
+      <span style={{ display:'inline-flex',width:16,height:16,borderRadius:4,background:x?'#FCE0E0':'#DAF1E2',color:x?'#C03030':'#1F8A4C',alignItems:'center',justifyContent:'center',fontSize:11,fontWeight:700,flexShrink:0,marginTop:1 }}>{x?'✕':'✓'}</span>
+      <span>{children}</span>
+    </div>
+  );
+}
+
+function SectionLabel({ n, name, style }) {
+  return (
+    <div style={{ display:'flex',alignItems:'center',gap:8,fontFamily:'JetBrains Mono',fontSize:10,color:'#888',textTransform:'uppercase',letterSpacing:'0.05em',marginBottom:12,...style }}>
+      <span style={{ background:'#222',color:'white',padding:'2px 6px',borderRadius:3,fontSize:9 }}>{String(n).padStart(2,'0')}</span>
+      <span>{name}</span>
+      <span style={{ flex:1,height:1,background:'#ddd' }} />
+    </div>
+  );
+}
+
+function Annot({ children, style }) {
+  return <div className="sk-annot" style={style}>{children}</div>;
+}
+
+function FakeNav({ city }) {
+  return (
+    <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'14px 24px',borderBottom:'1px solid #eee',background:'white',position:'sticky',top:0,zIndex:5 }}>
+      <div style={{ display:'flex',alignItems:'center',gap:24 }}>
+        <div className="dm-logo">Desk<span className="dot">M</span>achine</div>
+        <div style={{ display:'flex',gap:16,fontSize:11,color:'#555' }}>
+          <span>Services</span><span>Tarifs</span><span>Pourquoi nous</span><span>Contact</span>
+        </div>
+      </div>
+      <div style={{ display:'flex',gap:8 }}>
+        <span className="sk-pill" style={{ fontSize:10 }}>📍 {city?.name||'Suisse romande'}</span>
+        <SkBtn sm>Demander un RDV →</SkBtn>
+      </div>
+    </div>
+  );
+}
+
+function MobileNav({ city }) {
+  return (
+    <div style={{ display:'flex',alignItems:'center',justifyContent:'space-between',padding:'10px 14px',borderBottom:'1px solid #eee',background:'white',position:'sticky',top:0,zIndex:5 }}>
+      <div className="dm-logo" style={{ fontSize:14 }}>Desk<span className="dot">M</span>achine</div>
+      <div style={{ fontSize:18,lineHeight:1 }}>≡</div>
+    </div>
+  );
+}
+
+function SwipeChrome({ active = 0, total = 8 }) {
+  return (
+    <div style={{ position:'absolute',right:14,top:'50%',transform:'translateY(-50%)',display:'flex',flexDirection:'column',gap:6,zIndex:8 }}>
+      {Array.from({ length: total }).map((_, i) => (
+        <div key={i} style={{ width:4,height:i===active?22:8,background:i===active?'#2C6BD2':'#ccc',borderRadius:2 }} />
+      ))}
+    </div>
+  );
+}
+
+function StickyCTA({ city, label = 'Simuler mes économies' }) {
+  return (
+    <div style={{ position:'sticky',bottom:0,left:0,right:0,padding:'10px 14px',background:'rgba(255,255,255,0.95)',backdropFilter:'blur(8px)',borderTop:'1px solid #eee',display:'flex',gap:8,zIndex:9 }}>
+      <SkBtn full style={{ flex:1 }}>{label} →</SkBtn>
+      <SkBtn ghost sm style={{ width:44,justifyContent:'center',padding:0 }}>💬</SkBtn>
+    </div>
+  );
+}
+
+function Footer({ city }) {
+  return (
+    <div style={{ padding:'24px',background:'#1a1a1a',color:'#bbb',fontSize:11 }}>
+      <div className="dm-logo" style={{ color:'white',marginBottom:12 }}>Desk<span style={{ color:'#7AA8F0' }}>M</span>achine</div>
+      <div style={{ display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:12,marginBottom:12 }}>
+        <div>Services<br/>Tarifs<br/>FAQ</div>
+        <div>+41 21 552 05 26<br/>contact@deskmachine.ch</div>
+        <div>Yverdon-les-Bains<br/>{city?.name&&`Antenne ${city.name}`}</div>
+      </div>
+      <div style={{ borderTop:'1px solid #333',paddingTop:8,fontSize:9,color:'#666' }}>© 2025 DeskMachine Sàrl · CHE-300.783.289</div>
+    </div>
+  );
+}
+
+Object.assign(window, { CITIES, METIERS_BY_CITY, TEAM_PHOTO, Portrait, PortraitStack, SkBox, SkBtn, SkImg, SkPill, SkCheck, SectionLabel, Annot, FakeNav, MobileNav, SwipeChrome, StickyCTA, Footer });
+</script>
+
+<script type="text/babel">
+// ── dm-components.jsx ─────────────────────────────────────────
+const { useState: useStateC } = React;
+
+function CalculateurEconomies({ compact }) {
+  const [chf, setChf] = useStateC(450);
+  const dm = Math.max(149, Math.round(chf * 0.55 / 10) * 10);
+  const economie = chf - dm;
+  const economieAn = economie * 12;
+  return (
+    <div style={{ border:'1.5px solid #2b2b2b',borderRadius:10,padding:18,background:'#FBFAF6',boxShadow:'4px 4px 0 #2b2b2b' }}>
+      <div style={{ display:'flex',alignItems:'center',gap:8,marginBottom:12 }}>
+        <span className="sk-pill" style={{ background:'#FFE45C' }}>🧮 Calculateur</span>
+        <span style={{ fontSize:12,color:'#666' }}>Estimez vos économies en 10s</span>
+      </div>
+      <div style={{ fontSize:13,color:'#333',marginBottom:8 }}>Combien payez-vous votre fiduciaire actuelle / mois ?</div>
+      <input type="range" min={150} max={1500} step={50} value={chf} onChange={(e) => setChf(+e.target.value)} style={{ width:'100%',accentColor:'#2C6BD2' }} />
+      <div style={{ display:'flex',justifyContent:'space-between',fontFamily:'JetBrains Mono',fontSize:11,color:'#888',marginTop:4 }}>
+        <span>150 CHF</span>
+        <span style={{ fontWeight:700,color:'#2C6BD2',fontSize:14 }}>CHF {chf}.-</span>
+        <span>1500+ CHF</span>
+      </div>
+      <div style={{ display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,marginTop:14 }}>
+        <div style={{ border:'1px solid #ddd',borderRadius:6,padding:10,background:'white' }}>
+          <div style={{ fontSize:10,color:'#888',textTransform:'uppercase' }}>Aujourd'hui</div>
+          <div style={{ fontSize:22,fontWeight:800,textDecoration:'line-through',color:'#999' }}>CHF {chf}.-</div>
+          <div style={{ fontSize:10,color:'#888' }}>par mois</div>
+        </div>
+        <div style={{ border:'1.5px solid #2C6BD2',borderRadius:6,padding:10,background:'#D7E6FF' }}>
+          <div style={{ fontSize:10,color:'#1B4FA8',textTransform:'uppercase',fontWeight:600 }}>Avec DeskMachine</div>
+          <div style={{ fontSize:22,fontWeight:800,color:'#1B4FA8' }}>CHF {dm}.-</div>
+          <div style={{ fontSize:10,color:'#1B4FA8' }}>par mois</div>
+        </div>
+      </div>
+      <div style={{ marginTop:12,padding:10,background:'#1a1a1a',color:'white',borderRadius:6,textAlign:'center' }}>
+        <div style={{ fontSize:10,opacity:0.7,textTransform:'uppercase',letterSpacing:'0.05em' }}>Vous économisez</div>
+        <div style={{ fontSize:24,fontWeight:800,color:'#FFE45C' }}>CHF {economieAn.toLocaleString('fr-CH')}.- / an</div>
+      </div>
+      {!compact && <SkBtn full style={{ marginTop:12 }}>Recevoir mon offre exacte →</SkBtn>}
+    </div>
+  );
+}
+
+function ComparateurTarifaire() {
+  const rows = [
+    { name:'DeskMachine',    price:'CHF 149.-', digital:true,       rdv:'24h',     brevet:true,  highlight:true },
+    { name:'Fiduciaire A',   price:'CHF 380.-', digital:false,      rdv:'1-2 sem', brevet:true,  highlight:false },
+    { name:'Fiduciaire B',   price:'CHF 450.-', digital:'partiel',  rdv:'1 sem',   brevet:true,  highlight:false },
+    { name:'Comptable indé.',price:'CHF 320.-', digital:false,      rdv:'variable',brevet:false, highlight:false },
+  ];
+  return (
+    <div style={{ border:'1.5px solid #2b2b2b',borderRadius:10,overflow:'hidden',background:'white' }}>
+      <div style={{ background:'#1a1a1a',color:'white',padding:'10px 14px',display:'flex',justifyContent:'space-between',alignItems:'center' }}>
+        <span style={{ fontWeight:700,fontSize:13 }}>Comparatif tarifaire — PME 5 employés</span>
+        <span style={{ fontSize:10,color:'#999' }}>maj. 04/2026</span>
+      </div>
+      <table style={{ width:'100%',borderCollapse:'collapse',fontSize:12 }}>
+        <thead>
+          <tr style={{ background:'#f4f4f4',fontSize:10,textTransform:'uppercase',color:'#666' }}>
+            <th style={{ textAlign:'left',padding:8 }}>Prestataire</th>
+            <th style={{ padding:8 }}>Prix/mois</th>
+            <th style={{ padding:8 }}>100% digital</th>
+            <th style={{ padding:8 }}>Réponse</th>
+            <th style={{ padding:8 }}>Brevet féd.</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r,i) => (
+            <tr key={i} style={{ background:r.highlight?'#D7E6FF':'white',borderTop:'1px solid #eee',fontWeight:r.highlight?700:400 }}>
+              <td style={{ padding:8 }}>{r.highlight&&'⭐ '}{r.name}</td>
+              <td style={{ padding:8,textAlign:'center',color:r.highlight?'#1B4FA8':'#333' }}>{r.price}</td>
+              <td style={{ padding:8,textAlign:'center' }}>{r.digital===true?'✅':r.digital==='partiel'?'🟡':'❌'}</td>
+              <td style={{ padding:8,textAlign:'center' }}>{r.rdv}</td>
+              <td style={{ padding:8,textAlign:'center' }}>{r.brevet?'✅':'❌'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div style={{ padding:'8px 14px',fontSize:10,color:'#888',background:'#fafafa',borderTop:'1px solid #eee' }}>
+        Tarifs moyens constatés en Suisse romande, configuration équivalente.
+      </div>
+    </div>
+  );
+}
+
+function PriseRDV({ city }) {
+  const slots = ['09:00','10:30','14:00','15:30','17:00'];
+  const days = ['Lun 28','Mar 29','Mer 30','Jeu 01','Ven 02'];
+  const [selected, setSelected] = useStateC({ d:1,s:1 });
+  return (
+    <div style={{ border:'1.5px solid #2b2b2b',borderRadius:10,background:'white',overflow:'hidden' }}>
+      <div style={{ padding:14,background:'#1a1a1a',color:'white' }}>
+        <div style={{ display:'flex',alignItems:'center',gap:10,marginBottom:4 }}>
+          <div style={{ width:36,height:36,borderRadius:'50%',overflow:'hidden',flexShrink:0,border:'2px solid #FFE45C' }}>
+            <img src={TEAM_PHOTO} style={{ width:'100%',height:'100%',objectFit:'cover' }} />
+          </div>
+          <div>
+            <div style={{ fontSize:13,fontWeight:700 }}>RDV avec Julie · votre conseillère</div>
+            <div style={{ fontSize:10,color:'#aaa' }}>30 min · Visio ou téléphone · {city?.name}</div>
+          </div>
+        </div>
+      </div>
+      <div style={{ padding:14 }}>
+        <div style={{ fontSize:11,color:'#666',marginBottom:8,fontFamily:'JetBrains Mono',textTransform:'uppercase' }}>Avril 2026</div>
+        <div style={{ display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:6,marginBottom:12 }}>
+          {days.map((d,i) => (
+            <button key={i} onClick={() => setSelected(s => ({ ...s,d:i }))} style={{ padding:'8px 4px',border:'1px solid '+(selected.d===i?'#2C6BD2':'#ddd'),background:selected.d===i?'#D7E6FF':'white',borderRadius:4,fontSize:10,cursor:'pointer',fontWeight:selected.d===i?700:400 }}>{d}</button>
+          ))}
+        </div>
+        <div style={{ fontSize:11,color:'#666',marginBottom:8,fontFamily:'JetBrains Mono',textTransform:'uppercase' }}>Créneaux disponibles</div>
+        <div style={{ display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:6 }}>
+          {slots.map((s,i) => (
+            <button key={i} onClick={() => setSelected(o => ({ ...o,s:i }))} style={{ padding:'10px 4px',border:'1px solid '+(selected.s===i?'#2C6BD2':'#ddd'),background:selected.s===i?'#2C6BD2':'white',color:selected.s===i?'white':'#333',borderRadius:4,fontSize:11,cursor:'pointer',fontWeight:600 }}>{s}</button>
+          ))}
+        </div>
+        <SkBtn full style={{ marginTop:12 }}>Confirmer le RDV →</SkBtn>
+        <div style={{ marginTop:10,fontSize:10,color:'#888',textAlign:'center' }}>✓ Sans engagement · ✓ Confidentiel · ✓ Conseiller {city?.name}</div>
+      </div>
+    </div>
+  );
+}
+
+function TrustBar({ minimal }) {
+  const items = [
+    { ico:'🛡️',t:'Brevet fédéral' },
+    { ico:'🔒',t:'Données en CH' },
+    { ico:'⭐',t:'4.9/5 (127 avis)' },
+    { ico:'🏆',t:'+100 PME' },
+  ];
+  return (
+    <div style={{ display:'flex',gap:12,flexWrap:'wrap',justifyContent:minimal?'flex-start':'center' }}>
+      {items.map((it,i) => (
+        <div key={i} className="sk-pill" style={{ fontSize:11 }}><span>{it.ico}</span>{it.t}</div>
+      ))}
+    </div>
+  );
+}
+
+function CantonMap({ activeCity }) {
+  return (
+    <div style={{ position:'relative',width:'100%',aspectRatio:'16/10',background:'#F4F4F4',border:'1px dashed #c2c2c2',borderRadius:8,overflow:'hidden' }}>
+      <svg viewBox="0 0 400 250" style={{ width:'100%',height:'100%' }}>
+        <path d="M30 80 Q 80 40 150 60 T 280 70 Q 350 90 370 140 Q 360 200 280 210 Q 180 220 100 200 Q 30 180 30 80 Z" fill="#E6EFFA" stroke="#2C6BD2" strokeWidth="1.5" strokeDasharray="3 3" />
+        {[
+          { id:'geneve',   x:70,  y:180, l:'Genève' },
+          { id:'nyon',     x:95,  y:165, l:'Nyon' },
+          { id:'lausanne', x:130, y:150, l:'Lausanne' },
+          { id:'montreux', x:165, y:165, l:'Montreux' },
+          { id:'yverdon',  x:145, y:110, l:'Yverdon' },
+          { id:'neuchatel',x:175, y:95,  l:'Neuchâtel' },
+          { id:'bienne',   x:215, y:90,  l:'Bienne' },
+          { id:'sion',     x:235, y:175, l:'Sion' },
+        ].map(c => (
+          <g key={c.id}>
+            <circle cx={c.x} cy={c.y} r={c.id===activeCity?8:5} fill={c.id===activeCity?'#2C6BD2':'white'} stroke="#2C6BD2" strokeWidth="1.5" />
+            <text x={c.x+10} y={c.y+4} fontSize="10" fontFamily="Inter" fontWeight={c.id===activeCity?700:400} fill="#1a1a1a">{c.l}</text>
+          </g>
+        ))}
+      </svg>
+      <div style={{ position:'absolute',bottom:8,left:8,fontSize:9,color:'#888',fontFamily:'JetBrains Mono' }}>SUISSE ROMANDE</div>
+    </div>
+  );
+}
+
+function ProofTicker({ city }) {
+  return (
+    <div style={{ display:'flex',alignItems:'center',gap:10,padding:'8px 12px',background:'#1a1a1a',color:'white',borderRadius:6,fontSize:11 }}>
+      <span style={{ width:8,height:8,borderRadius:'50%',background:'#34C26A',boxShadow:'0 0 0 4px rgba(52,194,106,0.2)' }} />
+      <span><b>3 PME à {city?.name}</b> ont demandé une simulation cette semaine</span>
+    </div>
+  );
+}
+
+Object.assign(window, { CalculateurEconomies, ComparateurTarifaire, PriseRDV, TrustBar, CantonMap, ProofTicker });
+</script>
+
+<script type="text/babel">
+// ── dm-direction-1.jsx ─────────────────────────────────────────
+function Direction1({ city, mode }) {
+  const isMobile = mode === 'mobile';
+  const cityKey = Object.keys(CITIES).find(k => CITIES[k] === city);
+  const localMetiers = METIERS_BY_CITY[cityKey] || [];
+  const PAD = isMobile ? '32px 16px' : '80px 80px';
+  return (
+    <div style={{ width:'100%',height:'100%',overflowY:'auto',background:'white' }} className="artboard-scroll">
+      {isMobile ? <MobileNav city={city} /> : <FakeNav city={city} />}
+
+      {/* 01 HERO */}
+      <div style={{ padding:isMobile?'24px 16px 40px':'64px 80px 80px',background:'linear-gradient(180deg,#D7E6FF 0%,#FBFAF6 100%)',borderBottom:'1px solid #eee',position:'relative' }}>
+        <SectionLabel n={1} name="Hero — angle économies + humain" />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1.2fr 1fr',gap:32,alignItems:'center' }}>
+          <div>
+            <SkPill style={{ background:'#FFE45C',marginBottom:14 }}>📍 N°1 fiduciaire en ligne · {city.name}</SkPill>
+            <h1 style={{ fontSize:isMobile?32:60,fontWeight:900,lineHeight:1.02,margin:0,letterSpacing:'-0.035em' }}>
+              Divisez par 2 le coût de votre <span className="squiggle">fiduciaire</span> à {city.name}.
+            </h1>
+            <p style={{ fontSize:isMobile?14:18,color:'#444',marginTop:18,lineHeight:1.5,maxWidth:540 }}>
+              Comptabilité 100% en ligne pour PME ({localMetiers.join(' · ')}). Conseiller dédié, brevet fédéral, dès <b>CHF&nbsp;149.-/mois</b>.
+            </p>
+            <div style={{ display:'flex',gap:10,marginTop:22,flexWrap:'wrap' }}>
+              <SkBtn>Calculer mes économies →</SkBtn>
+              <SkBtn ghost>Voir le comparatif</SkBtn>
+            </div>
+            <div style={{ display:'flex',alignItems:'center',gap:12,marginTop:24 }}>
+              <PortraitStack count={4} size={40} />
+              <div style={{ fontSize:12,color:'#444',lineHeight:1.4 }}>
+                <div style={{ display:'flex',gap:2,color:'#FFC107',marginBottom:2 }}>★★★★★</div>
+                <div><b>+100 PME</b> accompagnées par notre équipe en {city.canton}</div>
+              </div>
+            </div>
+          </div>
+          <div style={{ position:'relative' }}>
+            <Portrait src={TEAM_PHOTO} h={isMobile?280:460} style={{ borderRadius:12 }} />
+            <SkBox style={{ position:'absolute',bottom:-16,left:-16,padding:12,background:'white',maxWidth:220,boxShadow:'4px 4px 0 #2b2b2b' }}>
+              <div style={{ display:'flex',alignItems:'center',gap:8,marginBottom:6 }}>
+                <span style={{ width:8,height:8,borderRadius:'50%',background:'#34C26A',boxShadow:'0 0 0 3px rgba(52,194,106,0.2)' }} />
+                <span style={{ fontSize:10,color:'#1F8A4C',fontWeight:700,textTransform:'uppercase' }}>En ligne</span>
+              </div>
+              <div style={{ fontSize:12,fontWeight:700 }}>Julie · Conseillère {city.canton}</div>
+              <div style={{ fontSize:10,color:'#666',marginTop:2 }}>Réponse moyenne : 1h47</div>
+            </SkBox>
+            <Annot style={{ position:'absolute',top:-28,right:0,transform:'rotate(-4deg)' }}>↑ votre conseillère dédiée</Annot>
+          </div>
+        </div>
+      </div>
+
+      {/* 02 CALCULATEUR */}
+      <div style={{ padding:isMobile?'32px 16px':'60px 80px',background:'white',borderBottom:'1px solid #eee' }}>
+        <SectionLabel n={2} name="Calculateur — interactif" />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 1fr',gap:32,alignItems:'center' }}>
+          <div>
+            <h2 style={{ fontSize:isMobile?24:34,fontWeight:800,margin:'0 0 10px',letterSpacing:'-0.02em',lineHeight:1.1 }}>Combien vous coûte vraiment votre fiduciaire ?</h2>
+            <p style={{ color:'#555',fontSize:14,lineHeight:1.6 }}>Bougez le curseur. On vous montre l'écart en CHF, par an. Sans inscription, sans email.</p>
+          </div>
+          <CalculateurEconomies compact />
+        </div>
+      </div>
+
+      {/* 03 TRUST STRIP */}
+      <div style={{ padding:isMobile?'20px 16px':'28px 80px',borderBottom:'1px solid #eee',background:'white' }}>
+        <div style={{ fontSize:11,color:'#888',textTransform:'uppercase',letterSpacing:'0.08em',marginBottom:12,textAlign:'center' }}>+100 PME suisses nous font confiance</div>
+        <div style={{ display:'flex',gap:isMobile?12:32,justifyContent:'center',alignItems:'center',flexWrap:'wrap',opacity:0.6 }}>
+          {['KUMBHA','ALPLOG','ROCHE & CIE','ATELIER 7','NORD-SUD','HELVETIA-X'].map((l,i) => (
+            <div key={i} style={{ fontFamily:'JetBrains Mono',fontSize:13,fontWeight:700,letterSpacing:'0.05em',color:'#666' }}>{l}</div>
+          ))}
+        </div>
+      </div>
+
+      {/* 04 KPI */}
+      <div style={{ padding:PAD }}>
+        <SectionLabel n={3} name="Pourquoi nous (4 KPI)" />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'repeat(2,1fr)':'repeat(4,1fr)',gap:16 }}>
+          {[
+            { v:'−50%',l:"moins cher qu'un fiduciaire classique" },
+            { v:'24h', l:'pour démarrer, sans paperasse' },
+            { v:'+100',l:'PME romandes accompagnées' },
+            { v:'4.9★',l:'127 avis Google vérifiés' },
+          ].map((k,i) => (
+            <div key={i} style={{ borderTop:'2px solid #2C6BD2',paddingTop:14 }}>
+              <div style={{ fontSize:isMobile?32:44,fontWeight:900,letterSpacing:'-0.03em',color:'#2C6BD2' }}>{k.v}</div>
+              <div style={{ fontSize:12,color:'#555',marginTop:4 }}>{k.l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 05 COMPARATEUR */}
+      <div style={{ padding:PAD,background:'#F7F7F8' }}>
+        <SectionLabel n={4} name="Comparateur tarifaire" />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 1.5fr',gap:32,alignItems:'center' }}>
+          <div>
+            <h2 style={{ fontSize:isMobile?26:36,fontWeight:800,margin:'0 0 12px',letterSpacing:'-0.02em',lineHeight:1.1 }}>Combien vous coûte vraiment une fiduciaire à {city.name} ?</h2>
+            <p style={{ color:'#555',fontSize:14,lineHeight:1.6 }}>Tarifs réels constatés pour une PME de 5 employés.</p>
+            <SkBtn style={{ marginTop:16 }}>Voir mon offre →</SkBtn>
+          </div>
+          <ComparateurTarifaire />
+        </div>
+      </div>
+
+      {/* 06 AVANT/APRÈS */}
+      <div style={{ padding:PAD }}>
+        <SectionLabel n={5} name="Méthode trad vs DeskMachine" />
+        <h2 style={{ fontSize:isMobile?26:36,fontWeight:800,margin:'0 0 24px',letterSpacing:'-0.02em' }}>L'ancien monde vs le nouveau.</h2>
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 1fr',gap:16 }}>
+          <SkBox style={{ padding:24,background:'white' }}>
+            <div style={{ fontSize:11,color:'#999',textTransform:'uppercase',marginBottom:12,letterSpacing:'0.08em' }}>Méthode traditionnelle</div>
+            <SkCheck x>Processus manuels et chronophages</SkCheck>
+            <SkCheck x>Déplacements à {city.name}</SkCheck>
+            <SkCheck x>Pièces demandées en retard</SkCheck>
+            <SkCheck x>Résultats trop tard pour décider</SkCheck>
+            <SkCheck x>Tarifs opaques, frais cachés</SkCheck>
+          </SkBox>
+          <SkBox style={{ padding:24,background:'#1a1a1a',color:'white',borderColor:'#1a1a1a' }}>
+            <div style={{ fontSize:11,color:'#FFE45C',textTransform:'uppercase',marginBottom:12,letterSpacing:'0.08em' }}>Avec DeskMachine</div>
+            <div style={{ color:'#eee' }}>
+              <SkCheck>100% en ligne, zéro déplacement</SkCheck>
+              <SkCheck>Compta prise en charge de A à Z</SkCheck>
+              <SkCheck>Suivi en temps réel sur dashboard</SkCheck>
+              <SkCheck>Conseiller dédié basé en {city.canton}</SkCheck>
+              <SkCheck>Tarif fixe transparent, dès CHF 149.-/mois</SkCheck>
+            </div>
+          </SkBox>
+        </div>
+      </div>
+
+      {/* 07 SERVICES */}
+      <div style={{ padding:PAD,background:'#FBFAF6' }}>
+        <SectionLabel n={6} name="Services" />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr 1fr':'repeat(3,1fr)',gap:12 }}>
+          {[
+            { ico:'📥',t:'Saisie comptable',d:'Vous envoyez, on saisit. Tous formats.' },
+            { ico:'🧾',t:'TVA & déclarations',d:"Trimestriel, annuel, on s'occupe de tout." },
+            { ico:'👥',t:'Salaires & RH',d:'Fiches de paie, AVS/LPP, attestations.' },
+            { ico:'📊',t:'Bouclement annuel',d:'Bilan, P&L, rapport pour votre AG.' },
+            { ico:'💼',t:'Conseil fiscal',d:`Optimisation fiscale ${city.canton}.` },
+            { ico:'📁',t:'Archivage digital',d:'Tous vos docs, accessibles 10 ans.' },
+          ].map((s,i) => (
+            <SkBox key={i} style={{ padding:18 }}>
+              <div style={{ fontSize:24,marginBottom:10 }}>{s.ico}</div>
+              <div style={{ fontWeight:700,fontSize:14,marginBottom:4 }}>{s.t}</div>
+              <div style={{ fontSize:11,color:'#666',lineHeight:1.5 }}>{s.d}</div>
+            </SkBox>
+          ))}
+        </div>
+      </div>
+
+      {/* 08 PROCESS */}
+      <div style={{ padding:PAD,background:'#1a1a1a',color:'white' }}>
+        <SectionLabel n={7} name="Process onboarding" style={{ color:'#888' }} />
+        <h2 style={{ fontSize:isMobile?26:36,fontWeight:800,margin:'0 0 8px',letterSpacing:'-0.02em' }}>Démarrer prend 24 heures. Pas 24 jours.</h2>
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'repeat(4,1fr)',gap:16,marginTop:28 }}>
+          {[
+            { n:'01',t:'Discovery 30min',d:'On comprend votre activité et vos besoins.' },
+            { n:'02',t:'Devis transparent',d:'Tarif fixe, pas de petites lignes.' },
+            { n:'03',t:'Migration',d:'On récupère tout chez votre fiduciaire actuelle.' },
+            { n:'04',t:"C'est parti",d:'Première saisie, dashboard activé.' },
+          ].map((s,i) => (
+            <div key={i} style={{ borderLeft:'2px solid #FFE45C',paddingLeft:14 }}>
+              <div className="sk-mono" style={{ fontSize:11,color:'#FFE45C',marginBottom:6 }}>JOUR {s.n}</div>
+              <div style={{ fontWeight:700,fontSize:16,marginBottom:6 }}>{s.t}</div>
+              <div style={{ fontSize:12,color:'#bbb',lineHeight:1.5 }}>{s.d}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 09 CAS CLIENT */}
+      <div style={{ padding:PAD }}>
+        <SectionLabel n={8} name="Cas client chiffré" />
+        <SkBox style={{ padding:28 }}>
+          <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 2fr',gap:28,alignItems:'center' }}>
+            <Portrait src={TEAM_PHOTO} h={220} style={{ borderRadius:8 }} />
+            <div>
+              <SkPill style={{ marginBottom:10 }}>📍 {localMetiers[0]} · {city.name}</SkPill>
+              <p style={{ fontSize:isMobile?18:24,fontWeight:600,lineHeight:1.4,margin:'0 0 14px' }}>« On a divisé nos frais comptables par 2 et on récupère 8h par semaine. »</p>
+              <div style={{ fontSize:12,color:'#666' }}><b>Felix Buchbinder</b> · Directeur, Kumbha Sàrl</div>
+              <div style={{ display:'flex',gap:28,marginTop:18 }}>
+                <div><div style={{ fontSize:28,fontWeight:900,color:'#2C6BD2' }}>−52%</div><div style={{ fontSize:10,color:'#888' }}>frais compta/an</div></div>
+                <div><div style={{ fontSize:28,fontWeight:900,color:'#2C6BD2' }}>8h/sem</div><div style={{ fontSize:10,color:'#888' }}>gagnées</div></div>
+                <div><div style={{ fontSize:28,fontWeight:900,color:'#2C6BD2' }}>24h</div><div style={{ fontSize:10,color:'#888' }}>onboarding</div></div>
+              </div>
+            </div>
+          </div>
+        </SkBox>
+      </div>
+
+      {/* 10 ÉQUIPE */}
+      <div style={{ padding:PAD,background:'white',borderTop:'1px solid #eee' }}>
+        <SectionLabel n={9} name="L'équipe" />
+        <h2 style={{ fontSize:isMobile?26:36,fontWeight:800,margin:'0 0 24px',letterSpacing:'-0.02em',lineHeight:1.1 }}>Des humains. Pas un call-center.</h2>
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'repeat(2,1fr)':'repeat(4,1fr)',gap:16 }}>
+          {[
+            { n:'Julie Dubois',  r:'Conseillère senior · Brevet féd.', c:city.canton, src:TEAM_PHOTO },
+            { n:'Marc Lachance', r:'Expert TVA & fiscalité',            c:'VD',        src:null },
+            { n:'Sophie Roulin', r:'Conseillère salaires & RH',         c:'GE',        src:null },
+            { n:'Thomas Berger', r:'Conseiller bouclements',            c:'NE',        src:null },
+          ].map((p,i) => (
+            <div key={i}>
+              <div style={{ position:'relative',borderRadius:10,overflow:'hidden',aspectRatio:'4/5',background:['#D7E6FF','#FFE45C','#FCE0E0','#DAF1E2'][i] }}>
+                {p.src?<img src={p.src} style={{ width:'100%',height:'100%',objectFit:'cover' }} />:(
+                  <div style={{ width:'100%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:56,fontWeight:900,color:'rgba(0,0,0,0.15)' }}>{p.n.split(' ').map(s=>s[0]).join('')}</div>
+                )}
+                <SkPill style={{ position:'absolute',top:10,left:10,fontSize:9,padding:'2px 8px' }}>📍 {p.c}</SkPill>
+              </div>
+              <div style={{ marginTop:10 }}>
+                <div style={{ fontWeight:700,fontSize:13 }}>{p.n}</div>
+                <div style={{ fontSize:11,color:'#666',marginTop:2 }}>{p.r}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 11 TÉMOIGNAGES */}
+      <div style={{ padding:PAD,background:'#FBFAF6' }}>
+        <SectionLabel n={10} name="Témoignages clients" />
+        <h2 style={{ fontSize:isMobile?26:36,fontWeight:800,margin:'0 0 20px',letterSpacing:'-0.02em' }}>Ils nous font confiance.</h2>
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'repeat(3,1fr)',gap:12 }}>
+          {[
+            { q:"Migration en 2 semaines, économie de CHF 4'200/an. Le conseiller comprend notre métier.", n:'M. Roulin', s:`Restaurant · ${city.name}`, color:'#FFE45C' },
+            { q:'Plus jamais de classeurs. Tout est en ligne, accessible quand je veux. Game changer.', n:'A. Müller', s:`Architecte · ${city.canton}`, color:'#D7E6FF' },
+            { q:'Le tarif est exactement ce qui était annoncé. Aucune mauvaise surprise depuis 18 mois.', n:'J. Perret', s:`Conseil · ${city.canton}`, color:'#FCE0E0' },
+          ].map((t,i) => (
+            <SkBox key={i} style={{ padding:20 }}>
+              <div style={{ display:'flex',gap:4,color:'#FFC107',marginBottom:10,fontSize:14 }}>★★★★★</div>
+              <p style={{ fontSize:13,lineHeight:1.55,margin:'0 0 14px' }}>« {t.q} »</p>
+              <div style={{ display:'flex',alignItems:'center',gap:10,paddingTop:10,borderTop:'1px solid #eee' }}>
+                <div style={{ width:36,height:36,borderRadius:'50%',background:t.color,display:'flex',alignItems:'center',justifyContent:'center',fontSize:12,fontWeight:700,color:'#1B4FA8',flexShrink:0 }}>{t.n.split(' ').map(s=>s[0]).join('')}</div>
+                <div style={{ fontSize:11 }}><b>{t.n}</b><br/><span style={{ color:'#888' }}>{t.s}</span></div>
+              </div>
+            </SkBox>
+          ))}
+        </div>
+      </div>
+
+      {/* 12 CARTE */}
+      <div style={{ padding:PAD }}>
+        <SectionLabel n={11} name="Couverture Suisse romande" />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 1.2fr',gap:32,alignItems:'center' }}>
+          <div>
+            <h2 style={{ fontSize:isMobile?26:36,fontWeight:800,margin:'0 0 12px',letterSpacing:'-0.02em',lineHeight:1.1 }}>Présents partout en Suisse romande.</h2>
+            <div style={{ display:'flex',flexWrap:'wrap',gap:6 }}>
+              {Object.values(CITIES).map((c,i) => (
+                <SkPill key={i} style={{ fontSize:11,background:c===city?'#2C6BD2':'white',color:c===city?'white':'#333',borderColor:c===city?'#2C6BD2':'#2b2b2b' }}>📍 {c.name}</SkPill>
+              ))}
+            </div>
+          </div>
+          <CantonMap activeCity={cityKey} />
+        </div>
+      </div>
+
+      {/* 13 ABOUT */}
+      <div style={{ padding:PAD,background:'#F7F7F8' }}>
+        <SectionLabel n={12} name="About" />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 1.4fr',gap:32,alignItems:'center' }}>
+          <Portrait src={TEAM_PHOTO} h={isMobile?240:320} style={{ borderRadius:12 }} />
+          <div>
+            <SkPill style={{ marginBottom:12 }}>Qui sommes-nous</SkPill>
+            <h2 style={{ fontSize:isMobile?26:36,fontWeight:800,margin:'0 0 14px',letterSpacing:'-0.02em',lineHeight:1.1 }}>Créé par des entrepreneurs, pour des entrepreneurs.</h2>
+            <p style={{ fontSize:14,lineHeight:1.6,color:'#444',margin:0 }}>Nous sommes comme vous : des entrepreneurs. Fatigués de perdre du temps avec l'administratif, on a créé nos propres outils. Le résultat a séduit nos clients — alors on en a fait un vrai service.</p>
+            <div style={{ display:'flex',gap:24,marginTop:18 }}>
+              <div><div style={{ fontSize:24,fontWeight:900,color:'#2C6BD2' }}>2021</div><div style={{ fontSize:10,color:'#888' }}>fondation</div></div>
+              <div><div style={{ fontSize:24,fontWeight:900,color:'#2C6BD2' }}>12</div><div style={{ fontSize:10,color:'#888' }}>experts</div></div>
+              <div><div style={{ fontSize:24,fontWeight:900,color:'#2C6BD2' }}>{city.canton}</div><div style={{ fontSize:10,color:'#888' }}>antenne locale</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 14 RDV */}
+      <div style={{ padding:PAD }}>
+        <SectionLabel n={13} name="Prise de RDV instantanée" />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 1.2fr',gap:32,alignItems:'center' }}>
+          <div>
+            <h2 style={{ fontSize:isMobile?26:36,fontWeight:800,margin:'0 0 12px',letterSpacing:'-0.02em',lineHeight:1.1 }}>Parlez à un conseiller {city.name} en 24h.</h2>
+            <p style={{ color:'#555',fontSize:14,lineHeight:1.6 }}>30 minutes, en visio ou téléphone, sans engagement.</p>
+            <div style={{ marginTop:16 }}><ProofTicker city={city} /></div>
+          </div>
+          <PriseRDV city={city} />
+        </div>
+      </div>
+
+      {/* 15 FAQ */}
+      <div style={{ padding:PAD,background:'#FBFAF6' }}>
+        <SectionLabel n={14} name="FAQ" />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 1.5fr',gap:32 }}>
+          <h2 style={{ fontSize:isMobile?26:36,fontWeight:800,margin:0,letterSpacing:'-0.02em',lineHeight:1.1 }}>Vous avez encore des questions ?</h2>
+          <div>
+            {[
+              "Que propose DeskMachine en plus d'une fiduciaire normale ?",
+              `Comment se passe la migration depuis ma fiduciaire actuelle à ${city.name} ?`,
+              'Mes données sont-elles vraiment sécurisées en Suisse ?',
+              'Puis-je résilier à tout moment ?',
+              `Est-ce que vous gérez les spécificités fiscales du canton ${city.canton} ?`,
+            ].map((q,i) => (
+              <div key={i} style={{ borderTop:'1px solid #ddd',padding:'14px 0',display:'flex',justifyContent:'space-between',alignItems:'center' }}>
+                <span style={{ fontSize:14,fontWeight:i===0?700:500 }}>{q}</span>
+                <span style={{ fontSize:18,color:'#2C6BD2' }}>{i===0?'−':'+'}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 16 CTA FINAL */}
+      <div style={{ padding:PAD,background:'#2C6BD2',color:'white',textAlign:'center' }}>
+        <h2 style={{ fontSize:isMobile?28:48,fontWeight:900,margin:'0 0 12px',letterSpacing:'-0.03em',lineHeight:1.05 }}>
+          Prêt à économiser <span style={{ color:'#FFE45C' }}>50%</span> sur votre fiduciaire&nbsp;?
+        </h2>
+        <p style={{ fontSize:16,opacity:0.9,maxWidth:580,margin:'0 auto 24px' }}>30 secondes pour simuler. 24h pour recevoir votre offre. 0 engagement.</p>
+        <div style={{ display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap' }}>
+          <SkBtn style={{ background:'#FFE45C',color:'#1a1a1a',borderColor:'#1a1a1a' }}>Lancer ma simulation →</SkBtn>
+          <SkBtn ghost style={{ background:'transparent',color:'white',borderColor:'white',boxShadow:'3px 3px 0 rgba(255,255,255,0.4)' }}>📞 Nous appeler</SkBtn>
+        </div>
+      </div>
+
+      <Footer city={city} />
+      {isMobile && <StickyCTA city={city} />}
+    </div>
+  );
+}
+window.Direction1 = Direction1;
+</script>
+
+<script type="text/babel">
+// ── dm-direction-2.jsx ─────────────────────────────────────────
+function Direction2({ city, mode }) {
+  const isMobile = mode === 'mobile';
+  const cityKey = Object.keys(CITIES).find(k => CITIES[k] === city);
+  const localMetiers = METIERS_BY_CITY[cityKey] || [];
+  return (
+    <div style={{ width:'100%',height:'100%',overflowY:'auto',background:'white' }} className="artboard-scroll">
+      {isMobile ? <MobileNav city={city} /> : <FakeNav city={city} />}
+      <div style={{ padding:isMobile?'24px 16px 32px':'60px 64px',background:'#FBFAF6' }}>
+        <SectionLabel n={1} name="Hero — angle local" />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1.3fr 1fr',gap:32,alignItems:'center' }}>
+          <div>
+            <SkPill style={{ background:'#D7E6FF',color:'#1B4FA8',borderColor:'#2C6BD2' }}>📍 {city.name} · canton {city.canton}</SkPill>
+            <h1 style={{ fontSize:isMobile?30:52,fontWeight:900,lineHeight:1.05,margin:'12px 0 0',letterSpacing:'-0.03em' }}>
+              La fiduciaire en ligne <span className="squiggle">de {city.name}</span>.
+            </h1>
+            <p style={{ fontSize:isMobile?14:16,color:'#555',marginTop:14,lineHeight:1.5 }}>
+              Conseiller dédié pour {localMetiers.join(', ').toLowerCase()} et autres PME du {city.canton}.
+            </p>
+            <div style={{ display:'flex',gap:10,marginTop:18,flexWrap:'wrap' }}>
+              <SkBtn>Devis pour {city.name} →</SkBtn>
+              <SkBtn ghost>📞 +41 21 552 05 26</SkBtn>
+            </div>
+          </div>
+          <CantonMap activeCity={cityKey} />
+        </div>
+      </div>
+      <div style={{ padding:isMobile?'32px 16px':'60px 64px',background:'white',borderTop:'1px solid #eee' }}>
+        <SectionLabel n={2} name="Spécialisations métier" />
+        <h2 style={{ fontSize:isMobile?22:30,fontWeight:800,margin:'0 0 20px',letterSpacing:'-0.02em' }}>On connaît les PME de {city.name}.</h2>
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'repeat(3,1fr)',gap:12 }}>
+          {localMetiers.map((m,i) => (
+            <SkBox key={i} style={{ padding:16 }}>
+              <div style={{ width:36,height:36,borderRadius:8,background:'#D7E6FF',display:'flex',alignItems:'center',justifyContent:'center',marginBottom:10 }}>{['🍽️','🛠️','⚖️'][i%3]}</div>
+              <div style={{ fontWeight:700,fontSize:14,marginBottom:4 }}>{m}</div>
+              <div style={{ fontSize:11,color:'#666',lineHeight:1.4 }}>TVA, charges sociales, particularités cantonales {city.canton}.</div>
+            </SkBox>
+          ))}
+        </div>
+      </div>
+      <div style={{ padding:isMobile?'32px 16px':'60px 64px',background:'#1a1a1a',color:'white' }}>
+        <SectionLabel n={3} name="Fiscalité cantonale" style={{ color:'#888' }} />
+        <h2 style={{ fontSize:isMobile?22:30,fontWeight:800,margin:'0 0 16px',letterSpacing:'-0.02em' }}>Spécificités fiscales — canton {city.canton}.</h2>
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr 1fr':'repeat(4,1fr)',gap:12 }}>
+          {[
+            { l:'TVA',v:city.tva,sub:'taux normal' },
+            { l:'Imp. bénéfice',v:'~14%',sub:`${city.canton} total` },
+            { l:'Charges soc.',v:'~13%',sub:'AVS/AI/APG' },
+            { l:'Délai',v:'30 sept',sub:'décl. annuelle' },
+          ].map((s,i) => (
+            <div key={i} style={{ borderLeft:'2px solid #FFE45C',paddingLeft:12 }}>
+              <div style={{ fontSize:10,color:'#888',textTransform:'uppercase' }}>{s.l}</div>
+              <div style={{ fontSize:22,fontWeight:800,color:'#FFE45C' }}>{s.v}</div>
+              <div style={{ fontSize:10,color:'#aaa' }}>{s.sub}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ padding:isMobile?'32px 16px':'60px 64px',background:'#FBFAF6' }}>
+        <div style={{ maxWidth:560,margin:'0 auto' }}><CalculateurEconomies /></div>
+      </div>
+      <div style={{ padding:isMobile?'32px 16px':'60px 64px',background:'#F7F7F8' }}>
+        <PriseRDV city={city} />
+      </div>
+      <Footer city={city} />
+      {isMobile && <StickyCTA city={city} label={`RDV ${city.name}`} />}
+    </div>
+  );
+}
+window.Direction2 = Direction2;
+</script>
+
+<script type="text/babel">
+// ── dm-direction-3.jsx ─────────────────────────────────────────
+function Direction3({ city, mode }) {
+  const isMobile = mode === 'mobile';
+  const [step, setStep] = React.useState(1);
+  return (
+    <div style={{ width:'100%',height:'100%',overflowY:'auto',background:'#FBFAF6' }} className="artboard-scroll">
+      {isMobile ? <MobileNav city={city} /> : <FakeNav city={city} />}
+      <div style={{ padding:isMobile?'20px 16px':'40px 64px',background:'linear-gradient(180deg,#2C6BD2 0%,#1B4FA8 100%)',color:'white' }}>
+        <SectionLabel n={1} name="Hero = simulateur progressif" style={{ color:'rgba(255,255,255,0.5)' }} />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 1.3fr',gap:32,alignItems:'center' }}>
+          <div>
+            <SkPill style={{ background:'#FFE45C',color:'#1a1a1a',borderColor:'#1a1a1a' }}>⚡ 30 secondes · sans inscription</SkPill>
+            <h1 style={{ fontSize:isMobile?28:46,fontWeight:900,lineHeight:1.05,margin:'12px 0 0',letterSpacing:'-0.03em' }}>
+              Combien votre fiduciaire à {city.name} vous coûte-t-elle <span style={{ color:'#FFE45C' }}>vraiment</span>&nbsp;?
+            </h1>
+          </div>
+          <SkBox style={{ padding:18,background:'white',color:'#1a1a1a' }}>
+            <div style={{ display:'flex',justifyContent:'space-between',marginBottom:12 }}>
+              {[1,2,3,4].map(s => (
+                <div key={s} style={{ flex:1,height:4,background:s<=step?'#2C6BD2':'#eee',marginRight:s<4?4:0,borderRadius:2 }} />
+              ))}
+            </div>
+            <div style={{ fontSize:11,color:'#888',textTransform:'uppercase',marginBottom:6 }}>Étape {step} / 4</div>
+            {step===1&&<>
+              <div style={{ fontSize:16,fontWeight:700,marginBottom:12 }}>Quel est votre métier ?</div>
+              <div style={{ display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:8 }}>
+                {['🍽️ Restaurant','🛠️ Artisan','⚖️ Profession lib.','💼 Conseil/IT','🏥 Santé','🛒 E-commerce'].map((m,i) => (
+                  <button key={i} onClick={() => setStep(2)} style={{ padding:12,border:'1px solid #ddd',background:'white',borderRadius:6,fontSize:12,cursor:'pointer',textAlign:'left' }}>{m}</button>
+                ))}
+              </div>
+            </>}
+            {step===2&&<>
+              <div style={{ fontSize:16,fontWeight:700,marginBottom:12 }}>Combien d'employés ?</div>
+              <div style={{ display:'flex',gap:6 }}>
+                {['1','2-5','6-10','11-25','25+'].map((m,i) => (
+                  <button key={i} onClick={() => setStep(3)} style={{ flex:1,padding:14,border:'1px solid #ddd',background:i===1?'#D7E6FF':'white',borderRadius:6,fontSize:13,cursor:'pointer',fontWeight:600 }}>{m}</button>
+                ))}
+              </div>
+            </>}
+            {step===3&&<>
+              <CalculateurEconomies compact />
+              <SkBtn full style={{ marginTop:12 }} onClick={() => setStep(4)}>Voir mes économies →</SkBtn>
+            </>}
+            {step===4&&<>
+              <div style={{ fontSize:14,color:'#666',marginBottom:4 }}>Vous économiseriez</div>
+              <div style={{ fontSize:38,fontWeight:900,color:'#1B4FA8',lineHeight:1 }}>CHF 3'612.-</div>
+              <div style={{ fontSize:12,color:'#888',marginBottom:14 }}>par an, soit ~52% de réduction</div>
+              <input placeholder="Votre email pro" style={{ width:'100%',padding:12,border:'1px solid #ddd',borderRadius:6,fontSize:13,marginBottom:8,boxSizing:'border-box' }} />
+              <SkBtn full>Recevoir l'offre détaillée →</SkBtn>
+            </>}
+            <div style={{ fontSize:10,color:'#999',marginTop:10,textAlign:'center' }}>🔒 Vos données restent en Suisse</div>
+          </SkBox>
+        </div>
+      </div>
+      <div style={{ padding:isMobile?'32px 16px':'60px 64px' }}>
+        <ComparateurTarifaire />
+      </div>
+      <div style={{ padding:isMobile?'32px 16px':'60px 64px',background:'#1a1a1a' }}>
+        <PriseRDV city={city} />
+      </div>
+      <Footer city={city} />
+      {isMobile && <StickyCTA city={city} />}
+    </div>
+  );
+}
+window.Direction3 = Direction3;
+</script>
+
+<script type="text/babel">
+// ── dm-direction-4.jsx ─────────────────────────────────────────
+function Direction4({ city, mode }) {
+  const isMobile = mode === 'mobile';
+  const cityKey = Object.keys(CITIES).find(k => CITIES[k] === city);
+  const localMetiers = METIERS_BY_CITY[cityKey] || [];
+  return (
+    <div style={{ width:'100%',height:'100%',overflowY:'auto',background:'white' }} className="artboard-scroll">
+      {isMobile ? <MobileNav city={city} /> : <FakeNav city={city} />}
+      <div style={{ padding:isMobile?'24px 16px 32px':'60px 64px',background:'#FBFAF6' }}>
+        <SectionLabel n={1} name="Hero — angle humain" />
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1.4fr 1fr',gap:32,alignItems:'center' }}>
+          <div>
+            <h1 style={{ fontSize:isMobile?30:50,fontWeight:900,lineHeight:1.05,margin:0,letterSpacing:'-0.03em' }}>
+              Un humain. Pas un robot.<br/>
+              <span style={{ color:'#2C6BD2' }}>Votre conseiller à {city.name}.</span>
+            </h1>
+            <p style={{ fontSize:isMobile?14:17,color:'#555',marginTop:16,lineHeight:1.5,maxWidth:480 }}>
+              Une fiduciaire 100% en ligne, mais avec un <span className="squiggle">vrai conseiller dédié</span>. Brevet fédéral, basé en Suisse romande, réponse en moins de 2h.
+            </p>
+            <div style={{ display:'flex',gap:10,marginTop:20,flexWrap:'wrap' }}>
+              <SkBtn>📅 Prendre 30 min avec un conseiller</SkBtn>
+              <SkBtn ghost>💬 Discuter par WhatsApp</SkBtn>
+            </div>
+          </div>
+          <SkBox style={{ padding:16,background:'white' }}>
+            <div style={{ display:'flex',gap:10,marginBottom:12 }}>
+              <div style={{ width:48,height:48,borderRadius:'50%',overflow:'hidden',flexShrink:0 }}>
+                <img src={TEAM_PHOTO} style={{ width:'100%',height:'100%',objectFit:'cover' }} />
+              </div>
+              <div>
+                <div style={{ fontWeight:700,fontSize:14 }}>Julie Dubois</div>
+                <div style={{ fontSize:11,color:'#666' }}>Conseillère · Brevet fédéral · {city.name}</div>
+                <div style={{ fontSize:10,color:'#34C26A',marginTop:2 }}>● En ligne</div>
+              </div>
+            </div>
+            <div style={{ background:'#F4F4F4',padding:10,borderRadius:8,fontSize:12,marginBottom:8 }}>Bonjour 👋 Je m'appelle Julie. Dites-moi en 2 mots votre activité, je vous prépare une offre.</div>
+            <input placeholder={`Ex: restaurant à ${city.name}, 4 employés...`} style={{ width:'100%',padding:10,border:'1px solid #ddd',borderRadius:6,fontSize:12,boxSizing:'border-box' }} />
+            <SkBtn full sm style={{ marginTop:8 }}>Envoyer →</SkBtn>
+          </SkBox>
+        </div>
+      </div>
+      <div style={{ padding:isMobile?'32px 16px':'60px 64px' }}>
+        <SectionLabel n={2} name="Process — 3 étapes" />
+        <h2 style={{ fontSize:isMobile?22:30,fontWeight:800,margin:'0 0 24px',letterSpacing:'-0.02em' }}>De votre 1er appel à votre 1ère décla, en 3 étapes.</h2>
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'repeat(3,1fr)',gap:16 }}>
+          {[
+            { n:'01',t:'On discute',d:'30 min en visio. Vous expliquez, on écoute.' },
+            { n:'02',t:'On migre',d:'On récupère vos docs auprès de votre fiduciaire. Zéro stress.' },
+            { n:'03',t:'On gère',d:'Saisie, TVA, salaires, bouclement. Tout sur votre dashboard.' },
+          ].map((s,i) => (
+            <SkBox key={i} style={{ padding:20 }}>
+              <div style={{ fontSize:36,fontWeight:900,color:'#D7E6FF',lineHeight:1,marginBottom:8 }}>{s.n}</div>
+              <div style={{ fontWeight:800,fontSize:16,marginBottom:8 }}>{s.t}</div>
+              <div style={{ fontSize:12,color:'#666',lineHeight:1.5 }}>{s.d}</div>
+            </SkBox>
+          ))}
+        </div>
+      </div>
+      <div style={{ padding:isMobile?'32px 16px':'60px 64px',background:'#1a1a1a',color:'white' }}>
+        <h2 style={{ fontSize:isMobile?22:30,fontWeight:800,margin:'0 0 20px',letterSpacing:'-0.02em' }}>Pourquoi nous faire confiance ?</h2>
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr 1fr':'repeat(4,1fr)',gap:16 }}>
+          {[
+            { ico:'🇨🇭',t:'Données 100% en Suisse',d:'Hébergement Infomaniak.' },
+            { ico:'🛡️',t:'Brevet fédéral',d:'Tous nos conseillers.' },
+            { ico:'🤝',t:'Sans engagement',d:'Résiliable à tout moment.' },
+            { ico:'⏱️',t:'Réponse < 2h',d:'En jours ouvrés.' },
+          ].map((r,i) => (
+            <div key={i}>
+              <div style={{ fontSize:28,marginBottom:6 }}>{r.ico}</div>
+              <div style={{ fontWeight:700,fontSize:13,marginBottom:4 }}>{r.t}</div>
+              <div style={{ fontSize:11,color:'#aaa' }}>{r.d}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ padding:isMobile?'32px 16px':'60px 64px' }}>
+        <div style={{ display:'grid',gridTemplateColumns:isMobile?'1fr':'1fr 1.2fr',gap:24 }}>
+          <div>
+            <h2 style={{ fontSize:isMobile?22:30,fontWeight:800,margin:'0 0 8px',letterSpacing:'-0.02em' }}>Un café (virtuel) avec Julie ?</h2>
+            <p style={{ color:'#555',fontSize:14,lineHeight:1.5 }}>30 min. Sans engagement. Pour {localMetiers.slice(0,2).join(' et ').toLowerCase()} et toutes PME du {city.canton}.</p>
+            <div style={{ marginTop:16 }}><ProofTicker city={city} /></div>
+          </div>
+          <PriseRDV city={city} />
+        </div>
+      </div>
+      <Footer city={city} />
+      {isMobile && <StickyCTA city={city} label="Parler à Julie" />}
+    </div>
+  );
+}
+window.Direction4 = Direction4;
+</script>
+
+<script type="text/babel">
+// ── dm-app.jsx ─────────────────────────────────────────────────
+const { useState: useStateA } = React;
+
+function SwipeView({ children }) {
+  const [idx, setIdx] = useStateA(0);
+  const sections = React.Children.toArray(children);
+  return (
+    <div style={{ position:'relative',width:'100%',height:'100%',background:'white',overflow:'hidden' }}>
+      <div style={{ position:'absolute',inset:0,display:'flex',alignItems:'stretch',justifyContent:'stretch' }}>
+        <div style={{ width:'100%',height:'100%',overflowY:'auto' }} className="artboard-scroll">
+          {sections[idx]}
+        </div>
+      </div>
+      <SwipeChrome active={idx} total={sections.length} />
+      <div style={{ position:'absolute',bottom:16,left:'50%',transform:'translateX(-50%)',display:'flex',gap:8,zIndex:8 }}>
+        <button onClick={() => setIdx(Math.max(0, idx-1))} style={{ width:36,height:36,borderRadius:'50%',border:'1.5px solid #2b2b2b',background:'white',cursor:'pointer' }}>↑</button>
+        <button onClick={() => setIdx(Math.min(sections.length-1, idx+1))} style={{ width:36,height:36,borderRadius:'50%',border:'1.5px solid #2b2b2b',background:'#2C6BD2',color:'white',cursor:'pointer' }}>↓</button>
+      </div>
+    </div>
+  );
+}
+
+function PhoneFrame({ children }) {
+  return <div className="phone-frame"><div className="phone-screen">{children}</div></div>;
+}
+
+function DesignSystem() {
+  return (
+    <div style={{ padding:24,background:'#FBFAF6',height:'100%',overflowY:'auto' }} className="artboard-scroll">
+      <h2 style={{ fontWeight:800,margin:'0 0 4px',fontSize:22 }}>Design system mid-fi</h2>
+      <p style={{ fontSize:12,color:'#666',marginBottom:20 }}>Couleurs et composants partagés par les 4 directions.</p>
+      <div style={{ display:'grid',gridTemplateColumns:'repeat(6,1fr)',gap:8,marginBottom:20 }}>
+        {[['#2C6BD2','Blue 500'],['#1B4FA8','Blue 700'],['#D7E6FF','Blue 100'],['#1a1a1a','Ink'],['#FFE45C','Yellow'],['#FBFAF6','Paper']].map(([c,l]) => (
+          <div key={c}>
+            <div style={{ height:60,background:c,borderRadius:6,border:'1px solid #ddd' }} />
+            <div style={{ fontSize:10,marginTop:4,fontFamily:'JetBrains Mono' }}>{c}</div>
+            <div style={{ fontSize:10,color:'#888' }}>{l}</div>
+          </div>
+        ))}
+      </div>
+      <div style={{ display:'flex',gap:8,marginBottom:12,flexWrap:'wrap' }}>
+        <SkBtn>Primary CTA</SkBtn>
+        <SkBtn ghost>Secondary</SkBtn>
+        <SkBtn sm>Small</SkBtn>
+        <SkPill>📍 Pill</SkPill>
+        <SkPill style={{ background:'#FFE45C' }}>⚡ Yellow</SkPill>
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [tweaks, setTweak] = useTweaks({ city:'lausanne', showSwipe:true, showMobile:true });
+  const cityKey = tweaks.city || 'lausanne';
+  const city = CITIES[cityKey];
+
+  return (
+    <>
+      <DesignCanvas>
+        <DCSection id="ds" title="Design system">
+          <DCArtboard id="ds-1" label="Tokens & primitives" width={680} height={540}>
+            <DesignSystem />
+          </DCArtboard>
+          <DCArtboard id="comp-calc" label="NEW · Calculateur d'économies" width={420} height={580}>
+            <div style={{ padding:24,background:'#FBFAF6',height:'100%',boxSizing:'border-box' }}>
+              <CalculateurEconomies />
+            </div>
+          </DCArtboard>
+          <DCArtboard id="comp-comp" label="NEW · Comparateur tarifaire" width={620} height={380}>
+            <div style={{ padding:24,background:'#FBFAF6',height:'100%',boxSizing:'border-box' }}>
+              <ComparateurTarifaire />
+            </div>
+          </DCArtboard>
+          <DCArtboard id="comp-rdv" label="NEW · RDV instantané" width={420} height={520}>
+            <div style={{ padding:24,background:'#FBFAF6',height:'100%',boxSizing:'border-box' }}>
+              <PriseRDV city={city} />
+            </div>
+          </DCArtboard>
+          <DCArtboard id="comp-map" label="NEW · Carte cantonale" width={520} height={360}>
+            <div style={{ padding:24,background:'#FBFAF6',height:'100%',boxSizing:'border-box' }}>
+              <CantonMap activeCity={cityKey} />
+            </div>
+          </DCArtboard>
+        </DCSection>
+
+        <DCSection id="d1" title={`★ Direction 1 — Économies max · LP COMPLÈTE · ${city.name}`}>
+          <DCArtboard id="d1-desktop" label="Desktop · LP complète" width={1280} height={4800}>
+            <Direction1 city={city} mode="desktop" />
+          </DCArtboard>
+          {tweaks.showMobile && (
+            <DCArtboard id="d1-mobile" label="Mobile · LP complète" width={420} height={4800}>
+              <div style={{ display:'flex',justifyContent:'center',paddingTop:20,height:'100%',background:'#ECECEE',boxSizing:'border-box' }}>
+                <PhoneFrame><Direction1 city={city} mode="mobile" /></PhoneFrame>
+              </div>
+            </DCArtboard>
+          )}
+          {tweaks.showSwipe && (
+            <DCArtboard id="d1-swipe" label="Desktop · swipe" width={1280} height={900}>
+              <SwipeView>
+                <Direction1 city={city} mode="desktop" />
+              </SwipeView>
+            </DCArtboard>
+          )}
+        </DCSection>
+
+        <DCSection id="alt" title="Directions alternatives — aperçu hero">
+          <DCArtboard id="d2-desktop" label="D2 · Hyper-local métier×ville" width={1280} height={900}>
+            <Direction2 city={city} mode="desktop" />
+          </DCArtboard>
+          <DCArtboard id="d3-desktop" label="D3 · Calculateur-first" width={1280} height={900}>
+            <Direction3 city={city} mode="desktop" />
+          </DCArtboard>
+          <DCArtboard id="d4-desktop" label="D4 · Conversational/humain" width={1280} height={900}>
+            <Direction4 city={city} mode="desktop" />
+          </DCArtboard>
+        </DCSection>
+      </DesignCanvas>
+
+      <TweaksPanel title="Tweaks">
+        <TweakSection label="Ville">
+          <TweakSelect label="Ville cible" value={tweaks.city} onChange={(v) => setTweak('city', v)}
+            options={Object.entries(CITIES).map(([k,c]) => ({ value:k, label:`${c.name} (${c.canton})` }))} />
+          <div style={{ fontSize:11,color:'#666',marginTop:6 }}>
+            Métiers: {(METIERS_BY_CITY[cityKey]||[]).join(', ')}
+          </div>
+        </TweakSection>
+        <TweakSection label="Affichage">
+          <TweakToggle label="Vue mobile" value={tweaks.showMobile} onChange={(v) => setTweak('showMobile', v)} />
+          <TweakToggle label="Variante swipe (D1)" value={tweaks.showSwipe} onChange={(v) => setTweak('showSwipe', v)} />
+        </TweakSection>
+      </TweaksPanel>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

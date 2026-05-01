@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>deskmachine · Composants animés</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ─── Tokens ───────────────────────────────────────────── */
+:root {
+  --blue:#2C6BD2; --blue-d:#1B4FA8; --blue-s:#D7E6FF; --blue-xs:#EEF4FF;
+  --yellow:#FFE45C; --yellow-d:#E8C84A;
+  --green:#22C55E; --red:#EF4444;
+  --ink:#0F1014; --ink2:#4B5563; --ink3:#9CA3AF; --ink4:#D1D5DB;
+  --surface:#FFFFFF; --paper:#F8F6F2; --paper2:#F1F0EB;
+  --border:1px solid rgba(0,0,0,.07); --border2:1px solid rgba(0,0,0,.13);
+  --r:12px; --r-sm:8px; --r-lg:20px; --r-xl:28px; --r-full:999px;
+  --shadow-xs:0 1px 2px rgba(0,0,0,.04);
+  --shadow-sm:0 2px 8px rgba(0,0,0,.06);
+  --shadow:0 4px 20px rgba(0,0,0,.08);
+  --shadow-md:0 8px 32px rgba(0,0,0,.10);
+  --shadow-lg:0 16px 56px rgba(0,0,0,.13);
+  --font:'Manrope',system-ui,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --t:.2s var(--ease);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font);color:var(--ink);background:var(--surface);line-height:1.6;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;border:none;outline:none;font-family:var(--font);background:none}
+.container{max-width:1100px;margin:0 auto;padding:0 clamp(20px,4vw,48px)}
+.eyebrow{font-family:var(--mono);font-size:.65rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
+.eyebrow.light{color:rgba(255,255,255,.4)}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:var(--r-full);font-family:var(--mono);font-size:.62rem;font-weight:600;letter-spacing:.06em;background:rgba(44,107,210,.1);color:var(--blue-d);margin-bottom:10px}
+.tag.dark{background:rgba(44,107,210,.25);color:#93b7f5}
+
+/* ─── NAV ──────────────────────────────────────────────── */
+#nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.88);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:var(--border)}
+.nav-i{max-width:1100px;margin:0 auto;padding:0 clamp(20px,4vw,48px);display:flex;align-items:center;justify-content:space-between;height:54px}
+.nav-logo{display:flex;align-items:center;gap:9px;font-size:.98rem;font-weight:800;letter-spacing:-.02em}
+.nav-logo-icon{width:26px;height:26px;display:grid;grid-template-columns:repeat(3,1fr);gap:2.5px;padding:5px;background:var(--blue);border-radius:6px}
+.nav-logo-icon span{background:rgba(255,255,255,.8);border-radius:1px}
+.nav-caption{font-family:var(--mono);font-size:.62rem;color:var(--ink3);padding:4px 10px;background:var(--paper);border-radius:var(--r-full);border:var(--border2)}
+
+/* ─── PAGE HERO ────────────────────────────────────────── */
+#pg-hero{padding:clamp(72px,10vw,120px) 0;background:var(--ink);position:relative;overflow:hidden;text-align:center}
+#pg-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% -10%,rgba(44,107,210,.35) 0%,transparent 60%)}
+#pg-hero>.container{position:relative;z-index:1}
+.pg-eyebrow{display:inline-flex;gap:6px;align-items:center;padding:5px 14px;border-radius:var(--r-full);border:1px solid rgba(255,255,255,.12);font-family:var(--mono);font-size:.65rem;color:rgba(255,255,255,.55);margin-bottom:28px}
+.pg-title{font-size:clamp(2.6rem,5vw,4.2rem);font-weight:800;line-height:1.06;letter-spacing:-.03em;color:#fff;margin-bottom:16px}
+.pg-sub{font-size:1rem;color:rgba(255,255,255,.55);max-width:480px;margin:0 auto 36px;line-height:1.7}
+
+/* word reveal */
+.word-reveal .word{display:inline-block;opacity:0;transform:translateY(16px) scale(.96);animation:wrdIn .55s var(--ease) forwards}
+@keyframes wrdIn{to{opacity:1;transform:none}}
+
+/* ─── SECTION WRAPPER ──────────────────────────────────── */
+.comp-section{padding:clamp(64px,8vw,96px) 0}
+.comp-section.dark{background:var(--ink)}
+.comp-section.paper{background:var(--paper)}
+.comp-header{max-width:600px;margin:0 auto 52px;text-align:center}
+.comp-title{font-size:clamp(1.7rem,3vw,2.4rem);font-weight:800;letter-spacing:-.025em;margin:10px 0 10px}
+.comp-title.light{color:#fff}
+.comp-desc{font-size:.93rem;color:var(--ink2);line-height:1.65}
+.comp-desc.light{color:rgba(255,255,255,.5)}
+
+/* ─── 1. COUNTUP ───────────────────────────────────────── */
+.counter-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(0,0,0,.06);border-radius:var(--r-lg);overflow:hidden;border:var(--border)}
+.counter-cell{background:#fff;padding:32px 24px;text-align:center;position:relative}
+.counter-cell::after{content:attr(data-label);display:block;font-size:.78rem;color:var(--ink3);margin-top:4px;font-weight:500}
+.count-val{font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.03em;color:var(--ink);line-height:1}
+.count-val .unit{font-size:.5em;font-weight:600;color:var(--blue);margin-right:2px}
+.count-val .suf{font-size:.55em;font-weight:600;color:var(--blue)}
+@media(max-width:640px){.counter-row{grid-template-columns:1fr 1fr}}
+
+/* ─── 2. MARQUEE ───────────────────────────────────────── */
+.marquee-wrap{overflow:hidden;mask:linear-gradient(90deg,transparent,black 10%,black 90%,transparent)}
+.marquee-track{display:flex;gap:12px;width:max-content;animation:marquee 28s linear infinite}
+.marquee-wrap:hover .marquee-track{animation-play-state:paused}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.m-badge{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--r-full);white-space:nowrap;font-size:.82rem;font-weight:600}
+.m-badge.white{background:#fff;border:var(--border);color:var(--ink)}
+.m-badge.blue{background:var(--blue-s);color:var(--blue-d)}
+.m-badge.yellow{background:rgba(255,228,92,.15);color:#7a5f00;border:1px solid rgba(232,200,74,.3)}
+.m-badge.ink{background:rgba(255,255,255,.07);color:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.1)}
+.m-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s ease infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 3px rgba(34,197,94,.2)}50%{box-shadow:0 0 0 6px rgba(34,197,94,.08)}}
+
+/* ─── 3. SPOTLIGHT CARDS ───────────────────────────────── */
+.spotlight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.spotlight-card{--mx:50%;--my:50%;position:relative;border-radius:var(--r-lg);padding:28px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);overflow:hidden;transition:border-color .25s,transform .25s var(--ease)}
+.spotlight-card:hover{border-color:rgba(44,107,210,.4);transform:translateY(-3px)}
+.spotlight-card::before{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle 180px at var(--mx) var(--my),rgba(44,107,210,.18) 0%,transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
+.spotlight-card:hover::before{opacity:1}
+.sc-ico{width:42px;height:42px;border-radius:10px;background:rgba(44,107,210,.15);display:flex;align-items:center;justify-content:center;font-size:1.2rem;margin-bottom:16px}
+.sc-title{font-size:1rem;font-weight:700;color:#fff;margin-bottom:8px}
+.sc-desc{font-size:.82rem;color:rgba(255,255,255,.5);line-height:1.6}
+.sc-val{font-size:2rem;font-weight:800;color:var(--yellow);margin-top:14px;font-family:var(--mono);letter-spacing:-.03em}
+@media(max-width:700px){.spotlight-grid{grid-template-columns:1fr}}
+
+/* ─── 4. MAGNETIC BUTTONS ──────────────────────────────── */
+.btn-row{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px 26px;border-radius:var(--r-sm);font-size:.9rem;font-weight:600;transition:all var(--t);white-space:nowrap;cursor:pointer;position:relative;overflow:hidden;font-family:var(--font)}
+.btn-lg{padding:16px 34px;font-size:1rem}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 0 0 0 rgba(44,107,210,0)}
+.btn-primary:hover{background:var(--blue-d);box-shadow:0 8px 28px rgba(44,107,210,.4)}
+.btn-primary::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.3) 50%,transparent 65%);transform:translateX(-100%);transition:transform .55s ease}
+.btn-primary:hover::after{transform:translateX(100%)}
+.btn-yellow{background:var(--yellow);color:var(--ink)}
+.btn-yellow:hover{background:var(--yellow-d);box-shadow:0 8px 24px rgba(255,228,92,.45)}
+.btn-yellow::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.45) 50%,transparent 65%);transform:translateX(-100%);transition:transform .55s ease}
+.btn-yellow:hover::after{transform:translateX(100%)}
+.btn-outline{background:transparent;color:var(--ink);border:var(--border2)}
+.btn-outline:hover{background:var(--paper2)}
+.btn-ghost-dark{background:rgba(255,255,255,.07);color:#fff;border:1px solid rgba(255,255,255,.12)}
+.btn-ghost-dark:hover{background:rgba(255,255,255,.13)}
+/* magnetic wrapper */
+.magnetic{display:inline-block;transition:transform .25s var(--ease)}
+
+/* ─── 5. BORDER BEAM ───────────────────────────────────── */
+@property --beam-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+.border-beam-wrap{display:flex;justify-content:center}
+.border-beam-outer{position:relative;border-radius:var(--r-xl);padding:2px;background:conic-gradient(from var(--beam-angle),transparent 0deg,var(--blue) 40deg,var(--yellow) 100deg,transparent 160deg);animation:beamSpin 4s linear infinite}
+@keyframes beamSpin{to{--beam-angle:360deg}}
+.border-beam-inner{background:var(--ink);border-radius:calc(var(--r-xl) - 2px);padding:36px 44px;min-width:360px;text-align:center}
+.beam-badge{display:inline-block;padding:4px 14px;background:rgba(255,228,92,.12);border:1px solid rgba(255,228,92,.3);border-radius:var(--r-full);font-size:.72rem;font-weight:700;color:var(--yellow);margin-bottom:18px;font-family:var(--mono);letter-spacing:.06em}
+.beam-price{font-size:3.2rem;font-weight:800;color:#fff;letter-spacing:-.04em;line-height:1}
+.beam-price span{font-size:1rem;font-weight:500;color:rgba(255,255,255,.4)}
+.beam-desc{font-size:.83rem;color:rgba(255,255,255,.45);margin:10px 0 22px}
+.beam-feats{display:flex;flex-direction:column;gap:8px;text-align:left;margin-bottom:24px}
+.beam-feat{display:flex;align-items:center;gap:9px;font-size:.84rem;color:rgba(255,255,255,.65)}
+.beam-feat::before{content:'✓';color:var(--green);font-weight:800;font-size:.8rem;flex-shrink:0}
+
+/* ─── 6. SLIDING TABS ──────────────────────────────────── */
+.tabs-wrap{background:var(--paper2);border:var(--border);border-radius:var(--r);padding:4px;display:inline-flex;position:relative;gap:2px}
+.tab-indicator{position:absolute;height:calc(100% - 8px);background:#fff;border-radius:9px;box-shadow:var(--shadow-xs);top:4px;left:4px;transition:transform .25s var(--ease),width .25s var(--ease)}
+.tab-item{position:relative;z-index:1;padding:9px 20px;border-radius:9px;font-size:.87rem;font-weight:500;color:var(--ink2);transition:color .15s;white-space:nowrap}
+.tab-item.active{color:var(--ink);font-weight:600}
+.tab-content-area{margin-top:32px}
+.tab-pane{display:none}
+.tab-pane.active{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;animation:tabIn .3s var(--ease) both}
+@keyframes tabIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.tp-emoji{font-size:2.2rem;margin-bottom:14px}
+.tp-title{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+.tp-desc{font-size:.88rem;color:var(--ink2);line-height:1.65}
+.tp-feats{display:flex;flex-direction:column;gap:8px}
+.tp-feat{display:flex;align-items:flex-start;gap:10px;padding:13px;border-radius:var(--r);border:var(--border);background:#fff;font-size:.84rem;color:var(--ink2);transition:all var(--t)}
+.tp-feat:hover{border-color:rgba(44,107,210,.2);box-shadow:var(--shadow-sm)}
+.tp-feat-ico{width:30px;height:30px;border-radius:7px;background:var(--blue-s);display:flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0}
+.tp-feat-t{font-weight:600;font-size:.82rem;color:var(--ink);margin-bottom:2px}
+@media(max-width:640px){.tab-pane.active{grid-template-columns:1fr}.tabs-wrap{display:grid;grid-template-columns:repeat(3,1fr)}}
+
+/* ─── 7. NUMBER FLIP ───────────────────────────────────── */
+.flip-container{display:flex;gap:10px;justify-content:center;align-items:flex-end;flex-wrap:wrap}
+.flip-digit{position:relative;width:56px;height:72px;perspective:400px}
+.flip-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .5s var(--ease)}
+.flip-digit.flipping .flip-inner{animation:flipDown .5s var(--ease) forwards}
+@keyframes flipDown{0%{transform:rotateX(0)}50%{transform:rotateX(-90deg)}100%{transform:rotateX(0)}}
+.flip-face{position:absolute;inset:0;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:2.2rem;font-weight:700;background:var(--ink);color:var(--yellow);border:1px solid rgba(255,255,255,.08)}
+.flip-face::after{content:'';position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.4)}
+.flip-label{margin-top:8px;font-family:var(--mono);font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);text-align:center}
+.flip-sep{font-size:2rem;font-weight:800;color:var(--ink);padding-bottom:8px;align-self:center}
+
+/* ─── 8. TOAST NOTIFICATIONS ───────────────────────────── */
+#toast-container{position:fixed;bottom:24px;left:24px;display:flex;flex-direction:column;gap:10px;z-index:9000;pointer-events:none}
+.toast{display:flex;align-items:flex-start;gap:10px;padding:14px 16px;background:#fff;border:var(--border2);border-radius:var(--r);box-shadow:var(--shadow-md);max-width:300px;pointer-events:auto;animation:toastIn .4s var(--ease) both;width:300px}
+.toast.out{animation:toastOut .35s var(--ease) forwards}
+@keyframes toastIn{from{opacity:0;transform:translateX(-20px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateY(10px) scale(.95)}}
+.toast-icon{width:32px;height:32px;border-radius:8px;background:var(--blue-s);display:flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.toast-body{flex:1;min-width:0}
+.toast-title{font-size:.82rem;font-weight:700;color:var(--ink);margin-bottom:2px}
+.toast-sub{font-size:.75rem;color:var(--ink3)}
+.toast-time{display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:.62rem;color:var(--ink3);margin-top:4px}
+.toast-time::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0}
+.toast-demo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--r-sm);background:var(--paper);border:var(--border2);font-size:.87rem;font-weight:600;cursor:pointer;transition:all var(--t)}
+.toast-demo-btn:hover{background:var(--paper2);box-shadow:var(--shadow-sm)}
+
+/* ─── 9. SHIMMER SKELETON ──────────────────────────────── */
+.shimmer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.sk-card{border-radius:var(--r-lg);border:var(--border);overflow:hidden;background:#fff}
+.sk-card.loading .sk-img-ph{background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}
+.sk-card.loading .sk-line{background:linear-gradient(90deg,#f0f0f0 25%,#e8e8e8 50%,#f0f0f0 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;border-radius:4px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.sk-img-ph{height:160px}
+.sk-pad{padding:18px}
+.sk-line{height:12px;margin-bottom:8px;border-radius:4px}
+.sk-line.short{width:60%}
+.sk-line.med{width:80%}
+.sk-card .real-content{display:none;padding:18px}
+.sk-card.loaded .sk-img-ph{display:none}
+.sk-card.loaded .sk-pad{display:none}
+.sk-card.loaded .real-content{display:block;animation:fadeIn .4s ease both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.real-img{height:160px;overflow:hidden}
+.real-img img{width:100%;height:100%;object-fit:cover;border-bottom:var(--border)}
+.real-card-body{padding:18px}
+.real-card-title{font-weight:700;font-size:.92rem;margin-bottom:5px}
+.real-card-desc{font-size:.78rem;color:var(--ink2);line-height:1.55}
+.real-pill{display:inline-flex;gap:5px;align-items:center;padding:3px 10px;border-radius:var(--r-full);font-size:.68rem;font-weight:600;margin-top:10px}
+@media(max-width:640px){.shimmer-grid{grid-template-columns:1fr}}
+
+/* ─── 10. ANIMATED GRADIENT HERO CTA ───────────────────── */
+.gradient-btn{position:relative;padding:16px 36px;border-radius:var(--r-full);font-size:1rem;font-weight:700;color:#fff;cursor:pointer;overflow:hidden;border:none;isolation:isolate}
+.gradient-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--blue-d),var(--blue),#4A8AE8,var(--blue),var(--blue-d));background-size:250% 100%;animation:gradMove 4s ease infinite}
+@keyframes gradMove{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.gradient-btn span{position:relative;z-index:1}
+.gradient-btn-outline{position:relative;padding:16px 36px;border-radius:var(--r-full);font-size:1rem;font-weight:700;color:var(--ink);cursor:pointer;border:2px solid transparent;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(90deg,var(--blue-d),var(--yellow),var(--blue)) border-box;transition:all .3s}
+.gradient-btn-outline:hover{background:linear-gradient(var(--paper),var(--paper)) padding-box,linear-gradient(90deg,var(--blue-d),var(--yellow),var(--blue)) border-box}
+
+/* ─── MISC UTILS ───────────────────────────────────────── */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv-d1{transition-delay:.08s}.rv-d2{transition-delay:.16s}.rv-d3{transition-delay:.24s}
+@media(max-width:900px){.g2{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-i">
+    <div class="nav-logo">
+      <div class="nav-logo-icon"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      deskmachine
+    </div>
+    <div class="nav-caption">Composants animés — bibliothèque</div>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<section id="pg-hero">
+  <div class="container">
+    <div class="pg-eyebrow">⚡ shadcn-quality · vanilla HTML/CSS/JS</div>
+    <h1 class="pg-title word-reveal" id="heroTitle">Composants animés pour deskmachine</h1>
+    <p class="pg-sub" id="heroSub" style="opacity:0;transition:opacity .8s .5s ease">10 composants prêts à intégrer dans vos landing pages. Chaque composant est autonome et respecte l'identité DeskMachine.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;opacity:0;transition:opacity .8s .8s ease" id="heroBtns">
+      <button class="gradient-btn magnetic"><span>Explorer les composants ↓</span></button>
+      <button class="gradient-btn-outline magnetic">Voir le code source</button>
+    </div>
+  </div>
+</section>
+
+<!-- 1. COUNTUP ──────────────────────────────────────────── -->
+<section class="comp-section paper">
+  <div class="container">
+    <div class="comp-header rv">
+      <div class="tag">01 · CountUp</div>
+      <h2 class="comp-title">Compteurs animés</h2>
+      <p class="comp-desc">Les chiffres clés comptent depuis zéro lors de l'entrée dans le viewport. Easing exponentiel, formatage CHF automatique.</p>
+    </div>
+    <div class="counter-row rv rv-d1"
+      data-count-1="100" data-count-2="49" data-count-3="127" data-count-4="2">
+      <div class="counter-cell" data-label="PME romandes accompagnées">
+        <div class="count-val"><span class="unit">+</span><span class="count-n" data-target="100">0</span></div>
+      </div>
+      <div class="counter-cell" data-label="% digital — aucun papier">
+        <div class="count-val"><span class="count-n" data-target="100">0</span><span class="suf">%</span></div>
+      </div>
+      <div class="counter-cell" data-label="avis vérifiés · note 4.9/5">
+        <div class="count-val"><span class="count-n" data-target="127">0</span></div>
+      </div>
+      <div class="counter-cell" data-label="heures · délai de réponse max">
+        <div class="count-val"><span class="count-n" data-target="2">0</span><span class="suf">h</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. MARQUEE ──────────────────────────────────────────── -->
+<section class="comp-section dark">
+  <div class="container">
+    <div class="comp-header rv">
+      <div class="tag dark">02 · Marquee</div>
+      <h2 class="comp-title light">Bandeau défilant</h2>
+      <p class="comp-desc light">Scroll infini CSS — aucun JS. Pause au survol. Utilisable pour badges de confiance, logos clients, mentions presse.</p>
+    </div>
+    <div class="rv rv-d1">
+      <div class="marquee-wrap" style="margin-bottom:12px">
+        <div class="marquee-track" id="mq1"></div>
+      </div>
+      <div class="marquee-wrap">
+        <div class="marquee-track" id="mq2" style="animation-direction:reverse;animation-duration:22s"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. SPOTLIGHT CARDS ──────────────────────────────────── -->
+<section class="comp-section dark">
+  <div class="container">
+    <div class="comp-header rv">
+      <div class="tag dark">03 · Spotlight Cards</div>
+      <h2 class="comp-title light">Cartes avec spotlight</h2>
+      <p class="comp-desc light">Un dégradé radial suit la souris à l'intérieur de chaque carte. Effet de profondeur sans surcharge visuelle.</p>
+    </div>
+    <div class="spotlight-grid rv rv-d1">
+      <div class="spotlight-card js-spotlight">
+        <div class="sc-ico">🇨🇭</div>
+        <div class="sc-title">100% suisse</div>
+        <div class="sc-desc">Droit CO, TVA 8.1%, données hébergées en Suisse. Conforme au droit fédéral.</div>
+        <div class="sc-val">CH</div>
+      </div>
+      <div class="spotlight-card js-spotlight">
+        <div class="sc-ico">⚡</div>
+        <div class="sc-title">Réponse garantie</div>
+        <div class="sc-desc">Votre conseillère dédiée répond en moins de 2 heures en heures ouvrées.</div>
+        <div class="sc-val">&lt;2h</div>
+      </div>
+      <div class="spotlight-card js-spotlight">
+        <div class="sc-ico">💰</div>
+        <div class="sc-title">Économies réelles</div>
+        <div class="sc-desc">Réduction moyenne de 55% par rapport à une fiduciaire traditionnelle.</div>
+        <div class="sc-val">÷2</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. MAGNETIC BUTTONS ─────────────────────────────────── -->
+<section class="comp-section paper">
+  <div class="container">
+    <div class="comp-header rv">
+      <div class="tag">04 · Boutons magnétiques + shimmer</div>
+      <h2 class="comp-title">Boutons interactifs</h2>
+      <p class="comp-desc">Effet shimmer au survol (pseudo-element translateX), effet magnétique (mousemove → translate léger), dégradé animé.</p>
+    </div>
+    <div class="btn-row rv rv-d1" style="margin-bottom:20px">
+      <div class="magnetic"><button class="btn btn-primary btn-lg">Demander un RDV →</button></div>
+      <div class="magnetic"><button class="btn btn-yellow btn-lg">Calculer mes économies</button></div>
+      <div class="magnetic"><button class="btn btn-outline btn-lg">En savoir plus</button></div>
+    </div>
+    <div class="btn-row rv rv-d2" style="padding:28px;background:var(--ink);border-radius:var(--r-lg)">
+      <div class="magnetic"><button class="btn btn-primary btn-lg">Principale</button></div>
+      <div class="magnetic"><button class="btn btn-ghost-dark btn-lg">Secondaire</button></div>
+      <div class="magnetic"><button class="gradient-btn"><span>Dégradé animé →</span></button></div>
+    </div>
+    <div class="btn-row rv rv-d3" style="margin-top:16px">
+      <button class="gradient-btn-outline magnetic">Bordure dégradée</button>
+    </div>
+  </div>
+</section>
+
+<!-- 5. BORDER BEAM ──────────────────────────────────────── -->
+<section class="comp-section dark">
+  <div class="container">
+    <div class="comp-header rv">
+      <div class="tag dark">05 · Border Beam</div>
+      <h2 class="comp-title light">Bordure lumineuse</h2>
+      <p class="comp-desc light">Dégradé conique qui tourne — CSS @property natif. Parfait pour mettre en avant le plan recommandé ou une offre limitée.</p>
+    </div>
+    <div class="border-beam-wrap rv rv-d1">
+      <div class="border-beam-outer">
+        <div class="border-beam-inner">
+          <div class="beam-badge">⭐ RECOMMANDÉ</div>
+          <div class="beam-price">CHF 149<span>.-/mois</span></div>
+          <div class="beam-desc">Tout inclus · sans engagement · résiliable à tout moment</div>
+          <div class="beam-feats">
+            <div class="beam-feat">Comptabilité générale complète</div>
+            <div class="beam-feat">Déclarations TVA trimestrielles</div>
+            <div class="beam-feat">Salaires &amp; certificats annuels</div>
+            <div class="beam-feat">Conseillère dédiée · réponse &lt;2h</div>
+            <div class="beam-feat">Bouclement annuel inclus</div>
+          </div>
+          <div class="magnetic" style="display:inline-block;width:100%">
+            <button class="btn btn-yellow" style="width:100%;padding:14px">Commencer maintenant →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. SLIDING TABS ─────────────────────────────────────── -->
+<section class="comp-section">
+  <div class="container">
+    <div class="comp-header rv">
+      <div class="tag">06 · Sliding Tabs</div>
+      <h2 class="comp-title">Onglets glissants</h2>
+      <p class="comp-desc">L'indicateur actif mesure la position du bouton et s'y déplace en CSS transition. Aucune bibliothèque requise.</p>
+    </div>
+    <div class="rv rv-d1">
+      <div class="tabs-wrap" id="tabsWrap">
+        <div class="tab-indicator" id="tabIndicator"></div>
+        <button class="tab-item active" data-tab="artisan">🔨 Artisans</button>
+        <button class="tab-item" data-tab="startup">🚀 Startups</button>
+        <button class="tab-item" data-tab="liberal">⚕️ Prof. libérales</button>
+        <button class="tab-item" data-tab="commerce">🛍️ Commerce</button>
+        <button class="tab-item" data-tab="independant">💼 Indépendants</button>
+      </div>
+      <div class="tab-content-area">
+        <div class="tab-pane active" id="tab-artisan">
+          <div>
+            <div class="tp-emoji">🔨</div>
+            <div class="tp-title">Artisans &amp; Construction</div>
+            <div class="tp-desc" style="margin-bottom:20px">Maçons, électriciens, menuisiers — devis, heures chantier, TVA sur matériaux. Vous construisez, on gère le reste.</div>
+            <div style="display:flex;gap:20px">
+              <div><div style="font-size:1.8rem;font-weight:800;color:var(--blue)">CHF 2'400</div><div style="font-size:.75rem;color:var(--ink3)">économie / an</div></div>
+              <div><div style="font-size:1.8rem;font-weight:800;color:var(--blue)">2 min</div><div style="font-size:.75rem;color:var(--ink3)">pour un devis</div></div>
+            </div>
+          </div>
+          <div class="tp-feats">
+            <div class="tp-feat"><div class="tp-feat-ico">📋</div><div><div class="tp-feat-t">Devis &amp; factures chantier</div><div style="font-size:.77rem;color:var(--ink3)">TVA matériaux/main d'œuvre</div></div></div>
+            <div class="tp-feat"><div class="tp-feat-ico">⏱️</div><div><div class="tp-feat-t">Saisie des heures mobile</div><div style="font-size:.77rem;color:var(--ink3)">Synchronisation automatique</div></div></div>
+            <div class="tp-feat"><div class="tp-feat-ico">🏛️</div><div><div class="tp-feat-t">Déclarations SUVA &amp; LPP</div><div style="font-size:.77rem;color:var(--ink3)">Assurances sociales gérées</div></div></div>
+          </div>
+        </div>
+        <div class="tab-pane" id="tab-startup">
+          <div>
+            <div class="tp-emoji">🚀</div>
+            <div class="tp-title">Startups &amp; Tech</div>
+            <div class="tp-desc" style="margin-bottom:20px">SaaS, agences, scale-ups — focus produit, on gère due diligence et rapports investisseurs.</div>
+            <div style="display:flex;gap:20px">
+              <div><div style="font-size:1.8rem;font-weight:800;color:var(--blue)">CHF 3'200</div><div style="font-size:.75rem;color:var(--ink3)">économie / an</div></div>
+              <div><div style="font-size:1.8rem;font-weight:800;color:var(--blue)">5 jours</div><div style="font-size:.75rem;color:var(--ink3)">clôture annuelle</div></div>
+            </div>
+          </div>
+          <div class="tp-feats">
+            <div class="tp-feat"><div class="tp-feat-ico">📊</div><div><div class="tp-feat-t">Reporting investisseurs</div><div style="font-size:.77rem;color:var(--ink3)">MRR, ARR, burn rate</div></div></div>
+            <div class="tp-feat"><div class="tp-feat-ico">🌍</div><div><div class="tp-feat-t">TVA internationale</div><div style="font-size:.77rem;color:var(--ink3)">MOSS, EU VAT, multidevise</div></div></div>
+            <div class="tp-feat"><div class="tp-feat-ico">💡</div><div><div class="tp-feat-t">Innosuisse / CTI</div><div style="font-size:.77rem;color:var(--ink3)">Aide au montage de dossiers</div></div></div>
+          </div>
+        </div>
+        <div class="tab-pane" id="tab-liberal">
+          <div><div class="tp-emoji">⚕️</div><div class="tp-title">Professions libérales</div><div class="tp-desc">Médecins, avocats, architectes — discrétion et conformité déontologique.</div></div>
+          <div class="tp-feats">
+            <div class="tp-feat"><div class="tp-feat-ico">🏥</div><div><div class="tp-feat-t">Cabinet médical</div><div style="font-size:.77rem;color:var(--ink3)">TARMED, RPC, assurances</div></div></div>
+            <div class="tp-feat"><div class="tp-feat-ico">🔒</div><div><div class="tp-feat-t">Secret professionnel</div><div style="font-size:.77rem;color:var(--ink3)">Données en Suisse, accès restreint</div></div></div>
+          </div>
+        </div>
+        <div class="tab-pane" id="tab-commerce">
+          <div><div class="tp-emoji">🛍️</div><div class="tp-title">Commerce &amp; Restauration</div><div class="tp-desc">Retail, restaurants, e-commerce — TVA mensuelle, marges, saisonnalité.</div></div>
+          <div class="tp-feats">
+            <div class="tp-feat"><div class="tp-feat-ico">🏪</div><div><div class="tp-feat-t">Caisse &amp; TPE</div><div style="font-size:.77rem;color:var(--ink3)">Intégration automatique</div></div></div>
+            <div class="tp-feat"><div class="tp-feat-ico">📈</div><div><div class="tp-feat-t">Analyse de marge</div><div style="font-size:.77rem;color:var(--ink3)">Tableaux de bord temps réel</div></div></div>
+          </div>
+        </div>
+        <div class="tab-pane" id="tab-independant">
+          <div><div class="tp-emoji">💼</div><div class="tp-title">Indépendants</div><div class="tp-desc">Graphistes, coachs, photographes — AVS, déclarations, revenus variables.</div></div>
+          <div class="tp-feats">
+            <div class="tp-feat"><div class="tp-feat-ico">🧾</div><div><div class="tp-feat-t">Facturation simplifiée</div><div style="font-size:.77rem;color:var(--ink3)">Modèles pro, relances auto</div></div></div>
+            <div class="tp-feat"><div class="tp-feat-ico">💰</div><div><div class="tp-feat-t">Optimisation impôt</div><div style="font-size:.77rem;color:var(--ink3)">Statut le plus avantageux</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. NUMBER FLIP ──────────────────────────────────────── -->
+<section class="comp-section paper">
+  <div class="container">
+    <div class="comp-header rv">
+      <div class="tag">07 · Number Flip</div>
+      <h2 class="comp-title">Chiffres flip 3D</h2>
+      <p class="comp-desc">Animation 3D perspective sur les chiffres. Idéal pour afficher un prix ou un compteur en temps réel. Cliquez sur les chiffres.</p>
+    </div>
+    <div class="rv rv-d1">
+      <div style="text-align:center;margin-bottom:16px;font-family:var(--mono);font-size:.7rem;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase">Prix mensuel deskmachine</div>
+      <div class="flip-container">
+        <div class="flip-digit" id="fd0"><div class="flip-inner"><div class="flip-face">C</div></div><div class="flip-label">devise</div></div>
+        <div class="flip-digit" id="fd1"><div class="flip-inner"><div class="flip-face">H</div></div><div class="flip-label"></div></div>
+        <div class="flip-digit" id="fd2"><div class="flip-inner"><div class="flip-face">F</div></div><div class="flip-label"></div></div>
+        <div class="flip-sep">·</div>
+        <div class="flip-digit" id="fd3"><div class="flip-inner"><div class="flip-face">1</div></div><div class="flip-label">centaines</div></div>
+        <div class="flip-digit" id="fd4"><div class="flip-inner"><div class="flip-face">4</div></div><div class="flip-label">dizaines</div></div>
+        <div class="flip-digit" id="fd5"><div class="flip-inner"><div class="flip-face">9</div></div><div class="flip-label">unités</div></div>
+        <div class="flip-sep">.-</div>
+      </div>
+      <div style="text-align:center;margin-top:24px">
+        <button class="toast-demo-btn" id="flipBtn">🎲 Animer les chiffres</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. TOAST NOTIFICATIONS ──────────────────────────────── -->
+<section class="comp-section">
+  <div class="container">
+    <div class="comp-header rv">
+      <div class="tag">08 · Social Proof Toasts</div>
+      <h2 class="comp-title">Notifications de preuve sociale</h2>
+      <p class="comp-desc">Toasts glissants en bas à gauche — activité réelle ou simulée. Renforce la crédibilité sans interrompre la lecture.</p>
+    </div>
+    <div style="text-align:center" class="rv rv-d1">
+      <button class="toast-demo-btn" onclick="triggerToast()">👆 Déclencher une notification</button>
+      <div style="margin-top:14px;font-size:.8rem;color:var(--ink3)">En production, elles s'affichent automatiquement toutes les 8-12 secondes.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. SHIMMER SKELETON ─────────────────────────────────── -->
+<section class="comp-section paper">
+  <div class="container">
+    <div class="comp-header rv">
+      <div class="tag">09 · Shimmer Skeleton</div>
+      <h2 class="comp-title">Squelette de chargement</h2>
+      <p class="comp-desc">Les cartes affichent un shimmer animé pendant le chargement puis révèlent le contenu avec un fade. CSS pur, zéro dépendance.</p>
+    </div>
+    <div class="shimmer-grid rv rv-d1" id="shimGrid"></div>
+    <div style="text-align:center;margin-top:24px">
+      <button class="toast-demo-btn" id="reloadBtn">🔄 Recharger l'animation</button>
+    </div>
+  </div>
+</section>
+
+<!-- 10. GRADIENT TEXT REVEAL ────────────────────────────── -->
+<section class="comp-section dark" style="text-align:center">
+  <div class="container">
+    <div class="comp-header rv" style="margin-bottom:36px">
+      <div class="tag dark">10 · Text Reveal + Gradient</div>
+      <h2 class="comp-title light">Révélation de texte</h2>
+      <p class="comp-desc light">Les mots entrent mot par mot avec un délai en cascade. Animation au scroll via IntersectionObserver.</p>
+    </div>
+    <h2 class="word-reveal rv rv-d1" id="reveal2" style="font-size:clamp(2rem,4vw,3.2rem);font-weight:800;color:#fff;letter-spacing:-.03em;line-height:1.15;margin-bottom:20px">Votre fiduciaire suisse ultraconnectée vous attend</h2>
+    <p class="rv rv-d2" style="font-size:1rem;color:rgba(255,255,255,.5);max-width:420px;margin:0 auto 32px;line-height:1.65">Rejoignez +100 PME romandes qui ont déjà réduit leur coût comptable de moitié.</p>
+    <div class="rv rv-d3" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="gradient-btn magnetic"><span>Demander une simulation gratuite →</span></button>
+      <button class="btn btn-ghost-dark magnetic btn-lg">Voir les tarifs</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background:#08090C;color:rgba(255,255,255,.4);padding:32px 0;text-align:center;font-size:.78rem">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:8px">
+      <div style="width:22px;height:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:4px;background:var(--blue);border-radius:5px"><span style="background:rgba(255,255,255,.8);border-radius:1px"></span><span style="background:rgba(255,255,255,.8);border-radius:1px"></span><span style="background:rgba(255,255,255,.8);border-radius:1px"></span><span style="background:rgba(255,255,255,.8);border-radius:1px"></span><span style="background:rgba(255,255,255,.8);border-radius:1px"></span><span style="background:rgba(255,255,255,.8);border-radius:1px"></span><span style="background:rgba(255,255,255,.8);border-radius:1px"></span><span style="background:rgba(255,255,255,.8);border-radius:1px"></span><span style="background:rgba(255,255,255,.8);border-radius:1px"></span></div>
+      <span style="font-weight:800;color:#fff;font-size:.95rem">deskmachine</span>
+    </div>
+    <div>Composants animés · bibliothèque interne · intégration LP1 &amp; LP2</div>
+  </div>
+</footer>
+
+<script>
+/* ─── HERO word reveal ─────────────────────────────────── */
+function splitReveal(el){
+  const words=el.textContent.trim().split(' ');
+  el.innerHTML=words.map((w,i)=>`<span class="word" style="animation-delay:${0.05+i*0.07}s">${w} </span>`).join('');
+}
+splitReveal(document.getElementById('heroTitle'));
+setTimeout(()=>{
+  document.getElementById('heroSub').style.opacity='1';
+  document.getElementById('heroBtns').style.opacity='1';
+},200);
+
+/* ─── MARQUEE build ────────────────────────────────────── */
+const ROW1=[
+  {t:'Brevet fédéral CH',cls:'white',ico:'🛡️'},
+  {t:'4.9/5 · 127 avis',cls:'blue',ico:'⭐'},
+  {t:'Données en Suisse',cls:'white',ico:'🔒'},
+  {t:'Droit CO suisse',cls:'white',ico:'⚖️'},
+  {t:'< 2h réponse',cls:'blue',ico:'⚡'},
+  {t:'100% digital',cls:'white',ico:'💻'},
+  {t:'+100 PME accompagnées',cls:'yellow',ico:'🏆'},
+  {t:'TVA 8.1% incluse',cls:'white',ico:'🧾'},
+];
+const ROW2=[
+  {t:'Lausanne · VD',cls:'ink',ico:'📍'},
+  {t:'Genève · GE',cls:'ink',ico:'📍'},
+  {t:'Neuchâtel · NE',cls:'ink',ico:'📍'},
+  {t:'Yverdon-les-Bains · VD',cls:'ink',ico:'📍'},
+  {t:'Nyon · VD',cls:'ink',ico:'📍'},
+  {t:'Montreux · VD',cls:'ink',ico:'📍'},
+  {t:'Bienne · BE',cls:'ink',ico:'📍'},
+  {t:'Sion · VS',cls:'ink',ico:'📍'},
+];
+function buildMarquee(id,items){
+  const el=document.getElementById(id);
+  const html=items.map(b=>`<div class="m-badge ${b.cls}"><span class="m-dot"></span>${b.ico} ${b.t}</div>`).join('');
+  el.innerHTML=html+html; // duplicate for seamless loop
+}
+buildMarquee('mq1',ROW1);
+buildMarquee('mq2',ROW2);
+
+/* ─── COUNTUP ──────────────────────────────────────────── */
+function countUp(el,target,dur=1600){
+  const start=performance.now();
+  const run=now=>{
+    const p=Math.min((now-start)/dur,1);
+    const eased=1-Math.pow(2,-10*p);
+    const val=Math.round(eased*target);
+    el.textContent=val;
+    if(p<1)requestAnimationFrame(run);
+    else el.textContent=target;
+  };
+  requestAnimationFrame(run);
+}
+const countObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.currentTarget.querySelectorAll('.count-n').forEach(n=>{
+        countUp(n,+n.dataset.target);
+      });
+      countObs.unobserve(e.currentTarget);
+    }
+  });
+},{threshold:.3});
+document.querySelector('.counter-row')&&countObs.observe(document.querySelector('.counter-row'));
+
+/* ─── SPOTLIGHT CARDS ──────────────────────────────────── */
+document.querySelectorAll('.js-spotlight').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+  });
+});
+
+/* ─── MAGNETIC BUTTONS ─────────────────────────────────── */
+document.querySelectorAll('.magnetic').forEach(wrap=>{
+  const btn=wrap.querySelector('button,a,.gradient-btn,.gradient-btn-outline')||wrap;
+  wrap.addEventListener('mousemove',e=>{
+    const r=wrap.getBoundingClientRect();
+    const cx=r.left+r.width/2,cy=r.top+r.height/2;
+    const dx=(e.clientX-cx)*0.28,dy=(e.clientY-cy)*0.28;
+    wrap.style.transform=`translate(${dx}px,${dy}px)`;
+  });
+  wrap.addEventListener('mouseleave',()=>{
+    wrap.style.transform='';
+  });
+});
+
+/* ─── SLIDING TABS ─────────────────────────────────────── */
+const tabsWrap=document.getElementById('tabsWrap');
+const ind=document.getElementById('tabIndicator');
+const tabs=tabsWrap?tabsWrap.querySelectorAll('.tab-item'):[];
+function moveInd(tab){
+  ind.style.width=tab.offsetWidth+'px';
+  ind.style.transform=`translateX(${tab.offsetLeft}px)`;
+}
+tabs.forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    moveInd(tab);
+    document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+    const pane=document.getElementById('tab-'+tab.dataset.tab);
+    if(pane){pane.classList.add('active')}
+  });
+});
+// init
+const activeTab=tabsWrap&&tabsWrap.querySelector('.tab-item.active');
+if(activeTab)setTimeout(()=>moveInd(activeTab),50);
+window.addEventListener('resize',()=>{
+  const a=tabsWrap&&tabsWrap.querySelector('.tab-item.active');
+  if(a)moveInd(a);
+});
+
+/* ─── NUMBER FLIP ──────────────────────────────────────── */
+function flipDigit(id,val){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.add('flipping');
+  setTimeout(()=>{
+    el.querySelector('.flip-face').textContent=val;
+    el.classList.remove('flipping');
+  },250);
+}
+document.getElementById('flipBtn')&&document.getElementById('flipBtn').addEventListener('click',()=>{
+  // animate to random CHF 149-399
+  const prices=['149','199','249','299','349','399'];
+  const pick=prices[Math.floor(Math.random()*prices.length)];
+  ['fd3','fd4','fd5'].forEach((id,i)=>{
+    setTimeout(()=>flipDigit(id,pick[i]),i*120);
+  });
+});
+
+/* ─── TOASTS ───────────────────────────────────────────── */
+const TOASTS=[
+  {ico:'🏢',title:'PME à Lausanne',sub:'vient de demander une simulation',time:'à l\'instant'},
+  {ico:'⚡',title:'Nouveau client',sub:'a rejoint deskmachine depuis Genève',time:'2 min'},
+  {ico:'💰',title:'Économie calculée',sub:'CHF 3\'200.- économisés / an — Yverdon',time:'5 min'},
+  {ico:'📞',title:'RDV confirmé',sub:'Julie rencontre une startup à Nyon',time:'8 min'},
+  {ico:'🛡️',title:'Transfert réussi',sub:'Dossier récupéré en 48h — Neuchâtel',time:'12 min'},
+  {ico:'⭐',title:'Avis 5★',sub:'"Enfin une fiduciaire qui répond vite !"',time:'15 min'},
+];
+let toastQ=0;
+function triggerToast(data){
+  const d=data||TOASTS[toastQ%TOASTS.length];toastQ++;
+  const el=document.createElement('div');
+  el.className='toast';
+  el.innerHTML=`<div class="toast-icon">${d.ico}</div><div class="toast-body"><div class="toast-title">${d.title}</div><div class="toast-sub">${d.sub}</div><div class="toast-time">${d.time}</div></div>`;
+  document.getElementById('toast-container').prepend(el);
+  setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),400)},4000);
+}
+// auto-fire
+let autoInterval=null;
+function startAutoToast(){
+  triggerToast();
+  autoInterval=setInterval(()=>{
+    const toasts=document.querySelectorAll('.toast');
+    if(toasts.length<3)triggerToast();
+  },7000);
+}
+setTimeout(startAutoToast,3000);
+
+/* ─── SHIMMER SKELETON ─────────────────────────────────── */
+const CARDS=[
+  {img:'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&q=80',title:'Comptabilité PME',desc:'Gestion complète de votre comptabilité selon le Code des obligations suisse.',pill:'🇨🇭 Droit suisse'},
+  {img:'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80',title:'Déclarations TVA',desc:'TVA trimestrielle, impôts cantonaux et fédéraux. Tous les cantons romands.',pill:'⚡ Automatisé'},
+  {img:'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&q=80',title:'Salaires & RH',desc:'Bulletins, AVS/LPP, certificats annuels. Votre équipe en ordre.',pill:'👥 Complet'},
+];
+function buildShimGrid(loading=true){
+  const g=document.getElementById('shimGrid');
+  if(!g)return;
+  g.innerHTML=CARDS.map((c,i)=>`
+    <div class="sk-card ${loading?'loading':''}" id="skc${i}">
+      <div class="sk-img-ph"></div>
+      <div class="sk-pad"><div class="sk-line med"></div><div class="sk-line short" style="margin-top:8px"></div><div class="sk-line short" style="width:40%;margin-top:8px"></div></div>
+      <div class="real-content">
+        <div class="real-img"><img src="${c.img}" alt="${c.title}" loading="lazy"></div>
+        <div class="real-card-body">
+          <div class="real-card-title">${c.title}</div>
+          <div class="real-card-desc">${c.desc}</div>
+          <div class="real-pill" style="background:var(--blue-s);color:var(--blue-d)">${c.pill}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  if(loading){
+    CARDS.forEach((_,i)=>{
+      setTimeout(()=>{
+        const el=document.getElementById(`skc${i}`);
+        if(el){el.classList.remove('loading');el.classList.add('loaded')}
+      },900+i*400);
+    });
+  }else{
+    document.querySelectorAll('.sk-card').forEach(el=>{el.classList.add('loaded')});
+  }
+}
+buildShimGrid(true);
+document.getElementById('reloadBtn')&&document.getElementById('reloadBtn').addEventListener('click',()=>buildShimGrid(true));
+
+/* ─── WORD REVEAL on scroll ────────────────────────────── */
+const rvEl=document.getElementById('reveal2');
+if(rvEl){
+  const rvObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        splitReveal(rvEl);
+        rvObs.unobserve(rvEl);
+      }
+    });
+  },{threshold:.2});
+  rvObs.observe(rvEl);
+}
+
+/* ─── GLOBAL scroll reveal ─────────────────────────────── */
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}});
+},{threshold:.08,rootMargin:'0px 0px -20px 0px'});
+document.querySelectorAll('.rv').forEach(el=>ro.observe(el));
+</script>
+</body>
+</html>

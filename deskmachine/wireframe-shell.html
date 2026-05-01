@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DeskMachine — Wireframes Landing v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Kalam:wght@400;700&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --dm-blue: #2C6BD2;
+    --dm-blue-dark: #1B4FA8;
+    --dm-blue-soft: #D7E6FF;
+    --dm-bg: #F7F7F8;
+    --dm-ink: #1a1a1a;
+    --dm-ink-2: #4a4a4a;
+    --dm-line: #2b2b2b;
+    --dm-line-soft: #c2c2c2;
+    --dm-paper: #FBFAF6;
+    --dm-yellow: #FFE45C;
+    --dm-green: #34C26A;
+    --dm-red: #E45858;
+  }
+  html, body { margin: 0; padding: 0; background: #ECECEE; font-family: 'Inter', sans-serif; color: var(--dm-ink); }
+  /* Sketchy primitives — used inside artboards */
+  .sk-box { border: 1.5px solid var(--dm-line); border-radius: 6px; background: white; }
+  .sk-box.dashed { border-style: dashed; }
+  .sk-box.soft { border-color: var(--dm-line-soft); }
+  .sk-pill { border: 1.5px solid var(--dm-line); border-radius: 999px; padding: 4px 10px; display: inline-flex; align-items: center; gap: 6px; font-size: 11px; background: white; }
+  .sk-btn { border: 1.5px solid var(--dm-line); border-radius: 6px; padding: 10px 16px; background: var(--dm-blue); color: white; font-weight: 600; font-size: 13px; box-shadow: 3px 3px 0 var(--dm-line); display: inline-flex; align-items: center; gap: 8px; cursor: pointer; }
+  .sk-btn.ghost { background: white; color: var(--dm-ink); }
+  .sk-btn.sm { padding: 6px 10px; font-size: 11px; box-shadow: 2px 2px 0 var(--dm-line); }
+  .sk-img { background:
+    repeating-linear-gradient(135deg, #eee 0 8px, #f7f7f7 8px 16px);
+    border: 1.5px dashed var(--dm-line-soft); border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #888;
+    text-align: center; padding: 6px;
+  }
+  .sk-handwrite { font-family: 'Kalam', cursive; }
+  .sk-annot { font-family: 'Caveat', cursive; color: var(--dm-blue); font-size: 18px; }
+  .sk-mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* Squiggle underline used for emphasis */
+  .squiggle { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 6'><path d='M0 3 Q 7.5 0 15 3 T 30 3 T 45 3 T 60 3' stroke='%232C6BD2' stroke-width='1.5' fill='none'/></svg>"); background-repeat: repeat-x; background-position: 0 100%; background-size: 60px 6px; padding-bottom: 4px; }
+
+  /* Fake nav reused */
+  .dm-logo { font-family: 'Inter'; font-weight: 800; letter-spacing: -0.02em; font-size: 18px; }
+  .dm-logo .dot { color: var(--dm-blue); }
+
+  /* Hide scrollbars on artboards */
+  .artboard-scroll { overflow-y: auto; overflow-x: hidden; scrollbar-width: thin; }
+  .artboard-scroll::-webkit-scrollbar { width: 6px; }
+  .artboard-scroll::-webkit-scrollbar-thumb { background: #ccc; border-radius: 3px; }
+
+  /* Mobile frame */
+  .phone-frame {
+    width: 360px; height: 740px;
+    border: 12px solid #1a1a1a; border-radius: 36px;
+    background: white; overflow: hidden; position: relative;
+    box-shadow: 6px 6px 0 #1a1a1a;
+  }
+  .phone-frame::before { content: ''; position: absolute; top: 8px; left: 50%; transform: translateX(-50%); width: 90px; height: 18px; border-radius: 9px; background: #1a1a1a; z-index: 10; }
+  .phone-screen { width: 100%; height: 100%; overflow-y: auto; background: white; }
+
+  /* Swipe page indicator */
+  .swipe-dots { display: flex; gap: 6px; }
+  .swipe-dots .d { width: 6px; height: 6px; border-radius: 50%; background: #ccc; }
+  .swipe-dots .d.active { background: var(--dm-blue); width: 18px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<div id="root"></div>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel" src="dm-primitives.jsx"></script>
+<script type="text/babel" src="dm-components.jsx"></script>
+<script type="text/babel" src="dm-direction-1.jsx"></script>
+<script type="text/babel" src="dm-direction-2.jsx"></script>
+<script type="text/babel" src="dm-direction-3.jsx"></script>
+<script type="text/babel" src="dm-direction-4.jsx"></script>
+<script type="text/babel" src="dm-app.jsx"></script>
+
+</body>
+</html>

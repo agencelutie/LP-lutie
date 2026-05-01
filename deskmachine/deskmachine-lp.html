@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeskMachine — Fiduciaire en ligne · Lausanne</title>
+<meta name="description" content="Fiduciaire 100% en ligne pour PME romandes. Conseiller dédié, brevet fédéral, dès CHF 149.-/mois. Divisez par 2 le coût de votre comptabilité.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Nunito+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ─── Reset & Variables ────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --blue: #2C6BD2;
+  --blue-dark: #1B4FA8;
+  --blue-soft: #D7E6FF;
+  --yellow: #FFE45C;
+  --green: #34C26A;
+  --red: #E45858;
+  --ink: #0F1014;
+  --ink-2: #545966;
+  --paper: #F8F6F2;
+  --white: #FFFFFF;
+  --border: rgba(0,0,0,0.09);
+  --border-strong: rgba(0,0,0,0.18);
+  --radius: 10px;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.07);
+  --shadow: 0 6px 32px rgba(0,0,0,0.10);
+  --shadow-lg: 0 16px 64px rgba(0,0,0,0.14);
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Nunito Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+html { scroll-behavior: smooth; font-size: 16px; }
+body { font-family: var(--font-body); color: var(--ink); background: var(--white); line-height: 1.6; overflow-x: hidden; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font-family: var(--font-body); cursor: pointer; border: none; outline: none; }
+input, select { font-family: var(--font-body); }
+
+/* ─── Typography ───────────────────────────────────────────── */
+h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.05; letter-spacing: -0.025em; }
+.display { font-size: clamp(2.6rem, 5.5vw, 4.5rem); font-weight: 800; }
+.h2 { font-size: clamp(1.9rem, 3.5vw, 2.9rem); font-weight: 800; }
+.h3 { font-size: clamp(1.3rem, 2vw, 1.7rem); font-weight: 700; }
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.label::before {
+  content: attr(data-n);
+  background: var(--ink);
+  color: white;
+  font-size: 0.6rem;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+.label::after { content: ''; flex: 1; height: 1px; background: var(--border-strong); max-width: 60px; }
+
+/* Squiggle underline */
+.squiggle {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 6'><path d='M0 3 Q10 0 20 3 T40 3 T60 3 T80 3' stroke='%232C6BD2' stroke-width='2' fill='none'/></svg>");
+  background-repeat: repeat-x;
+  background-position: 0 100%;
+  background-size: 80px 6px;
+  padding-bottom: 5px;
+}
+.squiggle-yellow {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 6'><path d='M0 3 Q10 0 20 3 T40 3 T60 3 T80 3' stroke='%23FFE45C' stroke-width='2.5' fill='none'/></svg>");
+  background-repeat: repeat-x;
+  background-position: 0 100%;
+  background-size: 80px 6px;
+  padding-bottom: 5px;
+}
+
+/* ─── Layout helpers ───────────────────────────────────────── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; }
+@media (max-width: 960px) { .grid-2 { grid-template-columns: 1fr; gap: 32px; } .grid-3 { grid-template-columns: 1fr 1fr; } .grid-4 { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ─── Buttons ──────────────────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 24px; border-radius: 8px;
+  font-family: var(--font-body); font-weight: 700; font-size: 0.9rem;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-primary {
+  background: var(--blue); color: white;
+  box-shadow: 0 4px 16px rgba(44,107,210,0.35);
+}
+.btn-primary:hover { background: var(--blue-dark); box-shadow: 0 6px 24px rgba(44,107,210,0.45); }
+.btn-ghost {
+  background: transparent; color: var(--ink);
+  border: 1.5px solid var(--border-strong);
+}
+.btn-ghost:hover { background: var(--paper); }
+.btn-yellow {
+  background: var(--yellow); color: var(--ink);
+  box-shadow: 0 4px 16px rgba(255,228,92,0.4);
+  border: 1.5px solid rgba(0,0,0,0.12);
+}
+.btn-yellow:hover { box-shadow: 0 6px 24px rgba(255,228,92,0.5); }
+.btn-white {
+  background: white; color: var(--ink);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+.btn-white:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.18); }
+.btn-lg { padding: 16px 32px; font-size: 1rem; }
+.btn-sm { padding: 9px 16px; font-size: 0.8rem; }
+
+/* ─── Pills / Badges ───────────────────────────────────────── */
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 5px 12px; border-radius: 999px;
+  font-size: 0.75rem; font-weight: 600;
+  border: 1.5px solid var(--border-strong);
+  background: white;
+}
+.pill-blue { background: var(--blue-soft); border-color: var(--blue); color: var(--blue-dark); }
+.pill-yellow { background: var(--yellow); border-color: rgba(0,0,0,0.15); color: var(--ink); }
+.pill-dark { background: var(--ink); border-color: var(--ink); color: white; }
+
+/* ─── Cards ────────────────────────────────────────────────── */
+.card {
+  background: white; border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.card:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+
+/* ─── Check items ──────────────────────────────────────────── */
+.check-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 0.9rem; color: inherit; margin-bottom: 10px;
+}
+.check-item .icon {
+  width: 20px; height: 20px; border-radius: 5px; flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 800;
+}
+.check-item .icon.yes { background: #E6F7EE; color: #1a7a46; }
+.check-item .icon.no { background: #FEECEC; color: #c03030; }
+
+/* ─── Section spacing ──────────────────────────────────────── */
+.section { padding: 96px 0; }
+.section-sm { padding: 64px 0; }
+.section-dark { background: var(--ink); color: white; }
+.section-paper { background: var(--paper); }
+.section-blue { background: var(--blue); color: white; }
+
+/* ─── Scroll reveal ────────────────────────────────────────── */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ═══════════════════════════════════════════════════════════
+   NAV
+═══════════════════════════════════════════════════════════ */
+#nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 0 48px; height: 68px;
+  display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+  border-bottom: 1px solid transparent;
+}
+#nav.scrolled {
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(12px);
+  border-bottom-color: var(--border);
+  box-shadow: 0 1px 12px rgba(0,0,0,0.06);
+}
+.nav-logo { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; color: white; letter-spacing: -0.02em; }
+#nav.scrolled .nav-logo { color: var(--ink); }
+.nav-logo span { color: var(--blue); }
+#nav.scrolled .nav-logo span { color: var(--blue); }
+.nav-links { display: flex; align-items: center; gap: 32px; font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.85); }
+#nav.scrolled .nav-links { color: var(--ink-2); }
+.nav-links a:hover { color: white; }
+#nav.scrolled .nav-links a:hover { color: var(--blue); }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-city {
+  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+  padding: 5px 10px; border-radius: 999px;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.9);
+  cursor: pointer; transition: all 0.15s;
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.1);
+  position: relative;
+}
+#nav.scrolled .nav-city { border-color: var(--border-strong); color: var(--ink); background: white; }
+.city-dropdown {
+  display: none; position: absolute; top: calc(100% + 8px); right: 0;
+  background: white; border: 1.5px solid var(--border); border-radius: 10px;
+  box-shadow: var(--shadow-lg); min-width: 200px; overflow: hidden; z-index: 200;
+}
+.city-dropdown.open { display: block; }
+.city-option {
+  display: block; padding: 10px 16px; font-size: 0.85rem; font-weight: 500; color: var(--ink);
+  cursor: pointer; transition: background 0.1s;
+  width: 100%; text-align: left; background: none; border: none; font-family: var(--font-body);
+}
+.city-option:hover { background: var(--paper); }
+.city-option.active { color: var(--blue); font-weight: 700; background: var(--blue-soft); }
+@media (max-width: 768px) { #nav { padding: 0 20px; } .nav-links { display: none; } }
+
+/* ═══════════════════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  background: var(--ink);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 70% 50%, rgba(44,107,210,0.35) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(44,107,210,0.15) 0%, transparent 50%);
+  padding: 140px 48px 96px;
+  position: relative;
+  overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='60'><path d='M60 0H0v60' fill='none' stroke='rgba(255,255,255,0.04)' stroke-width='1'/></svg>");
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.15fr 1fr; gap: 60px; align-items: center; position: relative; }
+.hero-content { color: white; }
+.hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; background: rgba(255,228,92,0.15); border: 1px solid rgba(255,228,92,0.4); color: var(--yellow); font-size: 0.75rem; font-weight: 700; margin-bottom: 24px; font-family: var(--font-mono); letter-spacing: 0.02em; }
+.hero-title { font-family: var(--font-display); font-size: clamp(2.8rem, 5.5vw, 5rem); font-weight: 800; line-height: 1.02; letter-spacing: -0.03em; margin-bottom: 24px; color: white; }
+.hero-title .city-name { color: var(--yellow); }
+.hero-sub { font-size: 1.05rem; color: rgba(255,255,255,0.75); line-height: 1.65; margin-bottom: 32px; max-width: 520px; }
+.hero-sub b { color: white; }
+.hero-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+.hero-social { display: flex; align-items: center; gap: 14px; }
+.portrait-stack { display: flex; }
+.portrait-stack .avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,0.9);
+  overflow: hidden; margin-left: -10px;
+  background: var(--blue-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 800; color: var(--blue-dark);
+  flex-shrink: 0;
+}
+.portrait-stack .avatar:first-child { margin-left: 0; }
+.hero-social-text { font-size: 0.82rem; color: rgba(255,255,255,0.75); line-height: 1.4; }
+.hero-social-text strong { color: white; display: block; }
+.hero-social-stars { color: #FFC107; font-size: 0.75rem; }
+/* Hero visual */
+.hero-visual { position: relative; }
+.hero-photo {
+  width: 100%; aspect-ratio: 3/4;
+  border-radius: 16px; overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+}
+.hero-photo img { width: 100%; height: 100%; object-fit: cover; }
+.hero-card {
+  position: absolute; bottom: -20px; left: -28px;
+  background: white; border-radius: 12px;
+  padding: 14px 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  max-width: 230px;
+}
+.hero-card-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 3px rgba(52,194,106,0.25); display: inline-block; margin-right: 6px; }
+.hero-card-status { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; color: var(--green); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+.hero-card-name { font-weight: 800; font-size: 0.9rem; font-family: var(--font-display); }
+.hero-card-sub { font-size: 0.75rem; color: var(--ink-2); margin-top: 2px; }
+.hero-annot {
+  position: absolute; top: -32px; right: -10px;
+  font-family: 'Caveat', cursive; font-size: 1rem; color: rgba(255,255,255,0.7);
+  transform: rotate(-4deg);
+  white-space: nowrap;
+}
+@media (max-width: 960px) { .hero-inner { grid-template-columns: 1fr; } .hero-visual { max-width: 400px; margin: 0 auto; } #hero { padding: 120px 20px 64px; } }
+
+/* ═══════════════════════════════════════════════════════════
+   CALCULATEUR
+═══════════════════════════════════════════════════════════ */
+.calc-wrapper {
+  background: white; border-radius: 16px;
+  border: 2px solid var(--ink); box-shadow: 6px 6px 0 var(--ink);
+  padding: 28px;
+}
+.calc-label-row { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.calc-badge { background: var(--yellow); border-radius: 999px; padding: 4px 12px; font-size: 0.75rem; font-weight: 700; }
+.calc-q { font-size: 0.9rem; color: var(--ink-2); margin-bottom: 10px; }
+input[type=range] { -webkit-appearance: none; width: 100%; height: 5px; border-radius: 3px; background: #e0e0e0; outline: none; accent-color: var(--blue); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--blue); border: 3px solid white; box-shadow: 0 2px 8px rgba(44,107,210,0.4); cursor: pointer; }
+.calc-range-labels { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 0.7rem; color: #999; margin-top: 6px; }
+.calc-range-current { text-align: center; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; color: var(--blue); margin-top: 2px; }
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.calc-box { border-radius: 8px; padding: 14px; }
+.calc-box.before { border: 1.5px solid var(--border); }
+.calc-box.after { border: 2px solid var(--blue); background: var(--blue-soft); }
+.calc-box-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; text-transform: uppercase; color: var(--ink-2); margin-bottom: 6px; }
+.calc-box.after .calc-box-label { color: var(--blue-dark); }
+.calc-box-amount { font-family: var(--font-display); font-size: 1.7rem; font-weight: 800; }
+.calc-box.before .calc-box-amount { text-decoration: line-through; color: #bbb; }
+.calc-box.after .calc-box-amount { color: var(--blue-dark); }
+.calc-box-sub { font-size: 0.7rem; color: var(--ink-2); margin-top: 2px; }
+.calc-savings {
+  margin-top: 14px; padding: 16px; background: var(--ink); border-radius: 8px; text-align: center;
+}
+.calc-savings-label { font-family: var(--font-mono); font-size: 0.65rem; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.08em; }
+.calc-savings-amount { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--yellow); line-height: 1.1; }
+.calc-savings-sub { font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+/* ═══════════════════════════════════════════════════════════
+   TRUST STRIP
+═══════════════════════════════════════════════════════════ */
+.trust-strip { padding: 24px 48px; border-top: 1.5px solid var(--border); border-bottom: 1.5px solid var(--border); }
+.trust-label { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #bbb; text-align: center; margin-bottom: 14px; }
+.trust-logos { display: flex; gap: 40px; justify-content: center; align-items: center; flex-wrap: wrap; opacity: 0.45; }
+.trust-logo { font-family: var(--font-display); font-size: 0.85rem; font-weight: 800; letter-spacing: 0.06em; color: var(--ink); }
+
+/* ═══════════════════════════════════════════════════════════
+   KPIs
+═══════════════════════════════════════════════════════════ */
+.kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; }
+.kpi-item {
+  padding: 48px 40px; border-right: 1.5px solid var(--border);
+}
+.kpi-item:last-child { border-right: none; }
+.kpi-number { font-family: var(--font-display); font-size: 3.5rem; font-weight: 800; color: var(--blue); line-height: 1; margin-bottom: 8px; }
+.kpi-label { font-size: 0.85rem; color: var(--ink-2); line-height: 1.4; }
+@media (max-width: 960px) { .kpi-grid { grid-template-columns: 1fr 1fr; } .kpi-item { border-right: none; border-bottom: 1.5px solid var(--border); } .kpi-item:nth-last-child(-n+2) { border-bottom: none; } }
+@media (max-width: 600px) { .kpi-grid { grid-template-columns: 1fr 1fr; } .kpi-item { padding: 32px 24px; } .kpi-number { font-size: 2.5rem; } }
+
+/* ═══════════════════════════════════════════════════════════
+   COMPARATEUR
+═══════════════════════════════════════════════════════════ */
+.table-wrap { border-radius: 12px; overflow: hidden; border: 1.5px solid var(--border); box-shadow: var(--shadow); }
+.table-header { background: var(--ink); color: white; padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+.table-header-title { font-family: var(--font-display); font-size: 0.95rem; font-weight: 700; }
+.table-header-tag { font-family: var(--font-mono); font-size: 0.65rem; color: rgba(255,255,255,0.5); }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; background: white; }
+thead tr { background: #f6f6f6; }
+th { padding: 10px 14px; text-align: left; font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-2); }
+th:not(:first-child) { text-align: center; }
+td { padding: 12px 14px; border-top: 1px solid var(--border); }
+td:not(:first-child) { text-align: center; }
+tr.highlight { background: var(--blue-soft); font-weight: 700; }
+tr.highlight td:first-child { color: var(--blue-dark); }
+tr.highlight td:nth-child(2) { color: var(--blue-dark); font-family: var(--font-display); font-size: 1rem; }
+.table-note { padding: 10px 16px; font-size: 0.72rem; color: var(--ink-2); background: #fafafa; border-top: 1px solid var(--border); }
+
+/* ═══════════════════════════════════════════════════════════
+   AVANT / APRÈS
+═══════════════════════════════════════════════════════════ */
+.avant-apres { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.aa-card { border-radius: 12px; padding: 32px; }
+.aa-card.before { background: white; border: 1.5px solid var(--border); }
+.aa-card.after { background: var(--ink); color: white; }
+.aa-title { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px; }
+.aa-card.before .aa-title { color: var(--ink-2); }
+.aa-card.after .aa-title { color: var(--yellow); }
+@media (max-width: 700px) { .avant-apres { grid-template-columns: 1fr; } }
+
+/* ═══════════════════════════════════════════════════════════
+   SERVICES
+═══════════════════════════════════════════════════════════ */
+.service-card { padding: 28px; }
+.service-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--blue-soft); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 16px; }
+.service-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+.service-desc { font-size: 0.82rem; color: var(--ink-2); line-height: 1.55; }
+
+/* ═══════════════════════════════════════════════════════════
+   PROCESS
+═══════════════════════════════════════════════════════════ */
+.process-steps { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; position: relative; }
+.process-steps::before {
+  content: '';
+  position: absolute;
+  top: 22px; left: 10%; right: 10%; height: 2px;
+  background: rgba(255,255,255,0.15);
+  z-index: 0;
+}
+.process-step { padding: 0 20px; position: relative; z-index: 1; }
+.process-num {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,0.1); border: 2px solid rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
+  color: var(--yellow); margin-bottom: 20px;
+}
+.process-day { font-family: var(--font-mono); font-size: 0.65rem; color: var(--yellow); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+.process-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: white; margin-bottom: 8px; }
+.process-desc { font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.55; }
+@media (max-width: 768px) { .process-steps { grid-template-columns: 1fr 1fr; } .process-steps::before { display: none; } .process-step { padding: 0 0 32px; border-bottom: 1px solid rgba(255,255,255,0.08); } }
+
+/* ═══════════════════════════════════════════════════════════
+   CAS CLIENT
+═══════════════════════════════════════════════════════════ */
+.case-card { padding: 40px; }
+.case-photo { border-radius: 10px; overflow: hidden; aspect-ratio: 3/4; flex-shrink: 0; width: 220px; }
+.case-photo img { width: 100%; height: 100%; object-fit: cover; }
+.case-content { flex: 1; }
+.case-quote { font-family: var(--font-display); font-size: clamp(1.1rem, 2vw, 1.6rem); font-weight: 700; line-height: 1.3; color: var(--ink); margin-bottom: 16px; }
+.case-meta { font-size: 0.82rem; color: var(--ink-2); margin-bottom: 24px; }
+.case-meta strong { color: var(--ink); }
+.case-stats { display: flex; gap: 32px; }
+.case-stat-n { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--blue); }
+.case-stat-l { font-size: 0.75rem; color: var(--ink-2); margin-top: 2px; }
+.case-inner { display: flex; gap: 36px; align-items: center; }
+@media (max-width: 768px) { .case-inner { flex-direction: column; } .case-photo { width: 100%; } }
+
+/* ═══════════════════════════════════════════════════════════
+   ÉQUIPE
+═══════════════════════════════════════════════════════════ */
+.team-card-photo { aspect-ratio: 4/5; border-radius: 10px; overflow: hidden; position: relative; margin-bottom: 14px; }
+.team-card-photo img, .team-card-photo .initials-bg { width: 100%; height: 100%; object-fit: cover; }
+.initials-bg { display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 3rem; font-weight: 800; color: rgba(0,0,0,0.12); }
+.team-card-badge { position: absolute; top: 12px; left: 12px; }
+.team-card-name { font-family: var(--font-display); font-size: 1rem; font-weight: 700; margin-bottom: 2px; }
+.team-card-role { font-size: 0.78rem; color: var(--ink-2); }
+
+/* ═══════════════════════════════════════════════════════════
+   TÉMOIGNAGES
+═══════════════════════════════════════════════════════════ */
+.testi-card { padding: 24px; }
+.testi-stars { color: #FFC107; font-size: 0.85rem; margin-bottom: 12px; letter-spacing: 2px; }
+.testi-quote { font-size: 0.9rem; line-height: 1.65; margin-bottom: 16px; font-style: italic; color: var(--ink); }
+.testi-footer { display: flex; align-items: center; gap: 10px; padding-top: 14px; border-top: 1px solid var(--border); }
+.testi-avatar { width: 36px; height: 36px; border-radius: 50%; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 800; font-family: var(--font-display); }
+.testi-name { font-weight: 700; font-size: 0.85rem; }
+.testi-sub { font-size: 0.75rem; color: var(--ink-2); }
+
+/* ═══════════════════════════════════════════════════════════
+   CARTE SVG
+═══════════════════════════════════════════════════════════ */
+.map-wrap { position: relative; width: 100%; aspect-ratio: 16/10; background: var(--paper); border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+.map-wrap svg { width: 100%; height: 100%; }
+.map-cities { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+
+/* ═══════════════════════════════════════════════════════════
+   RDV MODULE
+═══════════════════════════════════════════════════════════ */
+.rdv-wrap { border: 2px solid var(--ink); border-radius: 14px; overflow: hidden; box-shadow: 6px 6px 0 var(--ink); }
+.rdv-header { background: var(--ink); color: white; padding: 18px 20px; display: flex; align-items: center; gap: 14px; }
+.rdv-avatar { width: 44px; height: 44px; border-radius: 50%; overflow: hidden; border: 2px solid var(--yellow); flex-shrink: 0; }
+.rdv-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.rdv-name { font-family: var(--font-display); font-weight: 700; font-size: 0.95rem; }
+.rdv-info { font-size: 0.75rem; color: rgba(255,255,255,0.65); margin-top: 2px; }
+.rdv-body { padding: 20px; background: white; }
+.rdv-section-title { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-2); margin-bottom: 10px; }
+.rdv-days { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; margin-bottom: 16px; }
+.rdv-day { padding: 8px 4px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 0.72rem; font-weight: 600; text-align: center; cursor: pointer; transition: all 0.15s; background: white; font-family: var(--font-body); }
+.rdv-day:hover { border-color: var(--blue); background: var(--blue-soft); }
+.rdv-day.active { border-color: var(--blue); background: var(--blue); color: white; }
+.rdv-slots { display: grid; grid-template-columns: repeat(5,1fr); gap: 6px; margin-bottom: 16px; }
+.rdv-slot { padding: 11px 4px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 0.8rem; font-weight: 700; text-align: center; cursor: pointer; transition: all 0.15s; background: white; font-family: var(--font-mono); }
+.rdv-slot:hover { border-color: var(--blue); color: var(--blue); }
+.rdv-slot.active { background: var(--blue); border-color: var(--blue); color: white; }
+.rdv-footer-note { text-align: center; font-size: 0.72rem; color: var(--ink-2); margin-top: 10px; }
+.rdv-footer-note span { color: var(--green); }
+
+/* ═══════════════════════════════════════════════════════════
+   FAQ
+═══════════════════════════════════════════════════════════ */
+.faq-item { border-bottom: 1.5px solid var(--border); }
+.faq-question {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 0; cursor: pointer;
+  font-weight: 600; font-size: 0.95rem; color: var(--ink);
+  user-select: none;
+  transition: color 0.15s;
+  gap: 16px;
+}
+.faq-question:hover { color: var(--blue); }
+.faq-icon { width: 28px; height: 28px; border-radius: 50%; background: var(--paper); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1rem; color: var(--blue); transition: transform 0.25s, background 0.15s; }
+.faq-item.open .faq-icon { transform: rotate(45deg); background: var(--blue); color: white; }
+.faq-answer { overflow: hidden; max-height: 0; transition: max-height 0.35s ease; }
+.faq-answer-inner { padding: 0 0 20px; font-size: 0.9rem; color: var(--ink-2); line-height: 1.7; }
+
+/* ═══════════════════════════════════════════════════════════
+   CTA FINAL
+═══════════════════════════════════════════════════════════ */
+.cta-final { padding: 120px 48px; background: var(--blue); color: white; text-align: center; position: relative; overflow: hidden; }
+.cta-final::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 70% at 50% 0%, rgba(255,255,255,0.08) 0%, transparent 70%);
+}
+.cta-final > * { position: relative; }
+.cta-final-sub { font-size: 1.1rem; color: rgba(255,255,255,0.85); max-width: 540px; margin: 0 auto 36px; }
+.cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+@media (max-width: 600px) { .cta-final { padding: 80px 20px; } }
+
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════ */
+#footer { background: #080A0E; color: rgba(255,255,255,0.6); padding: 56px 48px 32px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; }
+.footer-logo { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; color: white; margin-bottom: 8px; }
+.footer-logo span { color: var(--blue); }
+.footer-tagline { font-size: 0.82rem; margin-bottom: 40px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+.footer-col-title { font-family: var(--font-mono); font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); margin-bottom: 14px; }
+.footer-links { display: flex; flex-direction: column; gap: 8px; }
+.footer-links a { font-size: 0.85rem; color: rgba(255,255,255,0.6); transition: color 0.15s; }
+.footer-links a:hover { color: white; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr 1fr; } #footer { padding: 48px 20px 24px; } }
+
+/* ═══════════════════════════════════════════════════════════
+   PROOF TICKER
+═══════════════════════════════════════════════════════════ */
+.proof-ticker { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: var(--ink); color: white; border-radius: 8px; font-size: 0.82rem; width: fit-content; }
+.proof-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(52,194,106,0.2); flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════════════════════
+   MOBILE STICKY BAR
+═══════════════════════════════════════════════════════════ */
+.mobile-bar {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  padding: 12px 16px; background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(12px); border-top: 1px solid var(--border);
+  z-index: 99; gap: 8px;
+}
+@media (max-width: 768px) { .mobile-bar { display: flex; } }
+
+/* ─── Section header ───────────────────────────────────────── */
+.section-header { margin-bottom: 56px; }
+.section-header.center { text-align: center; }
+.section-header p { font-size: 1rem; color: var(--ink-2); margin-top: 12px; max-width: 540px; line-height: 1.65; }
+.section-header.center p { margin: 12px auto 0; }
+
+/* ─── About section ───────────────────────────────────────── */
+.about-stat-n { font-family: var(--font-display); font-size: 2rem; font-weight: 800; color: var(--blue); }
+.about-stat-l { font-size: 0.75rem; color: var(--ink-2); margin-top: 2px; }
+.about-stats { display: flex; gap: 36px; margin-top: 24px; }
+
+/* ─── Separator line ──────────────────────────────────────── */
+.sep { border: none; border-top: 1.5px solid var(--border); }
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══════════════════════════════════════════════════ -->
+<nav id="nav">
+  <div class="nav-logo">Desk<span>M</span>achine</div>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#tarifs">Tarifs</a>
+    <a href="#equipe">L'équipe</a>
+    <a href="#rdv">Contact</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-city" id="navCity" onclick="toggleCityDropdown()">
+      <span>📍</span>
+      <span id="navCityName">Lausanne</span>
+      <span style="font-size:0.65rem; opacity:0.7">▾</span>
+      <div class="city-dropdown" id="cityDropdown"></div>
+    </div>
+    <a href="#rdv" class="btn btn-primary btn-sm" style="margin-left:4px">Demander un RDV →</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-pill">📍 N°1 fiduciaire en ligne · <span id="heroPillCity">Lausanne</span></div>
+      <h1 class="hero-title">
+        Divisez par&nbsp;2<br>
+        le coût de votre<br>
+        <span class="squiggle-yellow">fiduciaire</span><br>
+        à <span class="city-name" id="heroTitleCity">Lausanne</span>.
+      </h1>
+      <p class="hero-sub" id="heroSub">
+        Comptabilité 100% en ligne pour PME (<span id="heroMetiers">Startups tech · Consultants IT · Architectes</span>).
+        Conseiller dédié, brevet fédéral, dès <b>CHF&nbsp;149.-/mois</b>.
+      </p>
+      <div class="hero-btns">
+        <a href="#calculateur" class="btn btn-yellow btn-lg">Calculer mes économies →</a>
+        <a href="#tarifs" class="btn btn-white">Voir le comparatif</a>
+      </div>
+      <div class="hero-social">
+        <div class="portrait-stack">
+          <div class="avatar" style="background:none; overflow:hidden">
+            <img src="https://cdn.prod.website-files.com/68c005c9c1663ab4e1b4ea1b/69689c36b792f12c948acd54_WhatsApp%20Image%202026-01-15%20at%2008.38.46.jpeg" style="width:100%;height:100%;object-fit:cover">
+          </div>
+          <div class="avatar">ML</div>
+          <div class="avatar" style="background:#FCE0E0; color:#c03040">SR</div>
+          <div class="avatar" style="background:#DAF1E2; color:#1a7a46">TB</div>
+        </div>
+        <div class="hero-social-text">
+          <div class="hero-social-stars">★★★★★</div>
+          <strong>+100 PME accompagnées</strong>
+          4.9/5 · 127 avis vérifiés
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-photo">
+        <img src="https://cdn.prod.website-files.com/68c005c9c1663ab4e1b4ea1b/69689c36b792f12c948acd54_WhatsApp%20Image%202026-01-15%20at%2008.38.46.jpeg" alt="Équipe DeskMachine">
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-status"><span class="hero-card-dot"></span>En ligne</div>
+        <div class="hero-card-name">Julie · Conseillère <span id="heroCanton">VD</span></div>
+        <div class="hero-card-sub">Réponse moyenne : 1h47</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CALCULATEUR ════════════════════════════════════════════ -->
+<section id="calculateur" class="section section-paper">
+  <div class="container">
+    <div class="grid-2" style="gap:64px">
+      <div class="reveal">
+        <div class="label" data-n="02">Calculateur</div>
+        <h2 class="h2">Combien vous coûte <em>vraiment</em> votre fiduciaire ?</h2>
+        <p style="color:var(--ink-2); font-size:1rem; margin-top:16px; line-height:1.65">Bougez le curseur. On vous montre l'écart en CHF, par an. Sans inscription, sans email.</p>
+        <div style="margin-top:32px">
+          <div class="proof-ticker">
+            <div class="proof-dot"></div>
+            <span><b id="tickerCity">3 PME à Lausanne</b> ont demandé une simulation cette semaine</span>
+          </div>
+        </div>
+        <div style="margin-top:24px; display:flex; gap:32px">
+          <div>
+            <div style="font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--blue)" id="calcEcoAn">CHF 0</div>
+            <div style="font-size:0.78rem;color:var(--ink-2);margin-top:2px">économies potentielles / an</div>
+          </div>
+          <div>
+            <div style="font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--ink)" id="calcEcoPct">0%</div>
+            <div style="font-size:0.78rem;color:var(--ink-2);margin-top:2px">de réduction estimée</div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="calc-wrapper">
+          <div class="calc-label-row">
+            <span class="calc-badge">🧮 Calculateur</span>
+            <span style="font-size:0.8rem;color:var(--ink-2)">Estimez vos économies en 10s</span>
+          </div>
+          <div class="calc-q">Combien payez-vous votre fiduciaire actuelle / mois ?</div>
+          <input type="range" id="calcSlider" min="150" max="1500" step="50" value="450">
+          <div class="calc-range-labels"><span>150 CHF</span><span>1500+ CHF</span></div>
+          <div class="calc-range-current" id="calcCurrent">CHF 450.-</div>
+          <div class="calc-grid">
+            <div class="calc-box before">
+              <div class="calc-box-label">Aujourd'hui</div>
+              <div class="calc-box-amount" id="calcBefore">CHF 450.-</div>
+              <div class="calc-box-sub">par mois</div>
+            </div>
+            <div class="calc-box after">
+              <div class="calc-box-label">Avec DeskMachine</div>
+              <div class="calc-box-amount" id="calcAfter">CHF 249.-</div>
+              <div class="calc-box-sub">par mois</div>
+            </div>
+          </div>
+          <div class="calc-savings">
+            <div class="calc-savings-label">Vous économisez</div>
+            <div class="calc-savings-amount" id="calcSavings">CHF 2'424.-</div>
+            <div class="calc-savings-sub">par an · estimation basée sur votre profil</div>
+          </div>
+          <a href="#rdv" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:14px">Recevoir mon offre exacte →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TRUST STRIP ════════════════════════════════════════════ -->
+<div class="trust-strip">
+  <div class="trust-label">+100 PME suisses nous font confiance</div>
+  <div class="trust-logos">
+    <div class="trust-logo">KUMBHA</div>
+    <div class="trust-logo">ALPLOG</div>
+    <div class="trust-logo">ROCHE & CIE</div>
+    <div class="trust-logo">ATELIER 7</div>
+    <div class="trust-logo">NORD-SUD</div>
+    <div class="trust-logo">HELVETIA-X</div>
+  </div>
+</div>
+
+<!-- ═══ KPIs ═══════════════════════════════════════════════════ -->
+<section class="section-sm">
+  <div class="kpi-grid">
+    <div class="kpi-item reveal">
+      <div class="kpi-number" data-target="-50">−50%</div>
+      <div class="kpi-label">moins cher qu'un fiduciaire classique</div>
+    </div>
+    <div class="kpi-item reveal reveal-delay-1">
+      <div class="kpi-number">24h</div>
+      <div class="kpi-label">pour démarrer, sans paperasse ni déplacement</div>
+    </div>
+    <div class="kpi-item reveal reveal-delay-2">
+      <div class="kpi-number" data-target="100">+100</div>
+      <div class="kpi-label">PME romandes accompagnées</div>
+    </div>
+    <div class="kpi-item reveal reveal-delay-3">
+      <div class="kpi-number">4.9★</div>
+      <div class="kpi-label">127 avis Google vérifiés</div>
+    </div>
+  </div>
+</section>
+<hr class="sep">
+
+<!-- ═══ COMPARATEUR ════════════════════════════════════════════ -->
+<section id="tarifs" class="section">
+  <div class="container">
+    <div class="grid-2" style="gap:64px">
+      <div class="reveal">
+        <div class="label" data-n="03">Comparatif tarifaire</div>
+        <h2 class="h2">Combien vous coûte vraiment une fiduciaire à <span class="city-display" id="compCity">Lausanne</span> ?</h2>
+        <p style="color:var(--ink-2);margin-top:16px;line-height:1.65">Tarifs réels constatés pour une PME de 5 employés, configuration équivalente. Pas de frais cachés, pas de petites lignes.</p>
+        <a href="#rdv" class="btn btn-primary" style="margin-top:28px">Voir mon offre →</a>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="table-wrap">
+          <div class="table-header">
+            <span class="table-header-title">Comparatif fiduciaires romandes</span>
+            <span class="table-header-tag">maj. 04/2026</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Prestataire</th>
+                <th>Prix/mois</th>
+                <th>100% digital</th>
+                <th>Réponse</th>
+                <th>Brevet féd.</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="highlight">
+                <td>⭐ DeskMachine</td>
+                <td>CHF 149.-</td>
+                <td>✅</td>
+                <td>24h</td>
+                <td>✅</td>
+              </tr>
+              <tr>
+                <td>Fiduciaire A</td>
+                <td>CHF 380.-</td>
+                <td>❌</td>
+                <td>1–2 sem.</td>
+                <td>✅</td>
+              </tr>
+              <tr>
+                <td>Fiduciaire B</td>
+                <td>CHF 450.-</td>
+                <td>🟡 partiel</td>
+                <td>1 sem.</td>
+                <td>✅</td>
+              </tr>
+              <tr>
+                <td>Comptable indép.</td>
+                <td>CHF 320.-</td>
+                <td>❌</td>
+                <td>variable</td>
+                <td>❌</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="table-note">Tarifs moyens constatés en Suisse romande, configuration équivalente.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ AVANT / APRÈS ═══════════════════════════════════════════ -->
+<section class="section section-paper">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label" data-n="04">Méthode</div>
+      <h2 class="h2">L'ancien monde vs <span style="color:var(--blue)">le nouveau.</span></h2>
+    </div>
+    <div class="avant-apres reveal">
+      <div class="aa-card before">
+        <div class="aa-title">⛔ Méthode traditionnelle</div>
+        <div class="check-item"><span class="icon no">✕</span><span>Processus manuels et chronophages</span></div>
+        <div class="check-item"><span class="icon no">✕</span><span>Déplacements en agence à <span class="city-inline" id="aaCity">Lausanne</span></span></div>
+        <div class="check-item"><span class="icon no">✕</span><span>Pièces demandées en retard, jamais pro-actif</span></div>
+        <div class="check-item"><span class="icon no">✕</span><span>Résultats trop tard pour décider</span></div>
+        <div class="check-item"><span class="icon no">✕</span><span>Tarifs opaques, frais cachés à la facture</span></div>
+        <div class="check-item"><span class="icon no">✕</span><span>Comptabilité partiellement à votre charge</span></div>
+      </div>
+      <div class="aa-card after">
+        <div class="aa-title">✅ Avec DeskMachine</div>
+        <div class="check-item"><span class="icon yes">✓</span><span>100% en ligne, zéro déplacement</span></div>
+        <div class="check-item"><span class="icon yes">✓</span><span>Compta prise en charge de A à Z</span></div>
+        <div class="check-item"><span class="icon yes">✓</span><span>Suivi en temps réel sur votre dashboard</span></div>
+        <div class="check-item"><span class="icon yes">✓</span><span>Conseiller dédié basé en <span class="canton-inline" id="aaCanton">VD</span></span></div>
+        <div class="check-item"><span class="icon yes">✓</span><span>Tarif fixe et transparent, dès CHF 149.-/mois</span></div>
+        <div class="check-item"><span class="icon yes">✓</span><span>Réponse en moins de 2h ouvrées</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SERVICES ═══════════════════════════════════════════════ -->
+<section id="services" class="section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label" data-n="05">Services</div>
+      <h2 class="h2">Tout ce dont une PME a besoin.</h2>
+      <p>Comptable, salarial, administratif. Vous nous envoyez vos documents, on s'occupe du reste.</p>
+    </div>
+    <div class="grid-3 reveal">
+      <div class="card service-card">
+        <div class="service-icon">📥</div>
+        <div class="service-title">Saisie comptable</div>
+        <div class="service-desc">Vous envoyez vos documents, on saisit. Tous formats acceptés (PDF, photo, export bancaire).</div>
+      </div>
+      <div class="card service-card">
+        <div class="service-icon">🧾</div>
+        <div class="service-title">TVA &amp; déclarations</div>
+        <div class="service-desc">Décomptes trimestriels ou annuels, déclarations d'impôts, on s'occupe de tout dans les délais.</div>
+      </div>
+      <div class="card service-card">
+        <div class="service-icon">👥</div>
+        <div class="service-title">Salaires &amp; RH</div>
+        <div class="service-desc">Fiches de paie, déclarations AVS/LPP, attestations de salaire — précis et dans les délais.</div>
+      </div>
+      <div class="card service-card">
+        <div class="service-icon">📊</div>
+        <div class="service-title">Bouclement annuel</div>
+        <div class="service-desc">Bilan, compte de résultat, rapport de gestion — prêt pour votre AG et votre banque.</div>
+      </div>
+      <div class="card service-card">
+        <div class="service-icon">💼</div>
+        <div class="service-title">Conseil fiscal</div>
+        <div class="service-desc">Optimisation fiscale adaptée au canton <span class="canton-inline" id="servCanton">VD</span>. On vous explique clairement ce qui est possible.</div>
+      </div>
+      <div class="card service-card">
+        <div class="service-icon">📁</div>
+        <div class="service-title">Archivage digital</div>
+        <div class="service-desc">Tous vos documents accessibles 10 ans, hébergés en Suisse chez Infomaniak. Conforme RGPD.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ PROCESS ════════════════════════════════════════════════ -->
+<section class="section section-dark">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label" data-n="06" style="color:rgba(255,255,255,0.4)">Onboarding</div>
+      <h2 class="h2" style="color:white">Démarrer prend 24 heures.<br><span style="color:var(--yellow)">Pas 24 jours.</span></h2>
+      <p style="color:rgba(255,255,255,0.6); max-width:540px;">De l'appel découverte à la première saisie, sans interruption de service et sans stress.</p>
+    </div>
+    <div class="process-steps reveal">
+      <div class="process-step">
+        <div class="process-num">01</div>
+        <div class="process-day">Jour 01</div>
+        <div class="process-title">Discovery 30min</div>
+        <div class="process-desc">On comprend votre activité, vos besoins et votre situation actuelle.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">02</div>
+        <div class="process-day">Jour 01</div>
+        <div class="process-title">Devis transparent</div>
+        <div class="process-desc">Tarif fixe, tout inclus, pas de petites lignes. Vous savez exactement ce que vous payez.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">03</div>
+        <div class="process-day">Jour 02–07</div>
+        <div class="process-title">Migration</div>
+        <div class="process-desc">On récupère tout chez votre fiduciaire actuelle. Zéro démarche de votre côté.</div>
+      </div>
+      <div class="process-step">
+        <div class="process-num">04</div>
+        <div class="process-day">Jour 07–14</div>
+        <div class="process-title">C'est parti</div>
+        <div class="process-desc">Première saisie effectuée, dashboard activé, conseiller assigné. Vous êtes opérationnel.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CAS CLIENT ═════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="label reveal" data-n="07" style="margin-bottom:32px">Cas client</div>
+    <div class="card case-card reveal">
+      <div class="case-inner">
+        <div class="case-photo">
+          <img src="https://cdn.prod.website-files.com/68c005c9c1663ab4e1b4ea1b/69689c36b792f12c948acd54_WhatsApp%20Image%202026-01-15%20at%2008.38.46.jpeg" alt="Felix Buchbinder">
+        </div>
+        <div class="case-content">
+          <div class="pill pill-blue" style="margin-bottom:16px">📍 <span id="caseMetier">Startups tech</span> · <span class="city-inline" id="caseCity">Lausanne</span></div>
+          <div class="case-quote">« On a divisé nos frais comptables par 2 et on récupère 8h par semaine. La migration s'est faite en 10 jours, sans qu'on ait à faire quoi que ce soit. »</div>
+          <div class="case-meta"><strong>Felix Buchbinder</strong> · Directeur, Kumbha Sàrl — 12 employés, <span class="canton-inline" id="caseCanton">VD</span></div>
+          <div class="case-stats">
+            <div><div class="case-stat-n">−52%</div><div class="case-stat-l">frais compta / an</div></div>
+            <div><div class="case-stat-n">8h/sem</div><div class="case-stat-l">temps récupéré</div></div>
+            <div><div class="case-stat-n">10j</div><div class="case-stat-l">migration complète</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ÉQUIPE ══════════════════════════════════════════════════ -->
+<section id="equipe" class="section section-paper">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="label" data-n="08">L'équipe</div>
+      <h2 class="h2">Des humains.<br>Pas un call-center.</h2>
+      <p>Chaque PME a un conseiller dédié, basé en Suisse romande. On connaît votre dossier, votre métier, votre canton.</p>
+    </div>
+    <div class="grid-4 reveal">
+      <div>
+        <div class="team-card-photo">
+          <img src="https://cdn.prod.website-files.com/68c005c9c1663ab4e1b4ea1b/69689c36b792f12c948acd54_WhatsApp%20Image%202026-01-15%20at%2008.38.46.jpeg" alt="Julie Dubois">
+          <div class="team-card-badge"><span class="pill pill-blue" style="font-size:0.65rem;padding:3px 8px">📍 <span class="canton-inline" id="teamCanton">VD</span></span></div>
+        </div>
+        <div class="team-card-name">Julie Dubois</div>
+        <div class="team-card-role">Conseillère senior · Brevet fédéral</div>
+      </div>
+      <div>
+        <div class="team-card-photo">
+          <div class="initials-bg" style="background:#D7E6FF">ML</div>
+          <div class="team-card-badge"><span class="pill" style="font-size:0.65rem;padding:3px 8px">📍 VD</span></div>
+        </div>
+        <div class="team-card-name">Marc Lachance</div>
+        <div class="team-card-role">Expert TVA &amp; fiscalité</div>
+      </div>
+      <div>
+        <div class="team-card-photo">
+          <div class="initials-bg" style="background:#FCE0E0">SR</div>
+          <div class="team-card-badge"><span class="pill" style="font-size:0.65rem;padding:3px 8px">📍 GE</span></div>
+        </div>
+        <div class="team-card-name">Sophie Roulin</div>
+        <div class="team-card-role">Conseillère salaires &amp; RH</div>
+      </div>
+      <div>
+        <div class="team-card-photo">
+          <div class="initials-bg" style="background:#DAF1E2">TB</div>
+          <div class="team-card-badge"><span class="pill" style="font-size:0.65rem;padding:3px 8px">📍 NE</span></div>
+        </div>
+        <div class="team-card-name">Thomas Berger</div>
+        <div class="team-card-role">Conseiller bouclements</div>
+      </div>
+    </div>
+    <div style="margin-top:32px; display:flex; align-items:center; gap:16px; flex-wrap:wrap" class="reveal">
+      <div class="portrait-stack">
+        <div class="avatar" style="background:none;overflow:hidden;border-color:rgba(0,0,0,0.2)"><img src="https://cdn.prod.website-files.com/68c005c9c1663ab4e1b4ea1b/69689c36b792f12c948acd54_WhatsApp%20Image%202026-01-15%20at%2008.38.46.jpeg" style="width:100%;height:100%;object-fit:cover"></div>
+        <div class="avatar" style="border-color:rgba(0,0,0,0.2)">+8</div>
+      </div>
+      <span style="font-size:0.85rem;color:var(--ink-2)">+ 8 autres conseillers · Tous brevet fédéral · Tous basés en Suisse romande</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TÉMOIGNAGES ════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="label" data-n="09" style="justify-content:center">Témoignages</div>
+      <h2 class="h2">Ils nous font confiance.</h2>
+      <p>⭐ 4.9/5 · 127 avis Google vérifiés</p>
+    </div>
+    <div class="grid-3 reveal">
+      <div class="card testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">« Migration en 2 semaines, économie de CHF 4'200/an. Le conseiller comprend notre métier. On ne reviendra jamais en arrière. »</div>
+        <div class="testi-footer">
+          <div class="testi-avatar" style="background:var(--yellow); color:var(--ink)">MR</div>
+          <div><div class="testi-name">M. Roulin</div><div class="testi-sub">Restaurant · <span class="city-inline" id="testi1City">Lausanne</span></div></div>
+        </div>
+      </div>
+      <div class="card testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">« Plus jamais de classeurs. Tout est en ligne, accessible quand je veux depuis mon téléphone. Game changer pour mon cabinet. »</div>
+        <div class="testi-footer">
+          <div class="testi-avatar" style="background:var(--blue-soft); color:var(--blue-dark)">AM</div>
+          <div><div class="testi-name">A. Müller</div><div class="testi-sub">Architecte · <span class="canton-inline" id="testi2Canton">VD</span></div></div>
+        </div>
+      </div>
+      <div class="card testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-quote">« Le tarif est exactement ce qui était annoncé. Aucune mauvaise surprise depuis 18 mois. La réactivité de l'équipe est remarquable. »</div>
+        <div class="testi-footer">
+          <div class="testi-avatar" style="background:#FCE0E0; color:#c03040">JP</div>
+          <div><div class="testi-name">J. Perret</div><div class="testi-sub">Conseil · <span class="canton-inline" id="testi3Canton">VD</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COUVERTURE ═════════════════════════════════════════════ -->
+<section class="section section-paper">
+  <div class="container">
+    <div class="grid-2" style="gap:64px">
+      <div class="reveal">
+        <div class="label" data-n="10">Couverture</div>
+        <h2 class="h2">Présents partout en Suisse romande.</h2>
+        <p style="color:var(--ink-2);margin-top:16px;line-height:1.65">Conseiller dédié dans votre canton. On connaît votre fiscalité, vos délais, vos spécificités locales.</p>
+        <div class="map-cities" id="mapCities"></div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="map-wrap">
+          <svg viewBox="0 0 400 250">
+            <path d="M30 80 Q 80 40 150 60 T 280 70 Q 350 90 370 140 Q 360 200 280 210 Q 180 220 100 200 Q 30 180 30 80 Z" fill="#E6EFFA" stroke="#2C6BD2" stroke-width="1.5" stroke-dasharray="4 3"/>
+            <g id="mapDots"></g>
+          </svg>
+          <div style="position:absolute;bottom:10px;left:12px;font-family:var(--font-mono);font-size:0.6rem;color:#aaa;letter-spacing:0.06em">SUISSE ROMANDE</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ═══════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="grid-2" style="gap:64px">
+      <div style="border-radius:16px;overflow:hidden;box-shadow:var(--shadow-lg)" class="reveal">
+        <img src="https://cdn.prod.website-files.com/68c005c9c1663ab4e1b4ea1b/69689c36b792f12c948acd54_WhatsApp%20Image%202026-01-15%20at%2008.38.46.jpeg" alt="Équipe DeskMachine" style="width:100%;aspect-ratio:4/3;object-fit:cover">
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="label" data-n="11">À propos</div>
+        <div class="pill" style="margin-bottom:16px">Qui sommes-nous</div>
+        <h2 class="h2">Créé par des entrepreneurs, pour des entrepreneurs.</h2>
+        <p style="color:var(--ink-2);margin-top:20px;line-height:1.7;font-size:1rem">Nous sommes comme vous : des entrepreneurs. Fatigués de perdre du temps avec l'administratif, on a développé nos propres outils pour automatiser la gestion comptable. Le résultat a tellement séduit nos propres clients qu'on en a fait un vrai service.</p>
+        <div class="about-stats">
+          <div><div class="about-stat-n">2021</div><div class="about-stat-l">fondation</div></div>
+          <div><div class="about-stat-n">12</div><div class="about-stat-l">experts</div></div>
+          <div><div class="about-stat-n" id="aboutCanton">VD</div><div class="about-stat-l">antenne locale</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RDV ═════════════════════════════════════════════════════ -->
+<section id="rdv" class="section section-paper">
+  <div class="container">
+    <div class="grid-2" style="gap:64px">
+      <div class="reveal">
+        <div class="label" data-n="12">Rendez-vous</div>
+        <h2 class="h2">Parlez à un conseiller <span class="city-inline" id="rdvCity">Lausanne</span> en 24h.</h2>
+        <p style="color:var(--ink-2);margin-top:16px;line-height:1.65">30 minutes, en visio ou téléphone, sans engagement. On vous explique exactement combien vous économiseriez et comment se passerait la migration.</p>
+        <div style="margin-top:28px"><div class="proof-ticker"><div class="proof-dot"></div><span><b id="rdvTicker">3 PME à Lausanne</b> ont pris RDV cette semaine</span></div></div>
+        <div style="margin-top:20px; font-size:0.85rem; color:var(--ink-2); display:flex; flex-direction:column; gap:6px">
+          <div>📞 +41 21 552 05 26</div>
+          <div>✉️ contact@deskmachine.ch</div>
+        </div>
+        <div style="margin-top:28px; display:flex; gap:16px; flex-wrap:wrap">
+          <div class="pill"><span>🛡️</span> Sans engagement</div>
+          <div class="pill"><span>🔒</span> Confidentiel</div>
+          <div class="pill"><span>⏱️</span> 30 min max</div>
+        </div>
+      </div>
+      <div class="reveal reveal-delay-2">
+        <div class="rdv-wrap">
+          <div class="rdv-header">
+            <div class="rdv-avatar">
+              <img src="https://cdn.prod.website-files.com/68c005c9c1663ab4e1b4ea1b/69689c36b792f12c948acd54_WhatsApp%20Image%202026-01-15%20at%2008.38.46.jpeg" alt="Julie">
+            </div>
+            <div>
+              <div class="rdv-name">RDV avec Julie · votre conseillère</div>
+              <div class="rdv-info">30 min · Visio ou téléphone · <span class="city-inline" id="rdvHeaderCity">Lausanne</span></div>
+            </div>
+          </div>
+          <div class="rdv-body">
+            <div class="rdv-section-title">Mai 2026</div>
+            <div class="rdv-days" id="rdvDays"></div>
+            <div class="rdv-section-title">Créneaux disponibles</div>
+            <div class="rdv-slots" id="rdvSlots"></div>
+            <a href="#" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:4px" onclick="handleRdvConfirm(event)">Confirmer le RDV →</a>
+            <div class="rdv-footer-note"><span>✓</span> Sans engagement · <span>✓</span> Confirmation instantanée</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ══════════════════════════════════════════════════════ -->
+<section class="section">
+  <div class="container">
+    <div class="grid-2" style="gap:80px; align-items:start">
+      <div class="reveal">
+        <div class="label" data-n="13">FAQ</div>
+        <h2 class="h2">Vous avez encore des questions ?</h2>
+        <p style="color:var(--ink-2);margin-top:16px;line-height:1.65">On répond aux plus fréquentes ci-contre. Pour tout autre question : <a href="mailto:contact@deskmachine.ch" style="color:var(--blue);font-weight:600">contact@deskmachine.ch</a></p>
+      </div>
+      <div class="reveal reveal-delay-2" id="faqList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA FINAL ══════════════════════════════════════════════ -->
+<section class="cta-final">
+  <div class="label reveal" data-n="14" style="justify-content:center; color:rgba(255,255,255,0.5); margin-bottom:24px">Prêt à changer ?</div>
+  <h2 class="display reveal" style="color:white; margin-bottom:16px">
+    Prêt à économiser <span class="squiggle-yellow">50%</span><br>sur votre fiduciaire&nbsp;?
+  </h2>
+  <p class="cta-final-sub reveal">30 secondes pour simuler. 24h pour recevoir votre offre. Zéro engagement.</p>
+  <div class="cta-btns reveal">
+    <a href="#calculateur" class="btn btn-yellow btn-lg">Lancer ma simulation →</a>
+    <a href="tel:+41215520526" class="btn btn-white btn-lg">📞 Nous appeler</a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═════════════════════════════════════════════════ -->
+<footer id="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">Desk<span>M</span>achine</div>
+    <div class="footer-tagline">La fiduciaire en ligne qui comprend votre métier.</div>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-col-title">Contact</div>
+        <div class="footer-links">
+          <a href="tel:+41215520526">+41 21 552 05 26</a>
+          <a href="mailto:contact@deskmachine.ch">contact@deskmachine.ch</a>
+          <a>Yverdon-les-Bains (siège)</a>
+          <a id="footerCity">Antenne Lausanne</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Services</div>
+        <div class="footer-links">
+          <a href="#services">Comptabilité</a>
+          <a href="#services">TVA</a>
+          <a href="#services">Salaires</a>
+          <a href="#services">Conseil fiscal</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Entreprise</div>
+        <div class="footer-links">
+          <a href="#equipe">L'équipe</a>
+          <a href="#tarifs">Tarifs</a>
+          <a>Témoignages</a>
+          <a>Blog</a>
+        </div>
+      </div>
+      <div>
+        <div class="footer-col-title">Légal</div>
+        <div class="footer-links">
+          <a>Mentions légales</a>
+          <a>Confidentialité</a>
+          <a>CGV</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 DeskMachine Sàrl · CHE-300.783.289 · Yverdon-les-Bains</span>
+      <span>🇨🇭 Données hébergées en Suisse · Infomaniak</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Mobile bar -->
+<div class="mobile-bar">
+  <a href="#calculateur" class="btn btn-primary" style="flex:1;justify-content:center">Simuler mes économies →</a>
+  <a href="#rdv" class="btn btn-ghost btn-sm" style="width:44px;justify-content:center;padding:0">💬</a>
+</div>
+
+<script>
+// ─── City data ──────────────────────────────────────────────
+const CITIES = {
+  geneve:    { name:'Genève',            canton:'GE', tva:'8.1%', spec:'finance internationale', metiers:['Avocats','Conseil & finance','E-commerce'] },
+  lausanne:  { name:'Lausanne',          canton:'VD', tva:'8.1%', spec:'PME & startups',          metiers:['Startups tech','Consultants IT','Architectes'] },
+  montreux:  { name:'Montreux-Riviera',  canton:'VD', tva:'8.1%', spec:'tourisme & hôtellerie',   metiers:['Restaurants','Hôtels','Salons & esthétique'] },
+  yverdon:   { name:'Yverdon-les-Bains', canton:'VD', tva:'8.1%', spec:'industrie & artisanat',   metiers:['Artisans','Construction','PME industrie'] },
+  neuchatel: { name:'Neuchâtel',         canton:'NE', tva:'8.1%', spec:'horlogerie & micro-tech', metiers:['Horlogerie','Bureaux d\'études','Cabinets médicaux'] },
+  nyon:      { name:'Nyon',              canton:'VD', tva:'8.1%', spec:'multinationales & sièges', metiers:['Sièges sociaux','Conseil','Immobilier'] },
+  bienne:    { name:'Bienne',            canton:'BE', tva:'8.1%', spec:'bilingue DE/FR',           metiers:['Industrie','Médecins','Garages'] },
+  sion:      { name:'Sion (Valais)',     canton:'VS', tva:'8.1%', spec:'tourisme & vignerons',     metiers:['Vignerons','Restaurants','Construction'] },
+};
+
+const MAP_COORDS = {
+  geneve:{x:70,y:180}, nyon:{x:95,y:165}, lausanne:{x:130,y:150},
+  montreux:{x:165,y:165}, yverdon:{x:145,y:110}, neuchatel:{x:175,y:95},
+  bienne:{x:215,y:90}, sion:{x:235,y:175},
+};
+
+const TEAM_PHOTO = 'https://cdn.prod.website-files.com/68c005c9c1663ab4e1b4ea1b/69689c36b792f12c948acd54_WhatsApp%20Image%202026-01-15%20at%2008.38.46.jpeg';
+
+// ─── City init ──────────────────────────────────────────────
+function getUrlCity() {
+  const p = new URLSearchParams(window.location.search);
+  const v = p.get('ville');
+  return CITIES[v] ? v : 'lausanne';
+}
+
+let currentCity = getUrlCity();
+
+function setCity(key) {
+  currentCity = key;
+  const city = CITIES[key];
+  document.title = `DeskMachine — Fiduciaire en ligne · ${city.name}`;
+  // Nav
+  document.getElementById('navCityName').textContent = city.name;
+  // Hero
+  document.getElementById('heroPillCity').textContent = city.name;
+  document.getElementById('heroTitleCity').textContent = city.name;
+  document.getElementById('heroCanton').textContent = city.canton;
+  document.getElementById('heroSub').querySelector('.city-inline') && null;
+  document.getElementById('heroMetiers').textContent = city.metiers.join(' · ');
+  // City-inline spans
+  document.querySelectorAll('.city-inline').forEach(el => el.textContent = city.name);
+  document.querySelectorAll('.canton-inline').forEach(el => el.textContent = city.canton);
+  document.querySelectorAll('.city-name').forEach(el => el.textContent = city.name);
+  // Individual IDs
+  const ids = { heroPillCity:city.name, heroTitleCity:city.name, heroCanton:city.canton,
+    compCity:city.name, aaCity:city.name, aaCanton:city.canton, servCanton:city.canton,
+    caseMetier:city.metiers[0], caseCity:city.name, caseCanton:city.canton,
+    teamCanton:city.canton, testi1City:city.name, testi2Canton:city.canton,
+    testi3Canton:city.canton, rdvCity:city.name, rdvHeaderCity:city.name,
+    rdvTicker:`3 PME à ${city.name}`, aboutCanton:city.canton,
+    footerCity:`Antenne ${city.name}` };
+  Object.entries(ids).forEach(([id, val]) => { const el = document.getElementById(id); if (el) el.textContent = val; });
+  document.getElementById('tickerCity').textContent = `3 PME à ${city.name}`;
+  // Map
+  renderMap(key);
+  // City pills list
+  renderMapCities(key);
+  // Dropdown active
+  document.querySelectorAll('.city-option').forEach(o => {
+    o.classList.toggle('active', o.dataset.key === key);
+  });
+  // URL
+  const url = new URL(window.location);
+  url.searchParams.set('ville', key);
+  window.history.replaceState({}, '', url);
+}
+
+// ─── City dropdown ──────────────────────────────────────────
+function buildDropdown() {
+  const dd = document.getElementById('cityDropdown');
+  Object.entries(CITIES).forEach(([key, city]) => {
+    const btn = document.createElement('button');
+    btn.className = 'city-option';
+    btn.dataset.key = key;
+    btn.textContent = `${city.name} (${city.canton})`;
+    btn.onclick = (e) => { e.stopPropagation(); setCity(key); toggleCityDropdown(false); };
+    dd.appendChild(btn);
+  });
+}
+
+function toggleCityDropdown(force) {
+  const dd = document.getElementById('cityDropdown');
+  const open = force !== undefined ? force : !dd.classList.contains('open');
+  dd.classList.toggle('open', open);
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#navCity')) toggleCityDropdown(false);
+});
+
+// ─── Map render ─────────────────────────────────────────────
+function renderMap(activeKey) {
+  const g = document.getElementById('mapDots');
+  g.innerHTML = '';
+  Object.entries(MAP_COORDS).forEach(([key, c]) => {
+    const active = key === activeKey;
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('cx', c.x); circle.setAttribute('cy', c.y);
+    circle.setAttribute('r', active ? 9 : 5.5);
+    circle.setAttribute('fill', active ? '#2C6BD2' : 'white');
+    circle.setAttribute('stroke', '#2C6BD2'); circle.setAttribute('stroke-width', active ? 2 : 1.5);
+    if (active) {
+      const pulse = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      pulse.setAttribute('cx', c.x); pulse.setAttribute('cy', c.y); pulse.setAttribute('r', 14);
+      pulse.setAttribute('fill', 'rgba(44,107,210,0.12)'); pulse.setAttribute('stroke', 'none');
+      g.appendChild(pulse);
+    }
+    g.appendChild(circle);
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', c.x + 13); label.setAttribute('y', c.y + 4);
+    label.setAttribute('font-size', '10'); label.setAttribute('font-family', 'Nunito Sans, sans-serif');
+    label.setAttribute('font-weight', active ? '700' : '400');
+    label.setAttribute('fill', active ? '#1B4FA8' : '#333');
+    label.textContent = CITIES[key].name.split(' ')[0];
+    g.appendChild(label);
+  });
+}
+
+function renderMapCities(activeKey) {
+  const wrap = document.getElementById('mapCities');
+  if (!wrap) return;
+  wrap.innerHTML = '';
+  Object.entries(CITIES).forEach(([key, city]) => {
+    const pill = document.createElement('span');
+    const isActive = key === activeKey;
+    pill.className = isActive ? 'pill pill-blue' : 'pill';
+    pill.style.cursor = 'pointer';
+    pill.innerHTML = `📍 ${city.name}`;
+    pill.onclick = () => setCity(key);
+    wrap.appendChild(pill);
+  });
+}
+
+// ─── RDV module ─────────────────────────────────────────────
+const RDV_DAYS = ['Lun 26', 'Mar 27', 'Mer 28', 'Jeu 29', 'Ven 30'];
+const RDV_SLOTS = ['09:00', '10:30', '14:00', '15:30', '17:00'];
+let rdvSelected = { d: 1, s: 1 };
+
+function renderRDV() {
+  const daysEl = document.getElementById('rdvDays');
+  const slotsEl = document.getElementById('rdvSlots');
+  if (!daysEl || !slotsEl) return;
+  daysEl.innerHTML = RDV_DAYS.map((d, i) =>
+    `<button class="rdv-day ${rdvSelected.d===i?'active':''}" onclick="selectDay(${i})">${d}</button>`
+  ).join('');
+  slotsEl.innerHTML = RDV_SLOTS.map((s, i) =>
+    `<button class="rdv-slot ${rdvSelected.s===i?'active':''}" onclick="selectSlot(${i})">${s}</button>`
+  ).join('');
+}
+
+function selectDay(i) { rdvSelected.d = i; renderRDV(); }
+function selectSlot(i) { rdvSelected.s = i; renderRDV(); }
+
+function handleRdvConfirm(e) {
+  e.preventDefault();
+  const btn = e.target;
+  const day = RDV_DAYS[rdvSelected.d];
+  const slot = RDV_SLOTS[rdvSelected.s];
+  const city = CITIES[currentCity];
+  btn.textContent = `✓ RDV confirmé — ${day} à ${slot}`;
+  btn.style.background = '#34C26A';
+  btn.style.boxShadow = '0 4px 16px rgba(52,194,106,0.3)';
+  btn.style.cursor = 'default';
+}
+
+// ─── FAQ ────────────────────────────────────────────────────
+const FAQ_DATA = [
+  { q: "Que propose DeskMachine en plus d'une fiduciaire normale ?", a: "DeskMachine offre la même expertise comptable (brevet fédéral) mais 100% en ligne : tableau de bord en temps réel, réponse garantie en moins de 2h, tarif fixe tout inclus. Pas de paperasse, pas de déplacement, pas de mauvaise surprise sur la facture." },
+  { q: "Comment se passe la migration depuis ma fiduciaire actuelle ?", a: "On s'occupe de tout. On contacte votre fiduciaire actuelle pour récupérer vos données, on configure votre dossier et votre dashboard. La migration prend généralement 7 à 14 jours, sans aucune interruption de service de votre côté." },
+  { q: "Mes données sont-elles vraiment sécurisées en Suisse ?", a: "Oui. Toutes vos données sont hébergées chez Infomaniak, en Suisse, dans des datacentres certifiés ISO 27001. Elles ne transitent jamais hors de la Suisse. Conformité complète avec les lois suisses sur la protection des données (LPD)." },
+  { q: "Puis-je résilier à tout moment ?", a: "Oui. Notre engagement est mensuel. Un préavis de 30 jours suffit. On vous aide à transférer votre dossier complet à un autre prestataire si vous le souhaitez — on n'a aucun intérêt à vous retenir sans valeur ajoutée." },
+  { q: "Est-ce que vous gérez les spécificités fiscales cantonales ?", a: "Absolument. Chaque conseiller DeskMachine est spécialisé dans le canton où il opère — délais de déclaration, taux d'imposition, spécificités locales. Votre dossier ne sera jamais traité par quelqu'un qui ne connaît pas votre canton." },
+  { q: "Quels sont les délais de réponse de mon conseiller ?", a: "Nous garantissons une réponse en moins de 2h ouvrées (9h–18h, lundi–vendredi). En pratique, la moyenne est 1h47. Pour les urgences, un numéro direct est disponible." },
+];
+
+function renderFAQ() {
+  const list = document.getElementById('faqList');
+  if (!list) return;
+  list.innerHTML = FAQ_DATA.map((item, i) => `
+    <div class="faq-item ${i===0?'open':''}">
+      <div class="faq-question" onclick="toggleFAQ(${i})">
+        <span>${item.q}</span>
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-answer" style="${i===0?'max-height:300px':''}">
+        <div class="faq-answer-inner">${item.a}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleFAQ(idx) {
+  document.querySelectorAll('.faq-item').forEach((item, i) => {
+    const ans = item.querySelector('.faq-answer');
+    if (i === idx) {
+      const isOpen = item.classList.contains('open');
+      item.classList.toggle('open', !isOpen);
+      ans.style.maxHeight = isOpen ? '0' : '300px';
+    } else {
+      item.classList.remove('open');
+      item.querySelector('.faq-answer').style.maxHeight = '0';
+    }
+  });
+}
+
+// ─── Calculator ──────────────────────────────────────────────
+function updateCalc() {
+  const chf = parseInt(document.getElementById('calcSlider').value);
+  const dm = Math.max(149, Math.round(chf * 0.55 / 10) * 10);
+  const eco = chf - dm;
+  const ecoAn = eco * 12;
+  const pct = Math.round(eco / chf * 100);
+  document.getElementById('calcCurrent').textContent = `CHF ${chf}.-`;
+  document.getElementById('calcBefore').textContent = `CHF ${chf}.-`;
+  document.getElementById('calcAfter').textContent = `CHF ${dm}.-`;
+  document.getElementById('calcSavings').textContent = `CHF ${ecoAn.toLocaleString('fr-CH')}.-`;
+  document.getElementById('calcEcoAn').textContent = `CHF ${ecoAn.toLocaleString('fr-CH')}.-`;
+  document.getElementById('calcEcoPct').textContent = `${pct}%`;
+}
+
+// ─── Sticky nav ─────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ─── Scroll reveal ───────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ─── Init ────────────────────────────────────────────────────
+buildDropdown();
+renderRDV();
+renderFAQ();
+setCity(currentCity);
+updateCalc();
+document.getElementById('calcSlider').addEventListener('input', updateCalc);
+</script>
+</body>
+</html>
+</html>
