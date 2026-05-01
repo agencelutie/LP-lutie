@@ -67,10 +67,13 @@ section[id],div[id]{scroll-margin-top:68px}
 .btn-outline:hover{background:var(--paper);border:var(--border2)}
 .btn-ghost-white{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25)}
 .btn-ghost-white:hover{background:rgba(255,255,255,.2)}
-/* shimmer on primary */
-.btn-primary::after{content:'';position:absolute;inset:0;border-radius:var(--r-sm);background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.25) 50%,transparent 60%);transform:translateX(-100%);transition:transform .5s ease}
+/* shimmer on primary — auto loop + faster on hover */
+.btn-primary::after{content:'';position:absolute;inset:0;border-radius:var(--r-sm);background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.28) 50%,transparent 60%);transform:translateX(-100%);animation:btnShim 4.5s ease-in-out infinite;animation-delay:1.5s;pointer-events:none}
 .btn-primary{position:relative;overflow:hidden}
-.btn-primary:hover::after{transform:translateX(100%)}
+.btn-primary:hover::after{animation:btnShimFast .6s ease forwards}
+@keyframes btnShim{0%{transform:translateX(-100%)}25%{transform:translateX(110%)}100%{transform:translateX(110%)}}
+@keyframes btnShimFast{to{transform:translateX(110%)}}
+@media (prefers-reduced-motion:reduce){.btn-primary::after{animation:none}}
 
 /* ─── Pills / Badges ─────────────────────────────────── */
 .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:var(--r-full);font-size:.75rem;font-weight:600;white-space:nowrap}
@@ -186,8 +189,16 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 /* bento card content */
 .bc-main .bc-eyebrow{font-family:var(--mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:16px}
 .bc-main .bc-big{font-size:clamp(2rem,4vw,3.5rem);font-weight:800;line-height:1;color:#fff;margin-bottom:8px}
-.bc-main .bc-sub{font-size:.88rem;color:rgba(255,255,255,.75);line-height:1.6;margin-bottom:28px;max-width:300px}
+.bc-main .bc-sub{font-size:.88rem;color:rgba(255,255,255,.75);line-height:1.6;margin:18px 0 24px;max-width:300px}
 .bc-main .bc-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,.12);border-radius:var(--r-full);font-size:.8rem;color:#fff;border:1px solid rgba(255,255,255,.2)}
+.bc-savings{margin-bottom:6px}
+.bc-sav-row{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;font-size:.82rem}
+.bc-sav-l{color:rgba(255,255,255,.65);font-family:var(--mono);font-size:.62rem;letter-spacing:.06em;text-transform:uppercase}
+.bc-sav-old{font-weight:700;color:rgba(255,255,255,.5);text-decoration:line-through;font-variant-numeric:tabular-nums}
+.bc-sav-new{font-weight:800;color:var(--yellow);font-size:1.1rem;font-variant-numeric:tabular-nums;transition:transform .25s var(--ease)}
+.bc-sav-bar{height:6px;background:rgba(255,255,255,.12);border-radius:3px;margin:10px 0 8px;overflow:hidden;position:relative}
+.bc-sav-bar-fill{position:absolute;inset:0;background:linear-gradient(90deg,var(--yellow) 0%,#FFD021 100%);border-radius:3px;transform-origin:left center;transform:scaleX(.5);transition:transform 1.4s cubic-bezier(.16,1,.3,1)}
+.bc-sav-saved{font-size:.78rem;font-weight:700;color:var(--yellow);font-variant-numeric:tabular-nums;letter-spacing:.01em}
 .bc-icon{font-size:2rem;margin-bottom:14px}
 .bc-label{font-size:.82rem;font-weight:700;margin-bottom:6px}
 .bc-desc{font-size:.78rem;color:var(--ink2);line-height:1.55}
@@ -199,9 +210,19 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 .bc-cities .bc-label{color:#fff}
 .bc-cities-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:10px}
 .bc-city-tag{padding:3px 8px;background:rgba(255,255,255,.1);border-radius:4px;font-size:.68rem;color:rgba(255,255,255,.8)}
-.bc-price-n{font-size:2.2rem;font-weight:800;color:var(--blue);line-height:1;margin-top:6px}
-.bc-price-s{font-size:.75rem;color:var(--ink2);margin-top:3px}
+.bc-price-n{font-size:2.2rem;font-weight:800;color:var(--blue);line-height:1;margin-top:6px;display:inline-flex;align-items:baseline;gap:4px;font-variant-numeric:tabular-nums}
+.bc-price-suf{font-size:.78rem;font-weight:600;color:var(--ink3);letter-spacing:0}
+.bc-price-s{font-size:.75rem;color:var(--ink2);margin-top:8px}
+.bc-mini-slider{position:relative;height:6px;background:rgba(44,107,210,.12);border-radius:3px;margin:10px 0 6px;overflow:visible}
+.bc-mini-slider-fill{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,var(--blue) 0%,#5B8BE0 100%);border-radius:3px;width:25%;transition:width 1.6s cubic-bezier(.45,.05,.55,.95)}
+.bc-mini-slider-thumb{position:absolute;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:2.5px solid var(--blue);box-shadow:0 2px 6px rgba(44,107,210,.35);transform:translate(-50%,-50%);left:25%;transition:left 1.6s cubic-bezier(.45,.05,.55,.95)}
+.bc-cert{position:relative}
 .bc-cert-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(44,107,210,.08);border-radius:8px;font-size:.82rem;font-weight:600;color:var(--blue-d);margin-top:10px;border:1px solid rgba(44,107,210,.15)}
+.bc-seal{position:absolute;top:18px;right:18px;width:64px;height:64px;opacity:.92}
+.bc-seal-ring{stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset 1.4s cubic-bezier(.16,1,.3,1)}
+.bc-seal-tick{stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .9s cubic-bezier(.16,1,.3,1) .9s}
+.bento-grid.in .bc-seal-ring,.bento-grid.in .bc-seal-tick{stroke-dashoffset:0}
+@media(max-width:540px){.bc-seal{width:48px;height:48px;top:14px;right:14px}}
 @media(max-width:900px){.bento-grid{grid-template-columns:1fr 1fr}.bc-main{grid-column:1/3;grid-row:1}.bc-swiss{grid-column:1;grid-row:2}.bc-speed{grid-column:2;grid-row:2}.bc-price{grid-column:1;grid-row:3}.bc-cert{grid-column:2;grid-row:3}.bc-cities{grid-column:1/3;grid-row:4}}
 @media(max-width:600px){.bento-grid{grid-template-columns:1fr}.bc-main,.bc-swiss,.bc-speed,.bc-price,.bc-cert,.bc-cities{grid-column:1;grid-row:auto}}
 
@@ -218,8 +239,19 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 .vt td{padding:13px 16px;border-top:var(--border);text-align:center;vertical-align:middle}
 .vt td:first-child{text-align:left;padding-left:20px;font-weight:500}
 .vt tr:hover td{background:var(--paper)}
-.vt .dm-c{background:rgba(44,107,210,.05);font-weight:700;color:var(--blue-d)}
+.vt .dm-c{background:rgba(44,107,210,.05);font-weight:700;color:var(--blue-d);position:relative}
 .vt tr:hover .dm-c{background:rgba(44,107,210,.09)}
+/* dm column entrance pulse on reveal */
+.vs-wrap.in .vt tbody .dm-c{animation:dmPulse 1.4s ease both}
+.vs-wrap.in .vt tbody tr:nth-child(1) .dm-c{animation-delay:.1s}
+.vs-wrap.in .vt tbody tr:nth-child(2) .dm-c{animation-delay:.2s}
+.vs-wrap.in .vt tbody tr:nth-child(3) .dm-c{animation-delay:.3s}
+.vs-wrap.in .vt tbody tr:nth-child(4) .dm-c{animation-delay:.4s}
+.vs-wrap.in .vt tbody tr:nth-child(5) .dm-c{animation-delay:.5s}
+.vs-wrap.in .vt tbody tr:nth-child(6) .dm-c{animation-delay:.6s}
+.vs-wrap.in .vt tbody tr:nth-child(7) .dm-c{animation-delay:.7s}
+@keyframes dmPulse{0%{background:rgba(44,107,210,.05)}40%{background:rgba(44,107,210,.18);box-shadow:inset 0 0 0 2px rgba(44,107,210,.25)}100%{background:rgba(44,107,210,.05);box-shadow:none}}
+@media (prefers-reduced-motion:reduce){.vs-wrap.in .vt tbody .dm-c{animation:none}}
 .chk{color:var(--green)}.x{color:var(--red)}.par{color:var(--ink3);font-size:.8rem}
 .vs-fn{padding:10px 20px;font-size:.72rem;color:var(--ink3);background:var(--paper);border-top:var(--border)}
 @media(max-width:600px){.vt th:nth-child(3),.vt th:nth-child(4),.vt td:nth-child(3),.vt td:nth-child(4){display:none}}
@@ -268,13 +300,24 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 /* ─── PROCESS (timeline) ─────────────────────────────── */
 #process{background:var(--blue-d);color:#fff}
 .proc-grid{display:grid;grid-template-columns:repeat(4,1fr);position:relative;gap:0}
-.proc-line{position:absolute;top:26px;left:8%;right:8%;height:1px;background:rgba(255,255,255,.15)}
-.proc-step{padding:0 20px;position:relative;z-index:1}
-.proc-num{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.78rem;font-weight:600;color:var(--yellow);margin-bottom:20px}
+.proc-line{position:absolute;top:26px;left:8%;right:8%;height:2px;background:linear-gradient(90deg,var(--yellow) 0%,rgba(255,228,92,.5) 100%);transform-origin:left center;transform:scaleX(0);transition:transform 1.6s cubic-bezier(.16,1,.3,1) .15s;border-radius:1px}
+.proc-grid.in .proc-line{transform:scaleX(1)}
+.proc-step{padding:0 20px;position:relative;z-index:1;opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.proc-grid.in .proc-step{opacity:1;transform:none}
+.proc-grid.in .proc-step:nth-child(2){transition-delay:.25s}
+.proc-grid.in .proc-step:nth-child(3){transition-delay:.45s}
+.proc-grid.in .proc-step:nth-child(4){transition-delay:.65s}
+.proc-grid.in .proc-step:nth-child(5){transition-delay:.85s}
+.proc-num{width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.78rem;font-weight:600;color:var(--yellow);margin-bottom:20px;transition:transform .4s cubic-bezier(.34,1.56,.64,1),background .35s,color .35s,border-color .35s,box-shadow .35s}
+.proc-step:hover .proc-num{background:var(--yellow);color:var(--ink);border-color:var(--yellow);transform:scale(1.1) rotate(-4deg);box-shadow:0 8px 24px rgba(255,228,92,.35)}
 .proc-day{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--yellow);margin-bottom:7px}
 .proc-title{font-size:1.05rem;font-weight:700;color:#fff;margin-bottom:8px}
 .proc-desc{font-size:.82rem;color:rgba(255,255,255,.6);line-height:1.6}
 @media(max-width:768px){.proc-grid{grid-template-columns:1fr 1fr;gap:28px}.proc-line{display:none}}
+@media (prefers-reduced-motion:reduce){
+  .proc-line,.proc-step,.proc-num{transition:none;transform:none;opacity:1}
+  .proc-grid.in .proc-line{transform:scaleX(1)}
+}
 
 /* ─── ADVISOR ────────────────────────────────────────── */
 #advisor{background:var(--paper)}
@@ -295,18 +338,26 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 /* ─── TESTIMONIALS carousel ──────────────────────────── */
 #testi{background:var(--surface);overflow:hidden;padding:clamp(72px,9vw,112px) 0}
 .testi-head{max-width:1200px;margin:0 auto;padding:0 clamp(20px,4vw,48px);margin-bottom:48px}
-.testi-mask{overflow:hidden;mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);-webkit-mask:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent)}
-.testi-track{display:flex;gap:18px;width:max-content;animation:testiScroll 55s linear infinite}
-.testi-track:hover{animation-play-state:paused}
-@keyframes testiScroll{to{transform:translateX(-50%)}}
-.testi-card{width:360px;flex-shrink:0;padding:26px;border-radius:var(--r-lg);border:var(--border);background:#fff;box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
-.testi-stars{color:#F59E0B;letter-spacing:2px;font-size:.8rem;margin-bottom:14px}
-.testi-q{font-size:.9rem;line-height:1.72;color:var(--ink);flex:1;margin-bottom:20px;font-style:italic}
-.testi-foot{display:flex;align-items:center;gap:12px;padding-top:16px;border-top:var(--border)}
-.testi-av{width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--paper)}
-.testi-av img{width:100%;height:100%;object-fit:cover}
-.testi-name{font-weight:700;font-size:.87rem;color:var(--ink)}
-.testi-role{font-size:.72rem;color:var(--ink2);margin-top:2px}
+/* Stagger deck (21st.dev StaggerTestimonials inspired) */
+.testi-deck{position:relative;height:420px;max-width:1200px;margin:0 auto;overflow:hidden}
+@media(max-width:640px){.testi-deck{height:360px}}
+.testi-c{position:absolute;left:50%;top:50%;width:340px;height:340px;padding:28px;background:#fff;border:2px solid rgba(0,0,0,.08);cursor:pointer;transition:transform .6s cubic-bezier(.16,1,.3,1),box-shadow .4s,background-color .4s,border-color .4s,color .4s;display:flex;flex-direction:column;clip-path:polygon(36px 0%,calc(100% - 36px) 0%,100% 36px,100% 100%,calc(100% - 36px) 100%,36px 100%,0 100%,0 36px)}
+.testi-c.center{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 14px 0 4px rgba(0,0,0,.06)}
+.testi-c:not(.center):hover{border-color:rgba(44,107,210,.45)}
+@media(max-width:640px){.testi-c{width:280px;height:300px;padding:22px;clip-path:polygon(28px 0%,calc(100% - 28px) 0%,100% 28px,100% 100%,calc(100% - 28px) 100%,28px 100%,0 100%,0 28px)}}
+.testi-c-stars{color:#F59E0B;letter-spacing:2px;font-size:.78rem;margin-bottom:12px}
+.testi-c.center .testi-c-stars{color:var(--yellow)}
+.testi-c-q{font-size:.9rem;line-height:1.6;flex:1;font-weight:500}
+.testi-c.center .testi-c-q{font-size:.95rem}
+.testi-c-foot{margin-top:14px;display:flex;align-items:center;gap:10px}
+.testi-c-av{width:42px;height:42px;overflow:hidden;flex-shrink:0;background:var(--paper);box-shadow:3px 3px 0 rgba(0,0,0,.08)}
+.testi-c.center .testi-c-av{box-shadow:3px 3px 0 rgba(255,255,255,.25)}
+.testi-c-av img{width:100%;height:100%;object-fit:cover}
+.testi-c-name{font-weight:700;font-size:.84rem;line-height:1.2}
+.testi-c-role{font-size:.72rem;opacity:.7;margin-top:2px}
+.testi-nav{display:flex;justify-content:center;gap:10px;margin-top:24px;padding:0 clamp(20px,4vw,48px)}
+.testi-nav-btn{width:52px;height:52px;border:2px solid rgba(0,0,0,.13);background:#fff;font-size:1.5rem;color:var(--ink);cursor:pointer;transition:all var(--t);display:inline-flex;align-items:center;justify-content:center;font-family:var(--font);line-height:1}
+.testi-nav-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue);transform:translateY(-2px)}
 
 /* ─── CITIES marquee ─────────────────────────────────── */
 #cities{background:var(--blue-d);color:#fff;overflow:hidden}
@@ -380,6 +431,8 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 /* ─── CTA FINAL ──────────────────────────────────────── */
 #cta{padding:clamp(80px,12vw,140px) 0;background:linear-gradient(140deg,var(--blue-d) 0%,var(--blue) 60%,#4A8AE8 100%);color:#fff;text-align:center;position:relative;overflow:hidden}
 #cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(255,255,255,.1) 0%,transparent 70%)}
+#cta::after{content:'';position:absolute;inset:0;background:radial-gradient(circle 420px at var(--mx,50%) var(--my,50%),rgba(255,255,255,.16) 0%,rgba(255,228,92,.06) 30%,transparent 60%);opacity:0;transition:opacity .4s var(--ease);pointer-events:none;z-index:0}
+#cta.spot::after{opacity:1}
 #cta>.container{position:relative;z-index:1}
 .cta-title{font-size:clamp(2.2rem,4.5vw,3.6rem);font-weight:800;letter-spacing:-.03em;color:#fff;margin-bottom:14px}
 .cta-title em{font-style:normal;color:var(--yellow)}
@@ -416,9 +469,20 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
    ANIMATED COMPONENTS
 ═══════════════════════════════════════════════════════ */
 
-/* Word reveal */
-.word-reveal .word{display:inline-block;opacity:0;transform:translateY(14px);animation:wrdIn .52s var(--ease) forwards}
-@keyframes wrdIn{to{opacity:1;transform:none}}
+/* Word reveal — blur stagger (21st.dev inspired) */
+.word-reveal .word{display:inline-block;opacity:0;filter:blur(12px);transform:translateY(14px);animation:wrdIn .9s cubic-bezier(.16,1,.3,1) forwards}
+@keyframes wrdIn{to{opacity:1;filter:blur(0);transform:none}}
+
+/* Hero stagger — secondary elements blur in around the title */
+.hero-stagger>*:not(.word-reveal){opacity:0;filter:blur(8px);transform:translateY(12px);animation:heroStg .85s cubic-bezier(.16,1,.3,1) forwards}
+.hero-stagger>.hero-pills{animation-delay:.05s}
+.hero-stagger>.hero-sub{animation-delay:.55s}
+.hero-stagger>.hero-btns{animation-delay:.7s}
+.hero-stagger>.hero-social{animation-delay:.85s}
+@keyframes heroStg{to{opacity:1;filter:blur(0);transform:none}}
+@media (prefers-reduced-motion:reduce){
+  .word-reveal .word,.hero-stagger>*{animation:none;opacity:1;filter:none;transform:none}
+}
 
 /* Marquee */
 #mq-strip{background:var(--surface);border-top:var(--border);border-bottom:var(--border);padding:18px 0;overflow:hidden}
@@ -473,9 +537,12 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 #ham-btn span{display:block;width:18px;height:1.5px;background:var(--ink);border-radius:1px;transition:all var(--t)}
 @media(max-width:768px){#ham-btn{display:flex}}
 /* Simulateur option buttons */
-.sim-opt{padding:7px 14px;border-radius:var(--r-sm);border:var(--border2);background:#fff;font-size:.82rem;font-weight:500;color:var(--ink2);cursor:pointer;transition:all var(--t);font-family:var(--font)}
+.sim-opt{position:relative;padding:7px 14px;border-radius:var(--r-sm);border:var(--border2);background:#fff;font-size:.82rem;font-weight:500;color:var(--ink2);cursor:pointer;transition:color .35s var(--ease),border-color .35s var(--ease),transform .35s var(--ease);font-family:var(--font);z-index:1}
 .sim-opt:hover{border-color:var(--blue);color:var(--blue)}
-.sim-opt.active{background:var(--blue);border-color:var(--blue);color:#fff;font-weight:600}
+.sim-opt.active{border-color:var(--blue);color:#fff;font-weight:600}
+.sim-opt.active::before{content:'';position:absolute;inset:0;border-radius:var(--r-sm);background:var(--blue);box-shadow:0 4px 14px rgba(44,107,210,.35);z-index:-1;animation:simPop .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes simPop{0%{transform:scale(.85);opacity:.6}60%{transform:scale(1.04)}100%{transform:scale(1);opacity:1}}
+.sb-n{transition:transform .25s var(--ease),color .25s var(--ease)}
 /* Swiss image band */
 .swiss-band{position:relative;height:260px;overflow:hidden}
 .swiss-band img{width:100%;height:100%;object-fit:cover;display:block}
@@ -555,7 +622,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
 <section id="hero">
   <div class="container">
     <div class="hero-grid">
-      <div class="rv">
+      <div class="hero-stagger">
         <div class="hero-pills">
           <span class="pill pill-blue">🇨🇭 Fiduciaire suisse</span>
           <span class="pill pill-yellow">Jusqu'à 50% moins cher</span>
@@ -651,8 +718,13 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
     </div>
     <div class="bento-grid rv">
       <div class="bc bc-main">
-        <div class="bc-eyebrow">En moyenne, CHF 2'400 de moins par an</div>
-        <div class="bc-big">÷2</div>
+        <div class="bc-eyebrow">Économie annuelle moyenne</div>
+        <div class="bc-savings">
+          <div class="bc-sav-row"><span class="bc-sav-l">Avant</span><span class="bc-sav-old" id="savOld">CHF 4'800</span></div>
+          <div class="bc-sav-row"><span class="bc-sav-l">Avec deskmachine</span><span class="bc-sav-new" id="savNew">CHF 2'400</span></div>
+          <div class="bc-sav-bar"><div class="bc-sav-bar-fill" id="savBar"></div></div>
+          <div class="bc-sav-saved">−<span id="savDelta">CHF 2'400</span> / an</div>
+        </div>
         <div class="bc-sub">Nos clients paient moitié moins qu'avec leur fiduciaire précédente — à service identique ou supérieur. Pas un forfait, un tarif calibré sur vos besoins réels.</div>
         <div class="bc-pill">⭐ +100 PME accompagnées en Romandie</div>
       </div>
@@ -669,12 +741,18 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
       </div>
       <div class="bc bc-price js-sp">
         <div class="bc-label">Aucun forfait imposé</div>
-        <div class="bc-price-n">CHF 90+</div>
+        <div class="bc-price-n"><span id="bcPriceN">CHF 90</span><span class="bc-price-suf">+ /mois</span></div>
+        <div class="bc-mini-slider"><div class="bc-mini-slider-fill" id="bcSliderFill"></div><div class="bc-mini-slider-thumb" id="bcSliderThumb"></div></div>
         <div class="bc-price-s">Vous configurez — vous payez ce que vous utilisez. Devis gratuit en 24h, sans engagement, sans surprise.</div>
       </div>
       <div class="bc bc-cert js-sp">
         <div class="bc-label">Brevet fédéral de comptabilité</div>
         <div class="bc-desc">Diplôme reconnu en Suisse — pas un certificat en ligne. Vos comptes entre des mains qualifiées comme chez une grande fiduciaire, sans les tarifs.</div>
+        <svg class="bc-seal" viewBox="0 0 80 80" aria-hidden="true">
+          <circle class="bc-seal-ring" cx="40" cy="40" r="34" fill="none" stroke="var(--blue)" stroke-width="2.5" pathLength="100"/>
+          <circle cx="40" cy="40" r="22" fill="rgba(44,107,210,.08)"/>
+          <path class="bc-seal-tick" d="M30 41 L37 48 L52 32" fill="none" stroke="var(--blue)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" pathLength="100"/>
+        </svg>
         <div class="bc-cert-badge">🛡️ Brevet fédéral CH</div>
       </div>
       <div class="bc bc-cities">
@@ -880,8 +958,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
     <h2 class="h2">Ce que disent nos clients.</h2>
     <p style="color:var(--ink2);font-size:1rem;margin-top:10px">+100 PME en Suisse romande nous font confiance.</p>
   </div>
-  <div class="testi-mask">
-    <div class="testi-track" id="testiTrack"></div>
+  <div class="testi-deck" id="testiDeck"></div>
+  <div class="testi-nav">
+    <button class="testi-nav-btn" onclick="testiNav(-1)" aria-label="Témoignage précédent">‹</button>
+    <button class="testi-nav-btn" onclick="testiNav(1)" aria-label="Témoignage suivant">›</button>
   </div>
 </section>
 
@@ -1151,21 +1231,55 @@ function buildCities(){
   }
   const bc=document.getElementById('bcCities');if(bc)bc.innerHTML=Object.values(CITIES).map(c=>`<div class="bc-city-tag">${c.name}</div>`).join('');
 }
-function buildTesti(){
-  const TESTI=[
-    {q:'DeskMachine a la capacité de rendre très facile la complexité de toute ma comptabilité ainsi que les aspects administratifs des ressources humaines.',name:'Felix Buchbinder',role:'Directeur · Kumbha Sàrl',img:'https://randomuser.me/api/portraits/men/41.jpg'},
-    {q:'DeskMachine est le partenaire idéal pour les PME qui souhaitent externaliser les processus administratifs, comptables et financiers.',name:'Serge Galofaro',role:'Directeur · Axiomtec Software SA',img:'https://randomuser.me/api/portraits/men/54.jpg'},
-    {q:'L\'équipe de DeskMachine nous apporte un soutien inestimable et nous permet de nous focaliser sur nos processus cœur de métier.',name:'Nick Bang',role:'Fondateur · ATHL Research &amp; Technology SA',img:'https://randomuser.me/api/portraits/men/22.jpg'},
-    {q:'La transition depuis ma fiduciaire précédente s\'est faite en 48 heures. Zéro paperasse, zéro stress — tout a été géré par Natacha.',name:'Claire Rochat',role:'Gérante · Studio design · Lausanne',img:'https://randomuser.me/api/portraits/women/44.jpg'},
-    {q:'Enfin quelqu\'un qui comprend vraiment le droit vaudois. Nos déclarations sont gérées sans erreur, dans les délais, sans qu\'on ait à relancer.',name:'Marc Terrier',role:'Associé · Bureau d\'architectes · Nyon',img:'https://randomuser.me/api/portraits/men/36.jpg'},
-    {q:'Le rapport qualité-prix est imbattable en Suisse romande. Service équivalent à une grande fiduciaire, pour la moitié du prix.',name:'Sandra Favre',role:'Directrice · Boutique en ligne · Genève',img:'https://randomuser.me/api/portraits/women/68.jpg'},
-    {q:'J\'avais peur de perdre le contact humain avec une fiduciaire digitale. Mais Natacha est plus disponible que mon ancien comptable.',name:'David Müller',role:'Gérant · Garage automobile · Yverdon',img:'https://randomuser.me/api/portraits/men/67.jpg'},
-    {q:'La gestion des salaires de nos 6 employés est irréprochable. On reçoit tout à temps, parfaitement formaté pour l\'AVS et la LPP.',name:'Isabelle Blanc',role:'Co-fondatrice · PME industrielle · Bienne',img:'https://randomuser.me/api/portraits/women/28.jpg'},
-  ];
-  const tr=document.getElementById('testiTrack');if(!tr)return;
-  const html=TESTI.map(t=>`<div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-q">"${t.q}"</div><div class="testi-foot"><div class="testi-av"><img src="${t.img}" alt="${t.name}" loading="lazy"></div><div><div class="testi-name">${t.name}</div><div class="testi-role">${t.role}</div></div></div></div>`).join('');
-  tr.innerHTML=html+html;
+const TESTI=[
+  {q:'DeskMachine a la capacité de rendre très facile la complexité de toute ma comptabilité ainsi que les aspects administratifs des ressources humaines.',name:'Felix Buchbinder',role:'Directeur · Kumbha Sàrl',img:'https://randomuser.me/api/portraits/men/41.jpg'},
+  {q:'DeskMachine est le partenaire idéal pour les PME qui souhaitent externaliser les processus administratifs, comptables et financiers.',name:'Serge Galofaro',role:'Directeur · Axiomtec Software SA',img:'https://randomuser.me/api/portraits/men/54.jpg'},
+  {q:'L\'équipe de DeskMachine nous apporte un soutien inestimable et nous permet de nous focaliser sur nos processus cœur de métier.',name:'Nick Bang',role:'Fondateur · ATHL Research & Technology SA',img:'https://randomuser.me/api/portraits/men/22.jpg'},
+  {q:'La transition depuis ma fiduciaire précédente s\'est faite en 48 heures. Zéro paperasse, zéro stress — tout a été géré par Natacha.',name:'Claire Rochat',role:'Gérante · Studio design · Lausanne',img:'https://randomuser.me/api/portraits/women/44.jpg'},
+  {q:'Enfin quelqu\'un qui comprend vraiment le droit vaudois. Nos déclarations sont gérées sans erreur, dans les délais, sans qu\'on ait à relancer.',name:'Marc Terrier',role:'Associé · Bureau d\'architectes · Nyon',img:'https://randomuser.me/api/portraits/men/36.jpg'},
+  {q:'Le rapport qualité-prix est imbattable en Suisse romande. Service équivalent à une grande fiduciaire, pour la moitié du prix.',name:'Sandra Favre',role:'Directrice · Boutique en ligne · Genève',img:'https://randomuser.me/api/portraits/women/68.jpg'},
+  {q:'J\'avais peur de perdre le contact humain avec une fiduciaire digitale. Mais Natacha est plus disponible que mon ancien comptable.',name:'David Müller',role:'Gérant · Garage automobile · Yverdon',img:'https://randomuser.me/api/portraits/men/67.jpg'},
+  {q:'La gestion des salaires de nos 6 employés est irréprochable. On reçoit tout à temps, parfaitement formaté pour l\'AVS et la LPP.',name:'Isabelle Blanc',role:'Co-fondatrice · PME industrielle · Bienne',img:'https://randomuser.me/api/portraits/women/28.jpg'},
+];
+let testiIdx=0;
+function buildTesti(){renderTesti()}
+function renderTesti(){
+  const deck=document.getElementById('testiDeck');
+  if(!deck)return;
+  const len=TESTI.length;
+  const half=Math.floor(len/2);
+  const isMobile=window.matchMedia('(max-width:640px)').matches;
+  const cardW=isMobile?280:340;
+  const stride=cardW/1.55;
+  // build cards once, then update positions
+  if(!deck.dataset.built){
+    deck.dataset.built='1';
+    deck.innerHTML=TESTI.map((t,i)=>`<div class="testi-c" data-i="${i}" onclick="testiGoto(${i})">
+      <div class="testi-c-stars">★★★★★</div>
+      <div class="testi-c-q">"${t.q}"</div>
+      <div class="testi-c-foot">
+        <div class="testi-c-av"><img src="${t.img}" alt="${t.name}" loading="lazy"></div>
+        <div><div class="testi-c-name">${t.name}</div><div class="testi-c-role">${t.role}</div></div>
+      </div>
+    </div>`).join('');
+  }
+  deck.querySelectorAll('.testi-c').forEach((card,i)=>{
+    let pos=i-testiIdx;
+    if(pos>half)pos-=len;
+    if(pos<-half)pos+=len;
+    const isCenter=pos===0;
+    const tx=stride*pos;
+    const ty=isCenter?-50:(Math.abs(pos)%2===1?12:-12);
+    const rot=isCenter?0:(pos>0?2.5:-2.5);
+    card.style.transform=`translate(-50%,-50%) translate(${tx}px,${ty}px) rotate(${rot}deg)`;
+    card.style.zIndex=isCenter?20:(10-Math.abs(pos));
+    card.classList.toggle('center',isCenter);
+    card.setAttribute('aria-hidden',isCenter?'false':'true');
+  });
 }
+function testiNav(d){testiIdx=(testiIdx+d+TESTI.length)%TESTI.length;renderTesti()}
+function testiGoto(i){testiIdx=i;renderTesti()}
+window.addEventListener('resize',()=>{const d=document.getElementById('testiDeck');if(d&&d.dataset.built)renderTesti()});
 
 // ─ Simulateur d'offre (paramètres réels du site deskmachine.ch) ─
 // Grilles: docs[0-4], tva[0-3], emp[0-3]
@@ -1189,13 +1303,38 @@ function setSimOpt(groupId,btn){
   if(simState[prefix])simState[prefix][key]=+btn.dataset.val;
   updSim(prefix);
 }
+// Animated number tween (NumberFlow-style)
+const _simAnim={};
+function tweenNum(elId,from,to,dur=600){
+  const el=document.getElementById(elId);
+  if(!el)return;
+  if(_simAnim[elId])cancelAnimationFrame(_simAnim[elId]);
+  const start=performance.now();
+  const run=now=>{
+    const p=Math.min((now-start)/dur,1);
+    const eased=1-Math.pow(1-p,3); // easeOutCubic
+    const v=Math.round(from+(to-from)*eased);
+    el.textContent=`CHF ${v}.- / mois`;
+    if(p<1)_simAnim[elId]=requestAnimationFrame(run);
+  };
+  _simAnim[elId]=requestAnimationFrame(run);
+}
 function updSim(prefix){
   const s=simState[prefix];
   if(!s)return;
   const est=calcSim(s.docs,s.tva,s.emp);
   const elId=prefix==='h'?'hEst':prefix==='c'?'cEst':'pEst';
   const el=document.getElementById(elId);
-  if(el)el.textContent=`CHF ${est}.- / mois`;
+  if(!el)return;
+  // parse current value
+  const m=el.textContent.match(/(\d+)/);
+  const from=m?parseInt(m[1]):est;
+  if(from===est){el.textContent=`CHF ${est}.- / mois`;return;}
+  tweenNum(elId,from,est);
+  // micro-bump for tactile feedback
+  el.style.transition='transform .2s var(--ease)';
+  el.style.transform='scale(1.06)';
+  setTimeout(()=>{el.style.transform=''},180);
 }
 
 // ─ métiers tabs ─
@@ -1362,6 +1501,91 @@ function closeMobMenu(){
   document.body.style.overflow='';
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeMobMenu();});
+
+// ─ Bento micro-anims ─
+(function(){
+  const reduced=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const fmt=n=>"CHF "+n.toLocaleString('fr-CH').replace(/ | |,/g,"'");
+  // bc-main: savings counter loop
+  function tween(setter,from,to,dur=1100){
+    const start=performance.now();
+    const run=now=>{
+      const p=Math.min((now-start)/dur,1);
+      const eased=1-Math.pow(1-p,3);
+      setter(Math.round(from+(to-from)*eased));
+      if(p<1)requestAnimationFrame(run);
+    };
+    requestAnimationFrame(run);
+  }
+  function animSavings(){
+    const old=document.getElementById('savOld');
+    const nw=document.getElementById('savNew');
+    const delta=document.getElementById('savDelta');
+    const bar=document.getElementById('savBar');
+    if(!old||!nw||!delta||!bar)return;
+    const scenarios=[{old:4800,nw:2400},{old:6200,nw:3100},{old:9600,nw:4800},{old:3600,nw:1800}];
+    let idx=0;
+    function play(){
+      const s=scenarios[idx];
+      tween(v=>{old.textContent=fmt(v)},parseInt((old.textContent.match(/\d/g)||['4800']).join('')),s.old,800);
+      setTimeout(()=>{
+        tween(v=>{nw.textContent=fmt(v);delta.textContent=fmt(s.old-v)},s.old,s.nw,1100);
+        bar.style.transform=`scaleX(${(s.old-s.nw)/s.old})`;
+      },300);
+      idx=(idx+1)%scenarios.length;
+    }
+    if(reduced){old.textContent=fmt(4800);nw.textContent=fmt(2400);delta.textContent=fmt(2400);bar.style.transform='scaleX(.5)';return}
+    play();
+    setInterval(play,4200);
+  }
+  // bc-price: mini slider that walks tariffs
+  function animMiniSlider(){
+    const fill=document.getElementById('bcSliderFill');
+    const thumb=document.getElementById('bcSliderThumb');
+    const num=document.getElementById('bcPriceN');
+    if(!fill||!thumb||!num)return;
+    const steps=[{p:18,v:90},{p:38,v:130},{p:58,v:190},{p:78,v:270},{p:96,v:380}];
+    let i=0;
+    function play(){
+      const s=steps[i];
+      fill.style.width=s.p+'%';
+      thumb.style.left=s.p+'%';
+      tween(v=>{num.textContent='CHF '+v},parseInt(num.textContent.replace(/\D/g,''))||90,s.v,1500);
+      i=(i+1)%steps.length;
+    }
+    if(reduced){fill.style.width='25%';thumb.style.left='25%';num.textContent='CHF 90';return}
+    play();
+    setInterval(play,2400);
+  }
+  // trigger on bento intersect
+  const bento=document.getElementById('bento');
+  if(!bento)return;
+  const grid=bento.querySelector('.bento-grid');
+  const obs=new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){
+        if(grid)grid.classList.add('in'); // triggers SVG seal stroke
+        animSavings();
+        animMiniSlider();
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:.2});
+  obs.observe(bento);
+})();
+
+// ─ Final CTA spotlight ─
+(function(){
+  const cta=document.getElementById('cta');
+  if(!cta)return;
+  cta.addEventListener('mousemove',e=>{
+    const r=cta.getBoundingClientRect();
+    cta.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    cta.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+    cta.classList.add('spot');
+  });
+  cta.addEventListener('mouseleave',()=>cta.classList.remove('spot'));
+})();
 
 // ─ sticky nav ─
 window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',scrollY>60),{passive:true});
