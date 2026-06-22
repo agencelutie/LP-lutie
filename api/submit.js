@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const { name, email, company } = req.body || {};
+  const { name, email, company, role } = req.body || {};
 
   if (!name?.trim() || !email?.trim()) {
     return res.status(400).json({ error: 'Nom et email requis.' });
@@ -40,6 +40,7 @@ export default async function handler(req, res) {
       company_name: (company || '').trim(),
       contact_name: name.trim(),
       email: email.trim().toLowerCase(),
+      role: role || 'non-renseigné',
       status: 'new',
       source: 'skill.lutie.fr',
       created_at: admin.firestore.FieldValue.serverTimestamp(),
@@ -52,6 +53,14 @@ export default async function handler(req, res) {
 
   // 2. Send email via Brevo with download link
   const firstName = name.trim().split(' ')[0];
+
+  const roleMessages = {
+    'responsable-marketing': `Vous gérez vos campagnes en interne ? Le skill va vous faire gagner un temps précieux — et si vous voulez aller plus loin, nos experts sont disponibles pour un audit complet.`,
+    'freelance': `En tant que consultant, vous savez mieux que quiconque combien un bon audit fait la différence. Le skill est fait pour aller vite et frapper juste.`,
+    'agence': `Le skill est conçu pour s'intégrer dans votre workflow agence — analyse rapide, recommandations actionnables, prêt à partager en client.`,
+    'autre': `Bonne exploration ! Si vous avez des questions sur l'utilisation du skill, on est là.`,
+  };
+  const roleMsg = roleMessages[role] || roleMessages['autre'];
 
   const html = `
 <!DOCTYPE html>
@@ -70,6 +79,7 @@ export default async function handler(req, res) {
           <p style="margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#19345c;opacity:0.7;">Votre skill est prêt</p>
           <h1 style="margin:0 0 12px;font-size:26px;font-weight:800;color:#19345c;line-height:1.2;">Skill Google Ads<br>pour Claude</h1>
           <p style="margin:0 0 24px;font-size:15px;color:#19345c;opacity:0.85;line-height:1.6;">Bonjour ${firstName},<br>Cliquez sur le bouton ci-dessous pour télécharger votre skill.</p>
+          <p style="margin:-8px 0 24px;font-size:13px;color:#19345c;opacity:0.7;line-height:1.6;">${roleMsg}</p>
           <a href="${SKILL_URL}" style="display:inline-block;background:#19345c;color:#FCB002;font-weight:800;font-size:16px;text-decoration:none;padding:16px 36px;border-radius:999px;">
             Télécharger le skill ☀️
           </a>

@@ -147,7 +147,8 @@
       grid-template-columns: 1fr 1fr;
       gap: 12px;
     }
-    .lead-form input {
+    .lead-form input,
+    .lead-form select {
       width: 100%;
       padding: 14px 16px;
       border: 1.5px solid rgba(25,52,92,0.13);
@@ -158,12 +159,30 @@
       background: #fafafa;
       outline: none;
       transition: border-color .15s, background .15s;
+      appearance: none;
+      -webkit-appearance: none;
     }
-    .lead-form input:focus {
+    .lead-form input:focus,
+    .lead-form select:focus {
       border-color: #FCB002;
       background: #fff;
     }
     .lead-form input::placeholder { color: rgba(25,52,92,0.35); }
+    .lead-form select.placeholder { color: rgba(25,52,92,0.35); }
+    .lead-form select option { color: #19345c; }
+    .select-wrap {
+      position: relative;
+    }
+    .select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(25,52,92,0.4);
+      pointer-events: none;
+      font-size: 13px;
+    }
     .lead-form__submit {
       width: 100%;
       padding: 17px 32px;
@@ -431,6 +450,15 @@
           <input type="text"  name="name"  placeholder="Votre prénom" required autocomplete="given-name" />
           <input type="email" name="email" placeholder="Votre email pro" required autocomplete="email" />
         </div>
+        <div class="select-wrap">
+          <select name="role" id="lead-role" required class="placeholder">
+            <option value="" disabled selected>Vous êtes…</option>
+            <option value="responsable-marketing">Responsable marketing / entrepreneur</option>
+            <option value="freelance">Consultant Google Ads freelance</option>
+            <option value="agence">En agence digitale</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
         <button type="submit" class="lead-form__submit" id="lead-submit">
           Recevoir le skill gratuitement ☀️
         </button>
@@ -531,6 +559,10 @@
     const submit = document.getElementById('lead-submit');
     const error  = document.getElementById('lead-error');
 
+    document.getElementById('lead-role').addEventListener('change', function() {
+      this.classList.remove('placeholder');
+    });
+
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       error.style.display = 'none';
@@ -541,6 +573,7 @@
         name:    form.name.value.trim(),
         email:   form.email.value.trim(),
         company: '',
+        role:    document.getElementById('lead-role').value,
       };
 
       try {
