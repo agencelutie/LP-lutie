@@ -245,6 +245,54 @@
       font-weight: 800;
     }
 
+    /* ─ Logo ticker ──────────────────────────── */
+    .ticker-wrap {
+      width: 100%;
+      margin-top: 32px;
+      overflow: hidden;
+      position: relative;
+    }
+    .ticker-wrap::before,
+    .ticker-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 80px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .ticker-wrap::before {
+      left: 0;
+      background: linear-gradient(to right, #fff 0%, transparent 100%);
+    }
+    .ticker-wrap::after {
+      right: 0;
+      background: linear-gradient(to left, #fff 0%, transparent 100%);
+    }
+    .ticker-track {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      width: max-content;
+      animation: ticker-scroll 38s linear infinite;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker-scroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .ticker-track img {
+      height: 28px;
+      width: auto;
+      max-width: 120px;
+      object-fit: contain;
+      opacity: 0.55;
+      filter: grayscale(1);
+      transition: opacity .2s, filter .2s;
+      flex-shrink: 0;
+    }
+    .ticker-track img:hover { opacity: 1; filter: grayscale(0); }
+
     /* ─ Section divider ───────────────────────── */
     .section-label {
       display: flex;
@@ -382,6 +430,45 @@
   <div class="social-proof reveal">
     <div class="social-proof__stars">★★★★★</div>
     <p class="social-proof__text">Utilisé par <span id="user-count">1800</span> marketers Google Ads</p>
+  </div>
+
+  <!-- Logo ticker -->
+  <div class="ticker-wrap reveal">
+    <div class="ticker-track">
+      <img src="/logos/Groupe-défilant-1.png" alt="" />
+      <img src="/logos/Groupe-défilant-2.png" alt="" />
+      <img src="/logos/Groupe-défilant-3.png" alt="" />
+      <img src="/logos/Groupe-défilant-4.png" alt="" />
+      <img src="/logos/Groupe-défilant-5.png" alt="" />
+      <img src="/logos/logo_hertz_app-min-min.png" alt="" />
+      <img src="/logos/Groupe-défilant-6.png" alt="" />
+      <img src="/logos/LOGO-GLEVENTS-PRESSROOM.jpg" alt="" />
+      <img src="/logos/Groupe-défilant-7.png" alt="" />
+      <img src="/logos/Groupe-défilant-8.png" alt="" />
+      <img src="/logos/Logo_Covivio.svg_-2048x322-p-800.png" alt="" />
+      <img src="/logos/Groupe-défilant-9.png" alt="" />
+      <img src="/logos/Groupe-défilant-10.png" alt="" />
+      <img src="/logos/LOGO-NATHAN-rougeHD.jpg" alt="" />
+      <img src="/logos/logo_signitic_HD.png" alt="" />
+      <img src="/logos/2-4.webp" alt="" />
+      <!-- duplicate for seamless loop -->
+      <img src="/logos/Groupe-défilant-1.png" alt="" />
+      <img src="/logos/Groupe-défilant-2.png" alt="" />
+      <img src="/logos/Groupe-défilant-3.png" alt="" />
+      <img src="/logos/Groupe-défilant-4.png" alt="" />
+      <img src="/logos/Groupe-défilant-5.png" alt="" />
+      <img src="/logos/logo_hertz_app-min-min.png" alt="" />
+      <img src="/logos/Groupe-défilant-6.png" alt="" />
+      <img src="/logos/LOGO-GLEVENTS-PRESSROOM.jpg" alt="" />
+      <img src="/logos/Groupe-défilant-7.png" alt="" />
+      <img src="/logos/Groupe-défilant-8.png" alt="" />
+      <img src="/logos/Logo_Covivio.svg_-2048x322-p-800.png" alt="" />
+      <img src="/logos/Groupe-défilant-9.png" alt="" />
+      <img src="/logos/Groupe-défilant-10.png" alt="" />
+      <img src="/logos/LOGO-NATHAN-rougeHD.jpg" alt="" />
+      <img src="/logos/logo_signitic_HD.png" alt="" />
+      <img src="/logos/2-4.webp" alt="" />
+    </div>
   </div>
 
   <!-- Divider -->
