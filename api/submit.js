@@ -1,6 +1,6 @@
 import admin from 'firebase-admin';
 
-const SKILL_URL = 'https://skill.lutie.fr/ads-google-lutie.skill';
+const SKILL_URL = 'https://skill.lutie.fr/skill-google-ads-lutie.zip';
 
 let app;
 function getApp() {
