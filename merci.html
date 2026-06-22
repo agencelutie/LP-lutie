@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Merci — Lutie</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    @font-face {
+      font-family: 'ClashDisplay';
+      src: url('https://website-off-eta.vercel.app/fonts/ClashDisplay-Medium.woff2') format('woff2');
+      font-weight: 500; font-display: swap;
+    }
+    @font-face {
+      font-family: 'BDOGrotesk';
+      src: url('https://website-off-eta.vercel.app/fonts/BDOGrotesk-VF.ttf') format('truetype');
+      font-weight: 100 900; font-display: swap;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'BDOGrotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
+      background: linear-gradient(180deg, #ffffff 0%, #fff6df 40%, #ffedb3 70%, #ffc731 100%);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .topbar {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 28px 24px 0;
+    }
+    .logo {
+      display: flex; align-items: center; gap: 9px;
+      font-family: 'ClashDisplay', 'Plus Jakarta Sans', sans-serif;
+      font-size: 22px; font-weight: 500;
+      color: #19345c; letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .wrap {
+      max-width: 560px;
+      width: 100%;
+      padding: 60px 24px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      text-align: center;
+    }
+
+    .icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: #FCB002;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      box-shadow: 0 8px 32px rgba(252,176,2,0.35);
+    }
+
+    .heading {
+      font-family: 'ClashDisplay', 'Plus Jakarta Sans', sans-serif;
+      font-size: 32px; font-weight: 500;
+      color: #19345c;
+      line-height: 1.2;
+    }
+
+    .subtext {
+      font-size: 16px;
+      color: rgba(25,52,92,0.7);
+      line-height: 1.7;
+      max-width: 420px;
+    }
+
+    .card {
+      width: 100%;
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 32px;
+      box-shadow: 0 8px 40px rgba(25,52,92,0.10);
+      text-align: left;
+    }
+    .card__title {
+      font-size: 15px; font-weight: 700; color: #19345c;
+      margin-bottom: 18px;
+    }
+    .steps { display: flex; flex-direction: column; gap: 14px; }
+    .step { display: flex; align-items: flex-start; gap: 14px; }
+    .step__num {
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #19345c; color: #FCB002;
+      font-weight: 800; font-size: 13px;
+      text-align: center; line-height: 28px;
+    }
+    .step__text {
+      font-size: 14px; color: #19345c; line-height: 1.55;
+      padding-top: 4px;
+    }
+    .step__text code {
+      font-family: monospace;
+      background: #fff3cc;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font-size: 13px;
+    }
+
+    .dl-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      padding: 16px 36px;
+      border-radius: 999px;
+      background: #19345c;
+      color: #FCB002;
+      font-family: 'BDOGrotesk', 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px; font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(14,21,53,0.22);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .dl-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(14,21,53,0.28);
+    }
+
+    .cta-secondary {
+      font-size: 14px; color: rgba(25,52,92,0.6); line-height: 1.6;
+    }
+    .cta-secondary a {
+      color: #19345c; font-weight: 700; text-decoration: none;
+    }
+    .cta-secondary a:hover { text-decoration: underline; }
+
+    @media (max-width: 560px) {
+      .wrap { padding: 40px 16px 60px; }
+      .heading { font-size: 26px; }
+      .card { padding: 22px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="https://lutie.fr" class="logo">
+      <img src="https://website-off-eta.vercel.app/images/Groupe-1721-3.png" alt="Lutie" style="height:34px;width:auto;" />
+    </a>
+  </div>
+
+  <div class="wrap">
+
+    <div class="icon">☀️</div>
+
+    <h1 class="heading">C'est dans votre boîte !<br>Vérifiez vos emails.</h1>
+
+    <p class="subtext">
+      Le skill Google Ads pour Claude vient de vous être envoyé.<br>
+      Si vous ne le voyez pas, pensez à vérifier vos spams.
+    </p>
+
+    <a href="/ads-google-lutie.skill" download class="dl-btn">
+      Télécharger maintenant ☀️
+    </a>
+
+    <div class="card">
+      <p class="card__title">Comment l'installer :</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step__num">1</div>
+          <p class="step__text">Ouvrez <strong>Claude Code</strong> dans votre terminal</p>
+        </div>
+        <div class="step">
+          <div class="step__num">2</div>
+          <p class="step__text">Exécutez <code>claude skill install ads-google-lutie.skill</code></p>
+        </div>
+        <div class="step">
+          <div class="step__num">3</div>
+          <p class="step__text">Tapez <code>/ads-google</code> dans n'importe quelle conversation Claude</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="cta-secondary">
+      Une question ? Besoin d'un audit humain de vos campagnes ?<br>
+      <a href="https://lutie.fr">Contactez Lutie →</a>
+    </p>
+
+  </div>
+
+</body>
+</html>

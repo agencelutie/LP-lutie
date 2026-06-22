@@ -1,5 +1,7 @@
 import admin from 'firebase-admin';
 
+const SKILL_URL = 'https://skill.lutie.fr/ads-google-lutie.skill';
+
 let app;
 function getApp() {
   if (!app) {
@@ -31,7 +33,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Email invalide.' });
   }
 
-  // 1. Save lead to Firebase Firestore (crm_leads collection)
+  // 1. Save lead to Firebase Firestore
   try {
     const db = getApp() && admin.firestore();
     await db.collection('crm_leads').add({
@@ -48,19 +50,7 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Erreur lors de l\'enregistrement.' });
   }
 
-  // 2. Fetch the .skill file to attach
-  let skillBase64 = null;
-  try {
-    const skillUrl = `${req.headers['x-forwarded-proto'] || 'https'}://${req.headers.host}/ads-google-lutie.skill`;
-    const skillRes = await fetch(skillUrl);
-    if (skillRes.ok) {
-      skillBase64 = Buffer.from(await skillRes.arrayBuffer()).toString('base64');
-    }
-  } catch (e) {
-    console.warn('Could not fetch skill file:', e.message);
-  }
-
-  // 3. Send email via Brevo
+  // 2. Send email via Brevo with download link
   const firstName = name.trim().split(' ')[0];
 
   const html = `
@@ -76,10 +66,13 @@ export default async function handler(req, res) {
           <img src="https://website-off-eta.vercel.app/images/Groupe-1721-3.png" alt="Lutie" height="36" style="display:block;" />
         </td></tr>
 
-        <tr><td style="background:#FCB002;border-radius:16px;padding:32px 32px 24px;text-align:center;">
+        <tr><td style="background:#FCB002;border-radius:16px;padding:32px 32px 32px;text-align:center;">
           <p style="margin:0 0 8px;font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#19345c;opacity:0.7;">Votre skill est prêt</p>
-          <h1 style="margin:0 0 16px;font-size:26px;font-weight:800;color:#19345c;line-height:1.2;">Skill Google Ads<br>pour Claude</h1>
-          <p style="margin:0;font-size:15px;color:#19345c;opacity:0.85;line-height:1.6;">Bonjour ${firstName},<br>Vous trouverez le fichier <strong>ads-google-lutie.skill</strong> en pièce jointe.</p>
+          <h1 style="margin:0 0 12px;font-size:26px;font-weight:800;color:#19345c;line-height:1.2;">Skill Google Ads<br>pour Claude</h1>
+          <p style="margin:0 0 24px;font-size:15px;color:#19345c;opacity:0.85;line-height:1.6;">Bonjour ${firstName},<br>Cliquez sur le bouton ci-dessous pour télécharger votre skill.</p>
+          <a href="${SKILL_URL}" style="display:inline-block;background:#19345c;color:#FCB002;font-weight:800;font-size:16px;text-decoration:none;padding:16px 36px;border-radius:999px;">
+            Télécharger le skill ☀️
+          </a>
         </td></tr>
 
         <tr><td style="padding:32px 0 0;">
@@ -90,7 +83,7 @@ export default async function handler(req, res) {
                 <div style="width:28px;height:28px;border-radius:50%;background:#19345c;color:#FCB002;font-weight:800;font-size:13px;text-align:center;line-height:28px;">1</div>
               </td>
               <td style="padding-bottom:16px;">
-                <p style="margin:0;font-size:14px;color:#19345c;line-height:1.5;"><strong>Ouvrez Claude Code</strong> dans votre terminal</p>
+                <p style="margin:0;font-size:14px;color:#19345c;line-height:1.5;"><strong>Téléchargez</strong> le fichier <strong>ads-google-lutie.skill</strong> via le bouton ci-dessus</p>
               </td>
             </tr>
             <tr>
@@ -98,7 +91,7 @@ export default async function handler(req, res) {
                 <div style="width:28px;height:28px;border-radius:50%;background:#19345c;color:#FCB002;font-weight:800;font-size:13px;text-align:center;line-height:28px;">2</div>
               </td>
               <td style="padding-bottom:16px;">
-                <p style="margin:0;font-size:14px;color:#19345c;line-height:1.5;">Exécutez <strong style="font-family:monospace;background:#f5f5f5;padding:2px 6px;border-radius:4px;">claude skill install ads-google-lutie.skill</strong></p>
+                <p style="margin:0;font-size:14px;color:#19345c;line-height:1.5;">Ouvrez <strong>Claude Code</strong> et exécutez <strong style="font-family:monospace;background:#fff3cc;padding:2px 6px;border-radius:4px;">claude skill install ads-google-lutie.skill</strong></p>
               </td>
             </tr>
             <tr>
@@ -106,7 +99,7 @@ export default async function handler(req, res) {
                 <div style="width:28px;height:28px;border-radius:50%;background:#19345c;color:#FCB002;font-weight:800;font-size:13px;text-align:center;line-height:28px;">3</div>
               </td>
               <td>
-                <p style="margin:0;font-size:14px;color:#19345c;line-height:1.5;">Tapez <strong style="font-family:monospace;background:#f5f5f5;padding:2px 6px;border-radius:4px;">/ads-google</strong> dans n'importe quelle conversation Claude</p>
+                <p style="margin:0;font-size:14px;color:#19345c;line-height:1.5;">Tapez <strong style="font-family:monospace;background:#fff3cc;padding:2px 6px;border-radius:4px;">/ads-google</strong> dans n'importe quelle conversation Claude</p>
               </td>
             </tr>
           </table>
@@ -145,7 +138,6 @@ export default async function handler(req, res) {
       to: [{ email: email.trim().toLowerCase(), name: name.trim() }],
       subject: `${firstName}, votre Skill Google Ads pour Claude ☀️`,
       htmlContent: html,
-      ...(skillBase64 && { attachment: [{ name: 'ads-google-lutie.skill', content: skillBase64 }] }),
       tags: ['skill-lutie-fr'],
     }),
   });

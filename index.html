@@ -259,8 +259,7 @@
           throw new Error(json.error || 'Une erreur est survenue.');
         }
 
-        form.style.display = 'none';
-        success.style.display = 'flex';
+        window.location.href = '/merci';
       } catch (err) {
         error.textContent = err.message || 'Une erreur est survenue. Réessayez.';
         error.style.display = 'block';
