@@ -37,7 +37,7 @@ export default async function handler(req, res) {
   try {
     const db = getApp() && admin.firestore();
     await db.collection('crm_leads').add({
-      company_name: company.trim(),
+      company_name: (company || '').trim(),
       contact_name: name.trim(),
       email: email.trim().toLowerCase(),
       status: 'new',
@@ -127,24 +127,29 @@ export default async function handler(req, res) {
 </body>
 </html>`;
 
-  const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method: 'POST',
-    headers: {
-      'api-key': process.env.BREVO_API_KEY,
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      sender: { name: 'Lutie', email: 'hello@lutie.fr' },
-      to: [{ email: email.trim().toLowerCase(), name: name.trim() }],
-      subject: `${firstName}, votre Skill Google Ads pour Claude ☀️`,
-      htmlContent: html,
-      tags: ['skill-lutie-fr'],
-    }),
-  });
+  try {
+    const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': process.env.BREVO_API_KEY,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        sender: { name: 'Lutie', email: 'hello@lutie.fr' },
+        to: [{ email: email.trim().toLowerCase(), name: name.trim() }],
+        subject: `${firstName}, votre Skill Google Ads pour Claude ☀️`,
+        htmlContent: html,
+        tags: ['skill-lutie-fr'],
+      }),
+    });
 
-  if (!brevoRes.ok) {
-    const err = await brevoRes.text();
-    console.error('Brevo error:', err);
+    if (!brevoRes.ok) {
+      const err = await brevoRes.text();
+      console.error('Brevo error:', err);
+      return res.status(500).json({ error: 'Erreur lors de l\'envoi de l\'email.' });
+    }
+  } catch (err) {
+    console.error('Brevo network error:', err);
     return res.status(500).json({ error: 'Erreur lors de l\'envoi de l\'email.' });
   }
 
