@@ -26,8 +26,8 @@ export default async function handler(req, res) {
 
   const { name, email, company } = req.body || {};
 
-  if (!name?.trim() || !email?.trim() || !company?.trim()) {
-    return res.status(400).json({ error: 'Tous les champs sont requis.' });
+  if (!name?.trim() || !email?.trim()) {
+    return res.status(400).json({ error: 'Nom et email requis.' });
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: 'Email invalide.' });

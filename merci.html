@@ -26,125 +26,194 @@
 
     body {
       font-family: 'BDOGrotesk', 'Plus Jakarta Sans', system-ui, sans-serif;
-      background: linear-gradient(180deg, #ffffff 0%, #fff6df 40%, #ffedb3 70%, #ffc731 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #fff8e8 35%, #ffedb3 65%, #ffc731 100%);
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
+    /* ─ Nav ───────────────────────────────────── */
     .topbar {
-      width: 100%;
       display: flex;
-      justify-content: center;
-      padding: 28px 24px 0;
-    }
-    .logo {
-      display: flex; align-items: center; gap: 9px;
-      font-family: 'ClashDisplay', 'Plus Jakarta Sans', sans-serif;
-      font-size: 22px; font-weight: 500;
-      color: #19345c; letter-spacing: -0.02em;
-      text-decoration: none;
-    }
-
-    .wrap {
-      max-width: 560px;
-      width: 100%;
-      padding: 60px 24px 80px;
-      display: flex;
-      flex-direction: column;
+      justify-content: space-between;
       align-items: center;
-      gap: 32px;
+      padding: 20px 32px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .logo img { height: 32px; width: auto; display: block; }
+    .topbar-cta {
+      font-size: 13px; font-weight: 700;
+      color: #19345c; text-decoration: none;
+      opacity: 0.55;
+      transition: opacity .15s;
+    }
+    .topbar-cta:hover { opacity: 1; }
+
+    /* ─ Hero merci ────────────────────────────── */
+    .hero {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 52px 24px 0;
       text-align: center;
     }
-
-    .icon {
+    .hero__icon {
       width: 72px; height: 72px;
       border-radius: 50%;
       background: #FCB002;
       display: flex; align-items: center; justify-content: center;
-      font-size: 32px;
-      box-shadow: 0 8px 32px rgba(252,176,2,0.35);
+      font-size: 30px;
+      margin: 0 auto 24px;
+      box-shadow: 0 8px 32px rgba(252,176,2,0.4);
+      animation: pop .4s cubic-bezier(.34,1.56,.64,1) both;
     }
-
-    .heading {
+    @keyframes pop {
+      from { transform: scale(0.5); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .hero__title {
       font-family: 'ClashDisplay', 'Plus Jakarta Sans', sans-serif;
-      font-size: 32px; font-weight: 500;
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 500;
       color: #19345c;
       line-height: 1.2;
+      margin-bottom: 14px;
     }
-
-    .subtext {
+    .hero__sub {
       font-size: 16px;
-      color: rgba(25,52,92,0.7);
-      line-height: 1.7;
-      max-width: 420px;
+      color: rgba(25,52,92,0.6);
+      line-height: 1.65;
+      margin-bottom: 32px;
     }
 
-    .card {
-      width: 100%;
+    /* ─ DL button ─────────────────────────────── */
+    .dl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 40px;
+      border-radius: 999px;
+      background: #FCB002;
+      color: #19345c;
+      font-family: 'BDOGrotesk', 'Plus Jakarta Sans', sans-serif;
+      font-size: 17px;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 6px 28px rgba(252,176,2,0.45);
+      transition: transform .15s, box-shadow .15s;
+      letter-spacing: 0.01em;
+    }
+    .dl-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(252,176,2,0.5);
+    }
+    .dl-hint {
+      margin-top: 12px;
+      font-size: 12px;
+      color: rgba(25,52,92,0.4);
+      font-weight: 600;
+    }
+
+    /* ─ Steps card ────────────────────────────── */
+    .steps-wrap {
+      max-width: 520px;
+      margin: 40px auto 0;
+      padding: 0 24px;
+    }
+    .steps-card {
       background: #fff;
       border-radius: 20px;
       padding: 28px 32px;
-      box-shadow: 0 8px 40px rgba(25,52,92,0.10);
-      text-align: left;
+      box-shadow: 0 8px 32px rgba(25,52,92,0.09);
     }
-    .card__title {
-      font-size: 15px; font-weight: 700; color: #19345c;
-      margin-bottom: 18px;
+    .steps-card__title {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(25,52,92,0.4);
+      margin-bottom: 20px;
     }
-    .steps { display: flex; flex-direction: column; gap: 14px; }
+    .steps { display: flex; flex-direction: column; gap: 16px; }
     .step { display: flex; align-items: flex-start; gap: 14px; }
     .step__num {
       flex-shrink: 0;
       width: 28px; height: 28px;
       border-radius: 50%;
-      background: #19345c; color: #FCB002;
-      font-weight: 800; font-size: 13px;
-      text-align: center; line-height: 28px;
+      background: #19345c;
+      color: #FCB002;
+      font-weight: 800;
+      font-size: 13px;
+      text-align: center;
+      line-height: 28px;
     }
     .step__text {
-      font-size: 14px; color: #19345c; line-height: 1.55;
+      font-size: 14px;
+      color: #19345c;
+      line-height: 1.55;
       padding-top: 4px;
     }
     .step__text code {
-      font-family: monospace;
+      font-family: 'SF Mono', 'Fira Code', monospace;
       background: #fff3cc;
       padding: 2px 7px;
       border-radius: 5px;
       font-size: 13px;
     }
 
-    .dl-btn {
-      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-      padding: 16px 36px;
-      border-radius: 999px;
-      background: #19345c;
-      color: #FCB002;
-      font-family: 'BDOGrotesk', 'Plus Jakarta Sans', sans-serif;
-      font-size: 16px; font-weight: 800;
-      text-decoration: none;
-      box-shadow: 0 4px 20px rgba(14,21,53,0.22);
-      transition: transform .15s, box-shadow .15s;
+    /* ─ Booking section ───────────────────────── */
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      max-width: 860px;
+      margin: 56px auto 0;
+      padding: 0 24px;
     }
-    .dl-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(14,21,53,0.28);
+    .section-label::before,
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(25,52,92,0.12);
+    }
+    .section-label span {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(25,52,92,0.4);
+      white-space: nowrap;
     }
 
-    .cta-secondary {
-      font-size: 14px; color: rgba(25,52,92,0.6); line-height: 1.6;
+    .booking-section {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 24px 80px;
     }
-    .cta-secondary a {
-      color: #19345c; font-weight: 700; text-decoration: none;
+    .booking-section__header {
+      text-align: center;
+      margin-bottom: 28px;
     }
-    .cta-secondary a:hover { text-decoration: underline; }
+    .booking-section__header h3 {
+      font-family: 'ClashDisplay', 'Plus Jakarta Sans', sans-serif;
+      font-size: 26px;
+      font-weight: 500;
+      color: #19345c;
+      margin-bottom: 8px;
+    }
+    .booking-section__header p {
+      font-size: 15px;
+      color: rgba(25,52,92,0.6);
+      line-height: 1.6;
+    }
 
     @media (max-width: 560px) {
-      .wrap { padding: 40px 16px 60px; }
-      .heading { font-size: 26px; }
-      .card { padding: 22px 20px; }
+      .topbar { padding: 16px 20px; }
+      .hero { padding: 36px 20px 0; }
+      .steps-wrap { padding: 0 16px; }
+      .steps-card { padding: 22px 20px; }
+      .booking-section { padding: 24px 0 60px; }
+      .section-label { padding: 0 20px; }
     }
   </style>
 </head>
@@ -152,27 +221,29 @@
 
   <div class="topbar">
     <a href="https://lutie.fr" class="logo">
-      <img src="https://website-off-eta.vercel.app/images/Groupe-1721-3.png" alt="Lutie" style="height:34px;width:auto;" />
+      <img src="https://website-off-eta.vercel.app/images/Groupe-1721-3.png" alt="Lutie" />
     </a>
+    <a href="https://lutie.fr" class="topbar-cta">Découvrir Lutie →</a>
   </div>
 
-  <div class="wrap">
-
-    <div class="icon">☀️</div>
-
-    <h1 class="heading">C'est dans votre boîte !<br>Vérifiez vos emails.</h1>
-
-    <p class="subtext">
-      Le skill Google Ads pour Claude vient de vous être envoyé.<br>
-      Si vous ne le voyez pas, pensez à vérifier vos spams.
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero__icon">☀️</div>
+    <h1 class="hero__title">C'est dans votre boîte !</h1>
+    <p class="hero__sub">
+      Vérifiez vos emails — le skill est en route.<br>
+      En attendant, téléchargez-le directement ici :
     </p>
-
     <a href="/ads-google-lutie.skill" download class="dl-btn">
-      Télécharger maintenant ☀️
+      ↓ Télécharger le skill
     </a>
+    <p class="dl-hint">ads-google-lutie.skill · ~12 Ko</p>
+  </div>
 
-    <div class="card">
-      <p class="card__title">Comment l'installer :</p>
+  <!-- Steps -->
+  <div class="steps-wrap">
+    <div class="steps-card">
+      <p class="steps-card__title">Comment l'installer en 30 secondes</p>
       <div class="steps">
         <div class="step">
           <div class="step__num">1</div>
@@ -188,12 +259,25 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <p class="cta-secondary">
-      Une question ? Besoin d'un audit humain de vos campagnes ?<br>
-      <a href="https://lutie.fr">Contactez Lutie →</a>
-    </p>
+  <!-- Booking -->
+  <div class="section-label">
+    <span>Pendant qu'on y est</span>
+  </div>
 
+  <div class="booking-section">
+    <div class="booking-section__header">
+      <h3>On audite vos campagnes ensemble ?</h3>
+      <p>30 min avec un expert Lutie. Gratuit, sans engagement.<br>On regarde vos vrais chiffres, pas une démo.</p>
+    </div>
+    <iframe
+      src="https://calendly-ebon.vercel.app/agence-lutie/appel-d-couverte?iframe=true"
+      width="100%"
+      height="950"
+      frameborder="0"
+      style="border: none; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.07);">
+    </iframe>
   </div>
 
 </body>
