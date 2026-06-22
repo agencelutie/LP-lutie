@@ -39,6 +39,20 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* ─ Reveal animations ─────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s cubic-bezier(.22,1,.36,1), transform 0.55s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.08s; }
+    .reveal-delay-2 { transition-delay: 0.16s; }
+    .reveal-delay-3 { transition-delay: 0.24s; }
+
     /* ─ Nav ───────────────────────────────────── */
     .topbar {
       display: flex;
@@ -226,6 +240,10 @@
       color: rgba(25,52,92,0.55);
       font-weight: 600;
     }
+    #user-count {
+      color: #19345c;
+      font-weight: 800;
+    }
 
     /* ─ Section divider ───────────────────────── */
     .section-label {
@@ -273,9 +291,15 @@
     }
 
     /* ─ Booking section ───────────────────────── */
+    .booking-bg {
+      background: #ffffff;
+      width: 100%;
+      margin-top: 56px;
+      padding-top: 48px;
+    }
     .booking-section {
       max-width: 860px;
-      margin: 56px auto 0;
+      margin: 0 auto;
       padding: 0 24px 80px;
       width: 100%;
     }
@@ -322,19 +346,19 @@
 
   <!-- Hero -->
   <div class="hero">
-    <div class="hero__badge">
+    <div class="hero__badge reveal">
       ☀️ <span>Nouveau ·</span> Skill Claude Code · Google Ads
     </div>
-    <h1 class="hero__title">
-      Auditez vos Google Ads<br>avec Claude — <em>en 2 min</em>
+    <h1 class="hero__title reveal reveal-delay-1">
+      Auditez vos Google Ads<br>avec Claude <em>en 2 min</em>
     </h1>
-    <p class="hero__sub">
+    <p class="hero__sub reveal reveal-delay-2">
       Un skill Claude Code créé par Lutie pour analyser vos campagnes, identifier les pertes de budget et générer des recommandations actionnables — sans quitter votre terminal.
     </p>
   </div>
 
   <!-- Form -->
-  <div class="form-wrap">
+  <div class="form-wrap reveal reveal-delay-3">
     <div class="lead-card">
       <div id="lead-error" class="lead-error"></div>
       <form class="lead-form" id="lead-form">
@@ -355,18 +379,18 @@
   </div>
 
   <!-- Social proof -->
-  <div class="social-proof">
+  <div class="social-proof reveal">
     <div class="social-proof__stars">★★★★★</div>
-    <p class="social-proof__text">Utilisé par +200 marketers Google Ads</p>
+    <p class="social-proof__text">Utilisé par <span id="user-count">1800</span> marketers Google Ads</p>
   </div>
 
   <!-- Divider -->
-  <div class="section-label">
+  <div class="section-label reveal">
     <span>Voir en action</span>
   </div>
 
   <!-- Video -->
-  <div class="video-wrap">
+  <div class="video-wrap reveal">
     <div class="video-frame">
       <iframe
         src="https://www.youtube.com/embed/fEPzutWKSTg?autoplay=1&mute=1&rel=0&modestbranding=1"
@@ -378,24 +402,27 @@
   </div>
 
   <!-- Booking -->
-  <div class="booking-section">
-    <div class="section-label" style="margin-top:0; margin-bottom: 0;">
-      <span>Besoin d'un audit humain ?</span>
+  <div class="booking-bg reveal">
+    <div class="booking-section">
+      <div class="section-label" style="margin-top:0; margin-bottom: 0;">
+        <span>Besoin d'un audit humain ?</span>
+      </div>
+      <div class="booking-section__header" style="margin-top: 24px;">
+        <h3>On regarde vos campagnes ensemble</h3>
+        <p>30 min avec un expert Lutie. Gratuit, sans engagement.</p>
+      </div>
+      <iframe
+        src="https://calendly-ebon.vercel.app/agence-lutie/appel-d-couverte?iframe=true"
+        width="100%"
+        height="950"
+        frameborder="0"
+        style="border: none;">
+      </iframe>
     </div>
-    <div class="booking-section__header" style="margin-top: 24px;">
-      <h3>On regarde vos campagnes ensemble</h3>
-      <p>30 min avec un expert Lutie. Gratuit, sans engagement.</p>
-    </div>
-    <iframe
-      src="https://calendly-ebon.vercel.app/agence-lutie/appel-d-couverte?iframe=true"
-      width="100%"
-      height="950"
-      frameborder="0"
-      style="border: none;">
-    </iframe>
   </div>
 
   <script>
+    /* ─ Form submit ─────────────────────────── */
     const form   = document.getElementById('lead-form');
     const submit = document.getElementById('lead-submit');
     const error  = document.getElementById('lead-error');
@@ -428,6 +455,50 @@
         submit.textContent = 'Recevoir le skill gratuitement ☀️';
       }
     });
+
+    /* ─ Scroll reveal ───────────────────────── */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ─ Counter animation ───────────────────── */
+    const countEl = document.getElementById('user-count');
+    const TARGET  = 2013;
+    let current   = 1800;
+    countEl.textContent = current;
+
+    const counterObserver = new IntersectionObserver((entries) => {
+      if (!entries[0].isIntersecting) return;
+      counterObserver.disconnect();
+
+      // Fast count to target
+      const tick = setInterval(() => {
+        const step = Math.floor(Math.random() * 18) + 8;
+        current = Math.min(current + step, TARGET);
+        countEl.textContent = current;
+        if (current >= TARGET) {
+          clearInterval(tick);
+          // Slow random +1 every 4-12 seconds
+          const slowTick = () => {
+            setTimeout(() => {
+              current++;
+              countEl.textContent = current;
+              slowTick();
+            }, 4000 + Math.random() * 8000);
+          };
+          slowTick();
+        }
+      }, 40);
+    }, { threshold: 0.5 });
+
+    counterObserver.observe(countEl);
   </script>
 </body>
 </html>
