@@ -240,9 +240,26 @@
       color: rgba(25,52,92,0.55);
       font-weight: 600;
     }
-    #user-count {
-      color: #19345c;
+    .odometer-wrap {
+      display: inline-flex;
+      vertical-align: baseline;
       font-weight: 800;
+      color: #19345c;
+    }
+    .od-digit {
+      display: inline-block;
+      overflow: hidden;
+      height: 1em;
+      line-height: 1;
+      position: relative;
+    }
+    .od-val, .od-out {
+      display: block;
+      line-height: 1;
+    }
+    .od-out {
+      position: absolute;
+      top: 0; left: 0; width: 100%;
     }
 
     /* ─ Logo ticker ──────────────────────────── */
@@ -429,7 +446,7 @@
   <!-- Social proof -->
   <div class="social-proof reveal">
     <div class="social-proof__stars">★★★★★</div>
-    <p class="social-proof__text">Utilisé par <span id="user-count">1800</span> marketers Google Ads</p>
+    <p class="social-proof__text">Utilisé par <span id="odometer" class="odometer-wrap"></span> marketers Google Ads</p>
   </div>
 
   <!-- Logo ticker -->
@@ -555,37 +572,78 @@
 
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    /* ─ Counter animation ───────────────────── */
-    const countEl = document.getElementById('user-count');
-    const TARGET  = 2013;
-    let current   = 1800;
-    countEl.textContent = current;
+    /* ─ Odometer counter ────────────────────── */
+    let odValue = 190;
+    const ODO_TARGET = 213;
 
-    const counterObserver = new IntersectionObserver((entries) => {
+    function initOdo() {
+      const wrap = document.getElementById('odometer');
+      wrap.innerHTML = String(odValue).split('').map(d =>
+        `<span class="od-digit"><span class="od-val">${d}</span></span>`
+      ).join('');
+    }
+
+    function flipTo(newVal) {
+      const wrap = document.getElementById('odometer');
+      const slots = wrap.querySelectorAll('.od-digit');
+      const oldStr = String(odValue).padStart(slots.length, '0');
+      const newStr = String(newVal).padStart(slots.length, '0');
+
+      if (String(newVal).length !== String(odValue).length) {
+        wrap.innerHTML = String(newVal).split('').map(d =>
+          `<span class="od-digit"><span class="od-val">${d}</span></span>`
+        ).join('');
+        odValue = newVal;
+        return;
+      }
+
+      slots.forEach((slot, i) => {
+        if (oldStr[i] === newStr[i]) return;
+        const cur = slot.querySelector('.od-val');
+        const out = document.createElement('span');
+        out.className = 'od-out';
+        out.textContent = oldStr[i];
+        slot.appendChild(out);
+        cur.textContent = newStr[i];
+        cur.style.cssText = 'transform:translateY(100%);opacity:0;';
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          const t = 'transform 0.2s cubic-bezier(.22,1,.36,1),opacity 0.15s';
+          out.style.cssText = `transition:${t};transform:translateY(-100%);opacity:0;`;
+          cur.style.cssText = `transition:${t};transform:translateY(0);opacity:1;`;
+          setTimeout(() => { out.remove(); cur.style.cssText = ''; }, 350);
+        }));
+      });
+      odValue = newVal;
+    }
+
+    initOdo();
+
+    function slowLoop() {
+      setTimeout(() => {
+        const burst = Math.random() < 0.38 ? Math.floor(Math.random() * 3) + 2 : 1;
+        let done = 0;
+        const doBurst = () => {
+          flipTo(odValue + 1);
+          done++;
+          if (done < burst) setTimeout(doBurst, 100 + Math.random() * 220);
+          else slowLoop();
+        };
+        doBurst();
+      }, 3500 + Math.random() * 9000);
+    }
+
+    const odoObserver = new IntersectionObserver(entries => {
       if (!entries[0].isIntersecting) return;
-      counterObserver.disconnect();
-
-      // Fast count to target
-      const tick = setInterval(() => {
-        const step = Math.floor(Math.random() * 18) + 8;
-        current = Math.min(current + step, TARGET);
-        countEl.textContent = current;
-        if (current >= TARGET) {
-          clearInterval(tick);
-          // Slow random +1 every 4-12 seconds
-          const slowTick = () => {
-            setTimeout(() => {
-              current++;
-              countEl.textContent = current;
-              slowTick();
-            }, 4000 + Math.random() * 8000);
-          };
-          slowTick();
-        }
-      }, 40);
+      odoObserver.disconnect();
+      let v = odValue;
+      const fastTick = setInterval(() => {
+        v++;
+        flipTo(v);
+        if (v >= ODO_TARGET) { clearInterval(fastTick); slowLoop(); }
+      }, 55);
     }, { threshold: 0.5 });
 
-    counterObserver.observe(countEl);
+    odoObserver.observe(document.getElementById('odometer'));
   </script>
 </body>
 </html>
