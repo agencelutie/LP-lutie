@@ -1,6 +1,8 @@
 import admin from 'firebase-admin';
 
 const SKILL_URL = 'https://skill.lutie.fr/skill-google-ads-lutie.zip';
+// Brevo list ID for "Skill Google Ads" automation list
+const BREVO_LIST_ID = parseInt(process.env.BREVO_LIST_ID || '0', 10);
 
 let app;
 function getApp() {
@@ -51,9 +53,34 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Erreur lors de l\'enregistrement.' });
   }
 
-  // 2. Send email via Brevo with download link
+  // 2. Create/update Brevo contact with ROLE attribute for automation
   const firstName = name.trim().split(' ')[0];
+  if (BREVO_LIST_ID > 0) {
+    try {
+      await fetch('https://api.brevo.com/v3/contacts', {
+        method: 'POST',
+        headers: {
+          'api-key': process.env.BREVO_API_KEY,
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email.trim().toLowerCase(),
+          attributes: {
+            PRENOM: firstName,
+            NOM: name.trim().split(' ').slice(1).join(' ') || '',
+            ROLE: role || 'autre',
+            SOCIETE: (company || '').trim(),
+          },
+          listIds: [BREVO_LIST_ID],
+          updateEnabled: true,
+        }),
+      });
+    } catch (err) {
+      console.error('Brevo contacts error (non-fatal):', err);
+    }
+  }
 
+  // 3. Send email via Brevo with download link
   const roleMessages = {
     'responsable-marketing': `Vous gérez vos campagnes en interne ? Le skill va vous faire gagner un temps précieux — et si vous voulez aller plus loin, nos experts sont disponibles pour un audit complet.`,
     'freelance': `En tant que consultant, vous savez mieux que quiconque combien un bon audit fait la différence. Le skill est fait pour aller vite et frapper juste.`,
