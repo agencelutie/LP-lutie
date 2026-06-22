@@ -185,10 +185,16 @@
       white-space: nowrap;
     }
 
+    .booking-bg {
+      background: #ffffff;
+      width: 100%;
+      margin-top: 56px;
+      padding-top: 48px;
+    }
     .booking-section {
       max-width: 860px;
       margin: 0 auto;
-      padding: 24px 24px 80px;
+      padding: 0 24px 80px;
     }
     .booking-section__header {
       text-align: center;
@@ -262,22 +268,23 @@
   </div>
 
   <!-- Booking -->
-  <div class="section-label">
-    <span>Pendant qu'on y est</span>
-  </div>
-
-  <div class="booking-section">
-    <div class="booking-section__header">
-      <h3>On audite vos campagnes ensemble ?</h3>
-      <p>30 min avec un expert Lutie. Gratuit, sans engagement.<br>On regarde vos vrais chiffres, pas une démo.</p>
+  <div class="booking-bg">
+    <div class="booking-section">
+      <div class="section-label" style="margin-top:0; margin-bottom:0; padding: 0 24px;">
+        <span>Pendant qu'on y est</span>
+      </div>
+      <div class="booking-section__header" style="margin-top: 24px;">
+        <h3>On audite vos campagnes ensemble ?</h3>
+        <p>30 min avec un expert Lutie. Gratuit, sans engagement.<br>On regarde vos vrais chiffres, pas une démo.</p>
+      </div>
+      <iframe
+        src="https://calendly-ebon.vercel.app/agence-lutie/appel-d-couverte?iframe=true"
+        width="100%"
+        height="950"
+        frameborder="0"
+        style="border: none;">
+      </iframe>
     </div>
-    <iframe
-      src="https://calendly-ebon.vercel.app/agence-lutie/appel-d-couverte?iframe=true"
-      width="100%"
-      height="950"
-      frameborder="0"
-      style="border: none;">
-    </iframe>
   </div>
 
 </body>
